@@ -1,0 +1,94 @@
+import 'package:anitrak/src/pages/home.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+class App extends StatefulWidget {
+  const App({Key? key}) : super(key: key);
+
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> with TickerProviderStateMixin<App> {
+  int _currentIndex = 0;
+  late AnimationController _hide;
+
+  @override
+  void initState() {
+    super.initState();
+    _hide = AnimationController(vsync: this, duration: kThemeAnimationDuration);
+    _hide.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _hide.dispose();
+  }
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    if ((notification.depth == 0 && _currentIndex != 2) ||
+        (_currentIndex == 2 && notification.depth != 0)) {
+      if (notification is UserScrollNotification) {
+        final UserScrollNotification userScroll = notification;
+        switch (userScroll.direction) {
+          case ScrollDirection.forward:
+            _hide.forward();
+            break;
+          case ScrollDirection.reverse:
+            _hide.reverse();
+            break;
+          case ScrollDirection.idle:
+            break;
+        }
+      }
+    }
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return NotificationListener<ScrollNotification>(
+      onNotification: _handleScrollNotification,
+      child: Scaffold(
+        body: SafeArea(
+          top: false,
+          child: IndexedStack(
+            index: _currentIndex,
+            children: const [
+              Home(),
+              Center(
+                child: Text("MORE"),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: ClipRect(
+          child: SizeTransition(
+            sizeFactor: _hide,
+            axisAlignment: -1.0,
+            axis: Axis.vertical,
+            child: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              selectedItemColor: Theme.of(context).colorScheme.secondary,
+              unselectedItemColor: Colors.grey,
+              items: const [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.list_rounded), label: "Lists"),
+                // BottomNavigationBarItem(
+                //     icon: Icon(Icons.bookmark), label: "Favourites"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.more_horiz), label: "More"),
+              ],
+              onTap: (int index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

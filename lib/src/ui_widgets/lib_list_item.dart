@@ -56,22 +56,28 @@ class LibListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      mediaEntry.title,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w400),
-                      maxLines: 1,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        mediaEntry.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w400),
+                        maxLines: 2,
+                      ),
                     ),
-                    const Text(
-                      "TV, 2021",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w300),
-                      maxLines: 1,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        '${mediaEntry.progress}/${mediaEntry.total == 0 ? "-" : mediaEntry.total}',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.w300),
+                        maxLines: 1,
+                      ),
                     ),
                     Text(
-                      mediaEntry.score.toString(),
+                      '${mediaEntry.score == 0 ? "-" : mediaEntry.score } \u2b50',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.w300),

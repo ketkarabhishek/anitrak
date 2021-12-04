@@ -1,6 +1,9 @@
-import 'package:anitrak/src/pages/home.dart';
+import 'package:anitrak/src/database/database.dart';
+import 'package:anitrak/src/pages/library_page.dart';
+import 'package:anitrak/src/repositories/media_entries_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -12,6 +15,9 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with TickerProviderStateMixin<App> {
   int _currentIndex = 0;
   late AnimationController _hide;
+
+  // Database
+  MyDatabase db = MyDatabase();
 
   @override
   void initState() {
@@ -46,45 +52,65 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
     return false;
   }
 
+  Widget _repositoryProvider({required Widget child}) {
+    return RepositoryProvider<MediaEntriesRepo>(
+      create: (context) {
+        return MediaEntriesRepo(mediaEntriesDao: db.mediaEntriesDao);
+      },
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: _handleScrollNotification,
-      child: Scaffold(
-        body: SafeArea(
-          top: false,
-          child: IndexedStack(
-            index: _currentIndex,
-            children: const [
-              Home(),
-              Center(
-                child: Text("MORE"),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: ClipRect(
-          child: SizeTransition(
-            sizeFactor: _hide,
-            axisAlignment: -1.0,
-            axis: Axis.vertical,
-            child: BottomNavigationBar(
-              currentIndex: _currentIndex,
-              selectedItemColor: Theme.of(context).colorScheme.secondary,
-              unselectedItemColor: Colors.grey,
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.list_rounded), label: "Lists"),
-                // BottomNavigationBarItem(
-                //     icon: Icon(Icons.bookmark), label: "Favourites"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.more_horiz), label: "More"),
+    return _repositoryProvider(
+      child: NotificationListener<ScrollNotification>(
+        onNotification: _handleScrollNotification,
+        child: Scaffold(
+          body: SafeArea(
+            top: false,
+            child: IndexedStack(
+              index: _currentIndex,
+              children: const [
+                Center(
+                  child: Text("Dashboard"),
+                ),
+                LibraryPage(),
+                Center(
+                  child: Text("MORE"),
+                ),
               ],
-              onTap: (int index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+            ),
+          ),
+          bottomNavigationBar: ClipRect(
+            child: SizeTransition(
+              sizeFactor: _hide,
+              axisAlignment: -1.0,
+              axis: Axis.vertical,
+              child: BottomNavigationBar(
+                currentIndex: _currentIndex,
+                selectedItemColor: Theme.of(context).colorScheme.secondary,
+                unselectedItemColor: Colors.grey,
+                items: const [
+                   BottomNavigationBarItem(
+                    icon: Icon(Icons.dashboard_rounded),
+                    label: "Dashboard",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.list_rounded),
+                    label: "Library",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.more_horiz_rounded),
+                    label: "More",
+                  ),
+                ],
+                onTap: (int index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+              ),
             ),
           ),
         ),

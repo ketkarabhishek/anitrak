@@ -1,26 +1,26 @@
-import 'package:floor/floor.dart';
+import 'package:anitrak/src/database/database.dart';
+import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 
-@Entity()
-class MediaEntry {
-  @PrimaryKey(autoGenerate: true)
-  final int? id;
+class MediaEntry extends Insertable<MediaEntry> {
+  final String id;
   final int alEntryId;
   final int alMediaId;
   final String status;
-  final int? score;
+  final int score;
   final int progress;
   final int repeat;
-  final int createdAt;
-  final int updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   final String title;
   final String poster;
   final String color;
-  final int? total;
+  final int total;
   final int? malMediaId;
 
   MediaEntry({
-    this.id,
+    required this.id,
     required this.alEntryId,
     required this.title,
     required this.alMediaId,
@@ -53,19 +53,19 @@ class MediaEntry {
         malMediaId = json['malMediaId'];
 
   MediaEntry.fromAnilistJson(Map<String, dynamic> json)
-      : id = null,
+      : id = const Uuid().v4(),
         alEntryId = json['id'],
         alMediaId = json['mediaId'],
         status = json['status'],
         score = json['score'],
-        progress = json['progress'],
+        progress = json['progress'] ?? 0,
         repeat = json['repeat'],
-        createdAt = json['createdAt'],
-        updatedAt = json['updatedAt'],
+        createdAt = DateTime.fromMillisecondsSinceEpoch(json['createdAt']),
+        updatedAt = DateTime.fromMillisecondsSinceEpoch(json['updatedAt']),
         title = json['media']['title']['romaji'],
         poster = json["media"]['coverImage']['large'],
         color = json["media"]['coverImage']['color'] ?? "",
-        total = json['media']['episodes'],
+        total = json['media']['episodes'] ?? 0,
         malMediaId = json['media']['idMal'];
         
 
@@ -85,5 +85,25 @@ class MediaEntry {
       'total': total,
       'malMediaId': malMediaId,
     };
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    return MediaEntriesCompanion(
+      id: Value(id),
+      alEntryId: Value(alEntryId),
+      status: Value(status),
+      score: Value(score),
+      alMediaId: Value(alMediaId),
+      progress: Value(progress),
+      repeat: Value(repeat),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      title: Value(title),
+      poster: Value(poster),
+      color: Value(color),
+      total: Value(total),
+      malMediaId: Value(malMediaId),
+    ).toColumns(nullToAbsent);
   }
 }

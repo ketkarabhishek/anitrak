@@ -80,6 +80,7 @@ query ($userId: Int, $type: MediaType) {
             large
             color
           }
+          episodes
         }
       }
     }

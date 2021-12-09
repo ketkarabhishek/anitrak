@@ -1,5 +1,6 @@
 import 'package:anitrak/src/app.dart';
 import 'package:anitrak/src/mytheme.dart';
+import 'package:anitrak/src/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
       theme: MyTheme.lightTheme,
       darkTheme: MyTheme.darkTheme,
-      home: const App(),
+      home: Providers(child: const App()),
     );
   }
 }

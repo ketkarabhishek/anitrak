@@ -1,5 +1,5 @@
-// import 'package:anitrak/src/services/anilist/auth.dart';
 import 'package:anitrak/src/services/anilist/queries.dart' as queries;
+import 'package:anitrak/src/services/anilist/mutations.dart' as mutations;
 import 'package:graphql/client.dart';
 
 class GraphqlRequestFailure implements Exception {}
@@ -8,16 +8,14 @@ class AnilistClient {
   const AnilistClient({required GraphQLClient graphQLClient})
       : _graphQLClient = graphQLClient;
 
-  factory AnilistClient.create() {
+  factory AnilistClient.create({String? authToken}) {
     final _httpLink = HttpLink('https://graphql.anilist.co/');
-    // final _authLink = AuthLink(
-    //   getToken: () async {
-    //     final auth = AnilistAuth();
-    //     final token = await auth.authenticate();
-    //     return 'Bearer $token';
-    //   },
-    // );
-    final link = Link.from([_httpLink]); //authLink.concat(_httpLink);
+    final _authLink = AuthLink(
+      getToken: () async {
+        return authToken != null ? 'Bearer $authToken' : authToken;
+      },
+    );
+    final link = /*Link.from([_httpLink]);*/ _authLink.concat(_httpLink);
     return AnilistClient(
       graphQLClient: GraphQLClient(cache: GraphQLCache(), link: link),
     );
@@ -50,15 +48,21 @@ class AnilistClient {
       int userId, String mediaType) async {
     final result = await _graphQLClient.query(
       QueryOptions(
-        document: gql(queries.getMediaListCollection),
-        variables: <String, dynamic>{
-          'userId': userId,
-          'type': mediaType
-        }
-      ),
+          document: gql(queries.getMediaListCollection),
+          variables: <String, dynamic>{'userId': userId, 'type': mediaType}),
     );
 
     if (result.hasException) throw GraphqlRequestFailure();
     return result.data?['MediaListCollection'];
+  }
+
+  Future<void> saveMediaListEntry(Map<String, dynamic> mediaEntryData) async {
+    final result = await _graphQLClient.mutate(
+      MutationOptions(
+          document: gql(mutations.saveMediaListEntry),
+          variables: mediaEntryData),
+    );
+    if (result.hasException) throw GraphqlRequestFailure();
+    return;
   }
 }

@@ -5,13 +5,14 @@ import 'package:anitrak/src/services/anilist/anilist_client.dart';
 class MediaEntriesRepo {
   MediaEntriesRepo({
     required this.mediaEntriesDao,
-  });
+    AnilistClient? anilistClient
+  }): _client = anilistClient ?? AnilistClient.create();
 
   final MediaEntriesDao mediaEntriesDao;
 
-  final AnilistClient _client = AnilistClient.create();
+  final AnilistClient _client;
 
-  Stream<List<MediaEntry>> getAllMediaEntries() {
+  Stream<List<MediaEntry>> getAllMediaEntries() { 
     return mediaEntriesDao.getAllMediaEntries();
   }
 

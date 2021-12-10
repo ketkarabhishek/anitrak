@@ -1,4 +1,5 @@
 import 'package:anitrak/src/pages/library_page.dart';
+import 'package:anitrak/src/pages/more_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -94,9 +95,7 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
                 child: Text("Dashboard"),
               ),
               LibraryPage(),
-              Center(
-                child: Text("More"),
-              ),
+              MorePage(),
             ],
           ),
         ),

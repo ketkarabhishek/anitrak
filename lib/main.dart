@@ -22,12 +22,14 @@ class MyApp extends StatelessWidget {
         statusBarColor: Colors.transparent,
       ),
     );
-    return MaterialApp(
-      title: 'AniTrak',
-      themeMode: ThemeMode.light,
-      theme: MyTheme.lightTheme,
-      darkTheme: MyTheme.darkTheme,
-      home: Providers(child: const App()),
+    return Providers(
+      child: MaterialApp(
+        title: 'AniTrak',
+        themeMode: ThemeMode.light,
+        theme: MyTheme.lightTheme,
+        darkTheme: MyTheme.darkTheme,
+        home: const App(),
+      ),
     );
   }
 }

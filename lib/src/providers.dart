@@ -6,11 +6,16 @@ import 'package:anitrak/src/services/anilist/anilist_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Providers extends StatelessWidget {
-  Providers({Key? key, required this.child}) : super(key: key);
+class Providers extends StatefulWidget {
+  const Providers({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
-  // Database
+
+  @override
+  State<Providers> createState() => _ProvidersState();
+}
+
+class _ProvidersState extends State<Providers> {
   final MyDatabase db = MyDatabase();
 
   @override
@@ -30,7 +35,7 @@ class Providers extends StatelessWidget {
                   mediaEntriesDao: db.mediaEntriesDao,
                   anilistClient: anilistClient);
             },
-            child: child,
+            child: widget.child,
           );
         },
       ),

@@ -39,4 +39,10 @@ class AccountsRepo{
     final expiresIn = DateTime.now().add(Duration(seconds: tokenMap[_anilistJsonExpiresInKey])).subtract(const Duration(days: 7)).toIso8601String();
     await _storage.write(key: _anilistExpiresInKey, value: expiresIn);
   }
+
+  Future<void> deleteAnilistToken() async {
+    await _storage.delete(key: _anilistAccessTokenKey);
+    await _storage.delete(key: _anilistRefreshTokenKey);
+    await _storage.delete(key: _anilistExpiresInKey);
+  }
 }

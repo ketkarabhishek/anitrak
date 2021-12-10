@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class MyTheme {
   static ThemeData lightTheme = ThemeData(
-      // scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: Colors.grey[100],
       colorScheme: const ColorScheme.light().copyWith(
+        primary: Colors.red,
         secondary: Colors.redAccent,
         secondaryVariant: Colors.red,
         onPrimary: Colors.black,

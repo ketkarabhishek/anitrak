@@ -1,11 +1,16 @@
 part of 'accounts_bloc.dart';
 
-class AccountsState extends Equatable {
+class AccountsState {
   const AccountsState({
-    this.anilistAuth,
+    this.anilistAuth = "",
   });
 
-  final String? anilistAuth;
-  @override
-  List<Object?> get props => [];
+  final String anilistAuth;
+
+  bool get isAnilistAuth {
+    return anilistAuth.isNotEmpty;
+  }
+
+  // @override
+  // List<Object?> get props => [];
 }

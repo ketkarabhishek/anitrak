@@ -32,25 +32,9 @@ class MediaEntry extends Insertable<MediaEntry> {
     required this.createdAt,
     required this.updatedAt,
     required this.color,
-    required this.total, 
-    required this.malMediaId, 
+    required this.total,
+    required this.malMediaId,
   });
-
-  MediaEntry.fromDb(Map<String, dynamic> json)
-      : id = json['id'],
-        alEntryId = json['alEntryId'],
-        alMediaId = json['alMediaId'],
-        status = json['status'],
-        score = json['score'],
-        progress = json['progress'],
-        repeat = json['repeat'],
-        createdAt = json['createdAt'],
-        updatedAt = json['updatedAt'],
-        title = json['title'],
-        poster = json['poster'],
-        color = json['color'],
-        total = json['total'],
-        malMediaId = json['malMediaId'];
 
   MediaEntry.fromAnilistJson(Map<String, dynamic> json)
       : id = const Uuid().v4(),
@@ -67,7 +51,6 @@ class MediaEntry extends Insertable<MediaEntry> {
         color = json["media"]['coverImage']['color'] ?? "",
         total = json['media']['episodes'] ?? 0,
         malMediaId = json['media']['idMal'];
-        
 
   Map<String, dynamic> toMap() {
     return {
@@ -85,6 +68,50 @@ class MediaEntry extends Insertable<MediaEntry> {
       'total': total,
       'malMediaId': malMediaId,
     };
+  }
+
+  Map<String, dynamic> toAnilistMap() {
+    return {
+      'id': alEntryId,
+      'mediaId': alMediaId,
+      'status': status,
+      'score': score,
+      'progress': progress,
+      'repeat': repeat,
+    };
+  }
+
+  MediaEntry copyWith({
+    int? alEntryId,
+    int? alMediaId,
+    String? status,
+    int? score,
+    int? progress,
+    int? repeat,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? title,
+    String? poster,
+    String? color,
+    int? total,
+    int? malMediaId,
+  }) {
+    return MediaEntry(
+      id: id,
+      alEntryId: alEntryId ?? this.alEntryId,
+      title: title ?? this.title,
+      alMediaId: alMediaId ?? this.alMediaId,
+      poster: poster ?? this.poster,
+      status: status ?? this.status,
+      score: score ?? this.score,
+      progress: progress ?? this.progress,
+      repeat: repeat ?? this.repeat,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      color: color ?? this.color,
+      total: total ?? this.total,
+      malMediaId: malMediaId ?? this.malMediaId,
+    );
   }
 
   @override

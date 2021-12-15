@@ -41,4 +41,8 @@ class MediaEntriesDao extends DatabaseAccessor<MyDatabase>
       batch.insertAll(mediaEntries, entries);
     });
   }
+
+  Future<void> updateMediaEntry(MediaEntry entry) async {
+    await update(mediaEntries).replace(entry);
+  }
 }

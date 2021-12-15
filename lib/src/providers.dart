@@ -17,27 +17,22 @@ class Providers extends StatefulWidget {
 
 class _ProvidersState extends State<Providers> {
   final MyDatabase db = MyDatabase();
+  final AccountsRepo accountsRepo = AccountsRepo();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AccountsBloc(AccountsRepo())
+      create: (context) => AccountsBloc(accountsRepo)
         ..add(
           AccountsInitializedEvent(),
         ),
-      child: BlocBuilder<AccountsBloc, AccountsState>(
-        builder: (context, state) {
-          return RepositoryProvider<MediaEntriesRepo>(
-            create: (_) {
-              final anilistClient =
-                  AnilistClient.create(authToken: state.anilistAuth);
-              return MediaEntriesRepo(
-                  mediaEntriesDao: db.mediaEntriesDao,
-                  anilistClient: anilistClient);
-            },
-            child: widget.child,
-          );
+      child: RepositoryProvider<MediaEntriesRepo>(
+        create: (_) {
+          final anilistClient = AnilistClient.create(repo: accountsRepo);
+          return MediaEntriesRepo(
+              mediaEntriesDao: db.mediaEntriesDao, client: anilistClient);
         },
+        child: widget.child,
       ),
     );
   }

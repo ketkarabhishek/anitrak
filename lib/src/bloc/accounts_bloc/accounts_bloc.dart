@@ -7,34 +7,35 @@ part 'accounts_state.dart';
 class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   AccountsBloc(this._accountsRepo) : super(const AccountsState()) {
     on<AccountsInitializedEvent>((event, emit) async {
-      final anilistToken = await _initializeAlilistAccount();
-      emit(AccountsState(anilistAuth: anilistToken ?? ""));
+      final anilistToken = await _initializeAnilistAccount();
+      final state = AccountsState(anilistAuth: anilistToken);
+      emit(state);
     });
 
     on<AnilistLoginEvent>((event, emit) async {
       final anilistToken = await _loginAnilist();
-      emit(AccountsState(anilistAuth: anilistToken!));
+      emit(AccountsState(anilistAuth: anilistToken?.isNotEmpty ?? false));
     });
 
     on<AnilistLogoutEvent>((event, emit) async {
       await _accountsRepo.deleteAnilistToken();
-      emit(const AccountsState(anilistAuth: ""));
+      emit(const AccountsState());
     });
   }
 
   final AccountsRepo _accountsRepo;
 
-  Future<String?> _initializeAlilistAccount() async {
+  Future<bool> _initializeAnilistAccount() async {
     final accessToken = await _accountsRepo.anilistAccessToken;
     if(accessToken == null){
-      return null;
+      return false;
     }
     final expiresIn = await _accountsRepo.anilistExpiresIn;
     if(DateTime.now().difference(DateTime.parse(expiresIn!)).inDays > 0){
       // TODO - Implement refresh token
-      return null;
+      return false;
     }
-    return accessToken;
+    return true;
   }
 
   Future<String?> _loginAnilist() async{

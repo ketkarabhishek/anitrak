@@ -5,12 +5,12 @@ import 'package:anitrak/src/services/anilist/anilist_client.dart';
 class MediaEntriesRepo {
   MediaEntriesRepo({
     required this.mediaEntriesDao,
-    AnilistClient? anilistClient
-  }): _client = anilistClient ?? AnilistClient.create();
+    required this.client
+  });
 
   final MediaEntriesDao mediaEntriesDao;
 
-  final AnilistClient _client;
+  final AnilistClient client;
 
   Stream<List<MediaEntry>> getAllMediaEntries() { 
     return mediaEntriesDao.getAllMediaEntries();
@@ -20,8 +20,21 @@ class MediaEntriesRepo {
     return mediaEntriesDao.getMediaEntries(status: status);
   }
 
+  Future<void> updateMediaEntry(MediaEntry entry) async {
+    await mediaEntriesDao.updateMediaEntry(entry);
+    final varMap = {
+      'id': entry.alEntryId,
+      'mediaId': entry.alMediaId,
+      'status': entry.status,
+      'score': entry.score,
+      'progress': entry.progress,
+      'repeat': entry.repeat,
+    };
+    await client.saveMediaListEntry(varMap);
+  }
+
   Future<void> importAnilistLibrary() async {
-    final json = await _client.getMediaListCollection(561580, "ANIME");
+    final json = await client.getMediaListCollection(561580, "ANIME");
     final lists = json['lists'] as List;
     final filteredList =
         lists.where((element) => !element['isCustomList']).toList();

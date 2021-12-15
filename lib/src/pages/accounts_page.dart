@@ -32,7 +32,7 @@ class _AccountsPageState extends State<AccountsPage> {
                         style: Theme.of(context).textTheme.headline4,
                       ),
                       const Divider(),
-                      state.isAnilistAuth
+                      state.anilistAuth
                           ? OutlinedButton(
                               onPressed: () {
                                 BlocProvider.of<AccountsBloc>(context).add(AnilistLogoutEvent());

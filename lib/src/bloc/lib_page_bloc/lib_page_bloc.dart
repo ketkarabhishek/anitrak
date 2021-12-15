@@ -31,6 +31,10 @@ class LibPageBloc extends Bloc<LibPageEvent, LibPageState> {
     on<LibraryImportedEvent>((event, emit) async {
       await mediaEntriesRepo.importAnilistLibrary();
     });
+
+    on<LibraryEntryUpdated>((event, emit) async {
+      await mediaEntriesRepo.updateMediaEntry(event.updatedMediaEntry);
+    });
   }
 
   final MediaEntriesRepo mediaEntriesRepo;

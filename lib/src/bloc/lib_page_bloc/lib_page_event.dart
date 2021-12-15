@@ -5,3 +5,9 @@ abstract class LibPageEvent {}
 class LibraryFetchedEvent extends LibPageEvent{}
 
 class LibraryImportedEvent extends LibPageEvent{}
+
+class LibraryEntryUpdated extends LibPageEvent{
+  final MediaEntry updatedMediaEntry;
+
+  LibraryEntryUpdated(this.updatedMediaEntry);
+}

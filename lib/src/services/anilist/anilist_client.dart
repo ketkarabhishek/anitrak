@@ -1,3 +1,4 @@
+import 'package:anitrak/src/repositories/accounts_repo.dart';
 import 'package:anitrak/src/services/anilist/queries.dart' as queries;
 import 'package:anitrak/src/services/anilist/mutations.dart' as mutations;
 import 'package:graphql/client.dart';
@@ -8,11 +9,12 @@ class AnilistClient {
   const AnilistClient({required GraphQLClient graphQLClient})
       : _graphQLClient = graphQLClient;
 
-  factory AnilistClient.create({String? authToken}) {
+  factory AnilistClient.create({required AccountsRepo repo}) {
     final _httpLink = HttpLink('https://graphql.anilist.co/');
     final _authLink = AuthLink(
-      getToken: () async {
-        return authToken != null ? 'Bearer $authToken' : authToken;
+      getToken: () async { 
+        final authToken = await repo.anilistAccessToken;
+        return 'Bearer $authToken';
       },
     );
     final link = /*Link.from([_httpLink]);*/ _authLink.concat(_httpLink);
@@ -64,5 +66,6 @@ class AnilistClient {
     );
     if (result.hasException) throw GraphqlRequestFailure();
     return;
+    
   }
 }

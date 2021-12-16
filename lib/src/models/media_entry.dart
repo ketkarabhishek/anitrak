@@ -18,6 +18,7 @@ class MediaEntry extends Insertable<MediaEntry> {
   final String color;
   final int total;
   final int? malMediaId;
+  final bool synced;
 
   MediaEntry({
     required this.id,
@@ -34,6 +35,7 @@ class MediaEntry extends Insertable<MediaEntry> {
     required this.color,
     required this.total,
     required this.malMediaId,
+    required this.synced,
   });
 
   MediaEntry.fromAnilistJson(Map<String, dynamic> json)
@@ -50,7 +52,8 @@ class MediaEntry extends Insertable<MediaEntry> {
         poster = json["media"]['coverImage']['large'],
         color = json["media"]['coverImage']['color'] ?? "",
         total = json['media']['episodes'] ?? 0,
-        malMediaId = json['media']['idMal'];
+        malMediaId = json['media']['idMal'],
+        synced = true;
 
   Map<String, dynamic> toMap() {
     return {
@@ -67,6 +70,7 @@ class MediaEntry extends Insertable<MediaEntry> {
       'color': color,
       'total': total,
       'malMediaId': malMediaId,
+      'synced': synced,
     };
   }
 
@@ -95,6 +99,7 @@ class MediaEntry extends Insertable<MediaEntry> {
     String? color,
     int? total,
     int? malMediaId,
+    bool? synced,
   }) {
     return MediaEntry(
       id: id,
@@ -111,6 +116,7 @@ class MediaEntry extends Insertable<MediaEntry> {
       color: color ?? this.color,
       total: total ?? this.total,
       malMediaId: malMediaId ?? this.malMediaId,
+      synced: synced ?? this.synced
     );
   }
 
@@ -131,6 +137,7 @@ class MediaEntry extends Insertable<MediaEntry> {
       color: Value(color),
       total: Value(total),
       malMediaId: Value(malMediaId),
+      synced: Value(synced),
     ).toColumns(nullToAbsent);
   }
 }

@@ -22,6 +22,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
   final Value<String> color;
   final Value<int> total;
   final Value<int?> malMediaId;
+  final Value<bool> synced;
   const MediaEntriesCompanion({
     this.id = const Value.absent(),
     this.alEntryId = const Value.absent(),
@@ -37,6 +38,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     this.color = const Value.absent(),
     this.total = const Value.absent(),
     this.malMediaId = const Value.absent(),
+    this.synced = const Value.absent(),
   });
   MediaEntriesCompanion.insert({
     required String id,
@@ -53,6 +55,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     required String color,
     required int total,
     this.malMediaId = const Value.absent(),
+    required bool synced,
   })  : id = Value(id),
         alEntryId = Value(alEntryId),
         alMediaId = Value(alMediaId),
@@ -65,7 +68,8 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
         title = Value(title),
         poster = Value(poster),
         color = Value(color),
-        total = Value(total);
+        total = Value(total),
+        synced = Value(synced);
   static Insertable<MediaEntry> custom({
     Expression<String>? id,
     Expression<int>? alEntryId,
@@ -81,6 +85,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     Expression<String>? color,
     Expression<int>? total,
     Expression<int?>? malMediaId,
+    Expression<bool>? synced,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -97,6 +102,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
       if (color != null) 'color': color,
       if (total != null) 'total': total,
       if (malMediaId != null) 'mal_media_id': malMediaId,
+      if (synced != null) 'synced': synced,
     });
   }
 
@@ -114,7 +120,8 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
       Value<String>? poster,
       Value<String>? color,
       Value<int>? total,
-      Value<int?>? malMediaId}) {
+      Value<int?>? malMediaId,
+      Value<bool>? synced}) {
     return MediaEntriesCompanion(
       id: id ?? this.id,
       alEntryId: alEntryId ?? this.alEntryId,
@@ -130,6 +137,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
       color: color ?? this.color,
       total: total ?? this.total,
       malMediaId: malMediaId ?? this.malMediaId,
+      synced: synced ?? this.synced,
     );
   }
 
@@ -178,6 +186,9 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     if (malMediaId.present) {
       map['mal_media_id'] = Variable<int?>(malMediaId.value);
     }
+    if (synced.present) {
+      map['synced'] = Variable<bool>(synced.value);
+    }
     return map;
   }
 
@@ -197,7 +208,8 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
           ..write('poster: $poster, ')
           ..write('color: $color, ')
           ..write('total: $total, ')
-          ..write('malMediaId: $malMediaId')
+          ..write('malMediaId: $malMediaId, ')
+          ..write('synced: $synced')
           ..write(')'))
         .toString();
   }
@@ -209,75 +221,67 @@ class $MediaEntriesTable extends MediaEntries
   final String? _alias;
   $MediaEntriesTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
       'id', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _alEntryIdMeta = const VerificationMeta('alEntryId');
-  @override
   late final GeneratedColumn<int?> alEntryId = GeneratedColumn<int?>(
       'al_entry_id', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _alMediaIdMeta = const VerificationMeta('alMediaId');
-  @override
   late final GeneratedColumn<int?> alMediaId = GeneratedColumn<int?>(
       'al_media_id', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _statusMeta = const VerificationMeta('status');
-  @override
   late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
       'status', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _scoreMeta = const VerificationMeta('score');
-  @override
   late final GeneratedColumn<int?> score = GeneratedColumn<int?>(
       'score', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _progressMeta = const VerificationMeta('progress');
-  @override
   late final GeneratedColumn<int?> progress = GeneratedColumn<int?>(
       'progress', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _repeatMeta = const VerificationMeta('repeat');
-  @override
   late final GeneratedColumn<int?> repeat = GeneratedColumn<int?>(
       'repeat', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
-  @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
       'created_at', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
-  @override
   late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
       'updated_at', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _posterMeta = const VerificationMeta('poster');
-  @override
   late final GeneratedColumn<String?> poster = GeneratedColumn<String?>(
       'poster', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _colorMeta = const VerificationMeta('color');
-  @override
   late final GeneratedColumn<String?> color = GeneratedColumn<String?>(
       'color', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _totalMeta = const VerificationMeta('total');
-  @override
   late final GeneratedColumn<int?> total = GeneratedColumn<int?>(
       'total', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
   final VerificationMeta _malMediaIdMeta = const VerificationMeta('malMediaId');
-  @override
   late final GeneratedColumn<int?> malMediaId = GeneratedColumn<int?>(
       'mal_media_id', aliasedName, true,
       typeName: 'INTEGER', requiredDuringInsert: false);
+  final VerificationMeta _syncedMeta = const VerificationMeta('synced');
+  late final GeneratedColumn<bool?> synced = GeneratedColumn<bool?>(
+      'synced', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (synced IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -293,7 +297,8 @@ class $MediaEntriesTable extends MediaEntries
         poster,
         color,
         total,
-        malMediaId
+        malMediaId,
+        synced
       ];
   @override
   String get aliasedName => _alias ?? 'media_entries';
@@ -391,6 +396,12 @@ class $MediaEntriesTable extends MediaEntries
           malMediaId.isAcceptableOrUnknown(
               data['mal_media_id']!, _malMediaIdMeta));
     }
+    if (data.containsKey('synced')) {
+      context.handle(_syncedMeta,
+          synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
+    } else if (isInserting) {
+      context.missing(_syncedMeta);
+    }
     return context;
   }
 
@@ -428,6 +439,8 @@ class $MediaEntriesTable extends MediaEntries
           .mapFromDatabaseResponse(data['${effectivePrefix}total'])!,
       malMediaId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}mal_media_id']),
+      synced: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
     );
   }
 

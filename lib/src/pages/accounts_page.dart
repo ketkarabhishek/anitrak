@@ -14,44 +14,50 @@ class _AccountsPageState extends State<AccountsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Tracking"),
+        title: const Text("Tracking Services"),
         elevation: 0,
       ),
       body: BlocBuilder<AccountsBloc, AccountsState>(
         builder: (context, state) {
           return ListView(
             children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Anilist',
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
-                      const Divider(),
-                      state.anilistAuth
-                          ? OutlinedButton(
-                              onPressed: () {
-                                BlocProvider.of<AccountsBloc>(context).add(AnilistLogoutEvent());
-                              },
-                              child: const Text('Logout'),
-                            )
-                          : ElevatedButton(
-                              onPressed: () {
-                                BlocProvider.of<AccountsBloc>(context).add(AnilistLoginEvent());
-                              },
-                              child: const Text('Connect'),
-                            ),
-                    ],
-                  ),
-                ),
-              )
+              _anilistCard(state.anilistAuth),
             ],
           );
         },
+      ),
+    );
+  }
+
+  Widget _anilistCard(bool anilistState) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Anilist',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const Divider(),
+            anilistState
+                ? OutlinedButton(
+                    onPressed: () {
+                      BlocProvider.of<AccountsBloc>(context)
+                          .add(AnilistLogoutEvent());
+                    },
+                    child: const Text('Logout'),
+                  )
+                : ElevatedButton(
+                    onPressed: () {
+                      BlocProvider.of<AccountsBloc>(context)
+                          .add(AnilistLoginEvent());
+                    },
+                    child: const Text('Connect'),
+                  ),
+          ],
+        ),
       ),
     );
   }

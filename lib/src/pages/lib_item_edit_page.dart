@@ -34,6 +34,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
         repeat: repeat,
         score: _rating,
         status: _status,
+        synced: false,
         updatedAt: DateTime.now(),
       );
       Navigator.pop(context, updatedEntry);

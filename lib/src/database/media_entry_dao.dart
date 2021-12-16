@@ -33,6 +33,15 @@ class MediaEntriesDao extends DatabaseAccessor<MyDatabase>
     return query.watch();
   }
 
+  Stream<List<MediaEntry>> getUnsyncedMediaEntries() {
+    final query = select(mediaEntries)
+      ..where((tbl) => tbl.synced.equals(false))
+      ..orderBy([
+        (t) => OrderingTerm.asc(t.updatedAt)
+      ]);
+    return query.watch();
+  }
+
   Future<void> replaceAllEntries(List<MediaEntry> entries) async {
     await delete(mediaEntries).go();
     await batch((batch) {

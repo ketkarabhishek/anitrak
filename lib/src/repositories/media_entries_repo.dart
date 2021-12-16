@@ -20,16 +20,16 @@ class MediaEntriesRepo {
     return mediaEntriesDao.getMediaEntries(status: status);
   }
 
+  Stream<List<MediaEntry>> getUnsyncedMediaEntries() {
+    return mediaEntriesDao.getUnsyncedMediaEntries();
+  }
+
   Future<void> updateMediaEntry(MediaEntry entry) async {
     await mediaEntriesDao.updateMediaEntry(entry);
-    final varMap = {
-      'id': entry.alEntryId,
-      'mediaId': entry.alMediaId,
-      'status': entry.status,
-      'score': entry.score,
-      'progress': entry.progress,
-      'repeat': entry.repeat,
-    };
+  }
+
+  Future<void> updateAnilistEntry(MediaEntry entry) async {
+    final varMap = entry.toAnilistMap();
     await client.saveMediaListEntry(varMap);
   }
 

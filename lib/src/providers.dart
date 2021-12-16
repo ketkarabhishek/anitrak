@@ -16,21 +16,29 @@ class Providers extends StatefulWidget {
 }
 
 class _ProvidersState extends State<Providers> {
-  final MyDatabase db = MyDatabase();
-  final AccountsRepo accountsRepo = AccountsRepo();
+  final MyDatabase _db = MyDatabase();
+  final AccountsRepo _accountsRepo = AccountsRepo();
+  late final MediaEntriesRepo _mediaEntriesRepo; 
+
+  @override
+  void initState() {
+    final anilistClient = AnilistClient.create(repo: _accountsRepo);
+    _mediaEntriesRepo = MediaEntriesRepo(
+              mediaEntriesDao: _db.mediaEntriesDao, client: anilistClient);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AccountsBloc(accountsRepo)
+      lazy: false,
+      create: (context) => AccountsBloc(_accountsRepo, _mediaEntriesRepo)
         ..add(
           AccountsInitializedEvent(),
         ),
       child: RepositoryProvider<MediaEntriesRepo>(
         create: (_) {
-          final anilistClient = AnilistClient.create(repo: accountsRepo);
-          return MediaEntriesRepo(
-              mediaEntriesDao: db.mediaEntriesDao, client: anilistClient);
+          return _mediaEntriesRepo;
         },
         child: widget.child,
       ),

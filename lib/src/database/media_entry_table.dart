@@ -19,6 +19,8 @@ class MediaEntries extends Table {
   IntColumn get total => integer()();
   IntColumn get malMediaId => integer().nullable()();
 
+  BoolColumn get synced => boolean()();
+
   @override
   Set<Column> get primaryKey => {id};
 

@@ -24,53 +24,45 @@ class _LibraryPageState extends State<LibraryPage> {
       child: DefaultTabController(
         length: 5,
         child: Scaffold(
-          floatingActionButton: BlocBuilder<LibPageBloc, LibPageState>(
-            builder: (context, _) {
-              return FloatingActionButton(
-                child: const Icon(Icons.download_sharp),
-                onPressed: () async {
-                  BlocProvider.of<LibPageBloc>(context)
-                      .add(LibraryImportedEvent());
+          body: NestedScrollView(
+              floatHeaderSlivers: true,
+              headerSliverBuilder: (context, _) {
+                return <Widget>[
+                  SliverAppBar(
+                    title: const Text('Library'),
+                    pinned: true,
+                    floating: true,
+                    bottom: TabBar(
+                      isScrollable: true,
+                      indicatorColor: Theme.of(context).colorScheme.secondary,
+                      tabs: const [
+                        Tab(child: Text('Watching')),
+                        Tab(child: Text('Completed')),
+                        Tab(child: Text('Planned')),
+                        Tab(child: Text('On Hold')),
+                        Tab(child: Text('Dropped')),
+                      ],
+                    ),
+                  ),
+                ];
+              },
+              body: BlocBuilder<LibPageBloc, LibPageState>(
+                builder: (context, state) {
+                  if (state is LibPageLoading) {
+                    return const CircularProgressIndicator();
+                  }
+                  final libData = state as LibPageData;
+                  return TabBarView(
+                    children: [
+                      _libraryListView(libData.currentEntriesStream),
+                      _libraryListView(libData.completedEntriesStream),
+                      _libraryListView(libData.plannedEntriesStream),
+                      _libraryListView(libData.onholdEntriesStream),
+                      _libraryListView(libData.droppedEntriesStream),
+                    ],
+                  );
                 },
-              );
-            },
-          ),
-          body: NestedScrollView(headerSliverBuilder: (context, _) {
-            return <Widget>[
-              SliverAppBar(
-                title: const Text('Library'),
-                pinned: true,
-                floating: true,
-                bottom: TabBar(
-                  isScrollable: true,
-                  indicatorColor: Theme.of(context).colorScheme.secondary,
-                  tabs: const [
-                    Tab(child: Text('Watching')),
-                    Tab(child: Text('Completed')),
-                    Tab(child: Text('Planned')),
-                    Tab(child: Text('On Hold')),
-                    Tab(child: Text('Dropped')),
-                  ],
-                ),
-              ),
-            ];
-          }, body: BlocBuilder<LibPageBloc, LibPageState>(
-            builder: (context, state) {
-              if (state is LibPageLoading) {
-                return const CircularProgressIndicator();
-              }
-              final libData = state as LibPageData;
-              return TabBarView(
-                children: [
-                  _libraryListView(libData.currentEntriesStream),
-                  _libraryListView(libData.completedEntriesStream),
-                  _libraryListView(libData.plannedEntriesStream),
-                  _libraryListView(libData.onholdEntriesStream),
-                  _libraryListView(libData.droppedEntriesStream),
-                ],
-              );
-            },
-          )),
+              )),
         ),
       ),
     );
@@ -103,7 +95,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   ),
                 );
                 BlocProvider.of<LibPageBloc>(context)
-                      .add(LibraryEntryUpdated(result!));
+                    .add(LibraryEntryUpdated(result!));
               },
             ),
           );

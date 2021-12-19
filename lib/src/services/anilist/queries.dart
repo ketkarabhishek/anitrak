@@ -89,3 +89,15 @@ query ($userId: Int, $type: MediaType) {
 }
 
 ''';
+
+const getCurrentUserId = r'''
+query{
+  Viewer{
+    id
+    name
+    avatar {
+      medium
+    }
+  }
+}
+''';

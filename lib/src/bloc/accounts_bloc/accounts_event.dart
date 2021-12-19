@@ -7,3 +7,5 @@ class AccountsInitializedEvent extends AccountsEvent{}
 class AnilistLoginEvent extends AccountsEvent{}
 
 class AnilistLogoutEvent extends AccountsEvent{}
+
+class AnilistLibraryImported extends AccountsEvent{}

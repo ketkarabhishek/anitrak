@@ -1,4 +1,4 @@
-import 'package:anitrak/src/repositories/accounts_repo.dart';
+import 'package:anitrak/src/repositories/preferences_repo.dart';
 import 'package:anitrak/src/services/anilist/queries.dart' as queries;
 import 'package:anitrak/src/services/anilist/mutations.dart' as mutations;
 import 'package:graphql/client.dart';
@@ -9,10 +9,10 @@ class AnilistClient {
   const AnilistClient({required GraphQLClient graphQLClient})
       : _graphQLClient = graphQLClient;
 
-  factory AnilistClient.create({required AccountsRepo repo}) {
+  factory AnilistClient.create({required PreferencesRepo repo}) {
     final _httpLink = HttpLink('https://graphql.anilist.co/');
     final _authLink = AuthLink(
-      getToken: () async { 
+      getToken: () async {
         final authToken = await repo.anilistAccessToken;
         return 'Bearer $authToken';
       },
@@ -58,6 +58,14 @@ class AnilistClient {
     return result.data?['MediaListCollection'];
   }
 
+  Future<Map<String, dynamic>> getCurrentUserData() async {
+    final result = await _graphQLClient.query(
+      QueryOptions(document: gql(queries.getCurrentUserId)),
+    );
+    if (result.hasException) throw GraphqlRequestFailure();
+    return result.data?['Viewer'];
+  }
+
   Future<void> saveMediaListEntry(Map<String, dynamic> mediaEntryData) async {
     final result = await _graphQLClient.mutate(
       MutationOptions(
@@ -66,6 +74,5 @@ class AnilistClient {
     );
     if (result.hasException) throw GraphqlRequestFailure();
     return;
-    
   }
 }

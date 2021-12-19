@@ -2,8 +2,15 @@ part of 'accounts_bloc.dart';
 
 class AccountsState {
   const AccountsState({
-    this.anilistAuth = false,
+    this.anilistUserId = '',
+    this.anilistUserName = '',
+    this.anilistAvatar = ''
   });
+  final String anilistUserId;
+  final String anilistUserName;
+  final String anilistAvatar;
 
-  final bool anilistAuth;
+  bool get anilistAuth {
+    return anilistUserId.isNotEmpty;
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:anitrak/src/pages/dashboard_page.dart';
 import 'package:anitrak/src/pages/library_page.dart';
 import 'package:anitrak/src/pages/more_page.dart';
 import 'package:flutter/material.dart';
@@ -91,9 +92,7 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
           child: IndexedStack(
             index: _currentIndex,
             children: const [
-              Center(
-                child: Text("Dashboard"),
-              ),
+              DashboardPage(),
               LibraryPage(),
               MorePage(),
             ],

@@ -16,8 +16,8 @@ class MediaEntriesRepo {
     return mediaEntriesDao.getAllMediaEntries();
   }
 
-  Stream<List<MediaEntry>> getMediaEntries({String status = "CURRENT"}) {
-    return mediaEntriesDao.getMediaEntries(status: status);
+  Stream<List<MediaEntry>> getMediaEntries({String status = "CURRENT", int limit = 0}) {
+    return mediaEntriesDao.getMediaEntries(status: status, limit: limit);
   }
 
   Stream<List<MediaEntry>> getUnsyncedMediaEntries() {

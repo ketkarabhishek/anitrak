@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:anitrak/src/models/media_entry.dart';
-import 'package:anitrak/src/pages/lib_item_edit_page.dart';
 import 'package:flutter/material.dart';
 
 extension ColorExtension on String {

@@ -73,6 +73,9 @@ query ($userId: Int, $type: MediaType) {
         createdAt
         updatedAt
         media {
+          id
+          description
+          duration
           title {
             romaji
           }

@@ -8,11 +8,11 @@ abstract class LibPageState extends Equatable {
 class LibPageLoading extends LibPageState {}
 
 class LibPageData extends LibPageState {
-  final Stream<List<MediaEntry>> currentEntriesStream;
-  final Stream<List<MediaEntry>> completedEntriesStream;
-  final Stream<List<MediaEntry>> plannedEntriesStream;
-  final Stream<List<MediaEntry>> onholdEntriesStream;
-  final Stream<List<MediaEntry>> droppedEntriesStream;
+  final Stream<List<LibraryItem>> currentEntriesStream;
+  final Stream<List<LibraryItem>> completedEntriesStream;
+  final Stream<List<LibraryItem>> plannedEntriesStream;
+  final Stream<List<LibraryItem>> onholdEntriesStream;
+  final Stream<List<LibraryItem>> droppedEntriesStream;
 
   LibPageData({
     required this.currentEntriesStream,

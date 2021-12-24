@@ -1,6 +1,7 @@
 import 'package:anitrak/src/bloc/dashboard_bloc/dashboard_bloc.dart';
+import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
-import 'package:anitrak/src/repositories/media_entries_repo.dart';
+import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/ui_widgets/recents_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +23,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       body: BlocProvider<DashboardBloc>(
         create: (context) {
-          final repo = RepositoryProvider.of<MediaEntriesRepo>(context);
+          final repo = RepositoryProvider.of<MediaLibraryRepo>(context);
           return DashboardBloc(repo)..add(DashboardInitialized());
         },
         child: BlocBuilder<DashboardBloc, DashboardState>(
@@ -38,8 +39,8 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _recentsList(Stream<List<MediaEntry>> recentsStream) {
-    return StreamBuilder<List<MediaEntry>>(
+  Widget _recentsList(Stream<List<LibraryItem>> recentsStream) {
+    return StreamBuilder<List<LibraryItem>>(
       stream: recentsStream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -57,17 +58,17 @@ class _DashboardPageState extends State<DashboardPage> {
           height: 190,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: 10,
+            itemCount: list.length,
             itemBuilder: (context, index) {
               final entry = list[index];
               final width = MediaQuery.of(context).size.width - 20;
               return SizedBox(
                 width: width,
                 child: RecentsListItem(
-                  mediaEntry: entry,
+                  libraryItem: entry,
                   onTapNext: () {
                     final updated =
-                        entry.copyWith(progress: entry.progress + 1);
+                        entry.mediaEntry.copyWith(progress: entry.mediaEntry.progress + 1);
                     BlocProvider.of<DashboardBloc>(context)
                         .add(RecentsUpdated(updated));
                   },

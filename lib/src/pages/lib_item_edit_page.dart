@@ -1,12 +1,13 @@
+import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class LibItemEditPage extends StatefulWidget {
-  const LibItemEditPage({Key? key, required this.mediaEntry}) : super(key: key);
+  const LibItemEditPage({Key? key, required this.libraryItem}) : super(key: key);
 
-  final MediaEntry mediaEntry;
+  final LibraryItem libraryItem;
 
   @override
   _LibItemEditPageState createState() => _LibItemEditPageState();
@@ -15,8 +16,8 @@ class LibItemEditPage extends StatefulWidget {
 class _LibItemEditPageState extends State<LibItemEditPage> {
   final _formKey = GlobalKey<FormState>();
 
-  late int _rating = widget.mediaEntry.score;
-  late String _status = widget.mediaEntry.status;
+  late int _rating = widget.libraryItem.mediaEntry.score;
+  late String _status = widget.libraryItem.mediaEntry.status;
 
   final TextEditingController _progressTextController = TextEditingController();
   final TextEditingController _repeatTextController = TextEditingController();
@@ -29,7 +30,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
     if (_formKey.currentState!.validate()) {
       final progress = int.parse(_progressTextController.text);
       final repeat = int.parse(_repeatTextController.text);
-      final updatedEntry = widget.mediaEntry.copyWith(
+      final updatedEntry = widget.libraryItem.mediaEntry.copyWith(
         progress: progress,
         repeat: repeat,
         score: _rating,
@@ -43,8 +44,8 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
 
   @override
   void initState() {
-    _progressTextController.text = widget.mediaEntry.progress.toString();
-    _repeatTextController.text = widget.mediaEntry.repeat.toString();
+    _progressTextController.text = widget.libraryItem.mediaEntry.progress.toString();
+    _repeatTextController.text = widget.libraryItem.mediaEntry.repeat.toString();
     _progressFocusNode.addListener(() {
       if (_progressFocusNode.hasFocus) {
         _progressTextController.selection = TextSelection(
@@ -109,7 +110,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    widget.mediaEntry.title,
+                    widget.libraryItem.media.title,
                     style: Theme.of(context).textTheme.headline5,
                     textAlign: TextAlign.start,
                   ),
@@ -125,15 +126,15 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                     decoration: InputDecoration(
                         border: const OutlineInputBorder(),
                         label: const Text('Progress'),
-                        suffixText: 'of  ${widget.mediaEntry.total} Episodes'),
+                        suffixText: 'of  ${widget.libraryItem.media.total} Episodes'),
                     validator: (String? value) {
                       if (value == null || value.isEmpty) {
                         return "Please enter a number";
                       }
                       final val = int.parse(value);
-                      if (widget.mediaEntry.total > 0 &&
-                          val > widget.mediaEntry.total) {
-                        return "Please enter a number between 0 and ${widget.mediaEntry.total}";
+                      if (widget.libraryItem.media.total > 0 &&
+                          val > widget.libraryItem.media.total) {
+                        return "Please enter a number between 0 and ${widget.libraryItem.media.total}";
                       }
                       return null;
                     },

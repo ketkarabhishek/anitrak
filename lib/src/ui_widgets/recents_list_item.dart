@@ -1,12 +1,12 @@
-import 'package:anitrak/src/bloc/dashboard_bloc/dashboard_bloc.dart';
+import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
 import 'package:flutter/material.dart';
 
 class RecentsListItem extends StatelessWidget {
-  const RecentsListItem({Key? key, required this.mediaEntry, this.onTapNext})
+  const RecentsListItem({Key? key, required this.libraryItem, this.onTapNext})
       : super(key: key);
 
-  final MediaEntry mediaEntry;
+  final LibraryItem libraryItem;
   final void Function()? onTapNext;
 
   @override
@@ -31,7 +31,7 @@ class RecentsListItem extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  mediaEntry.poster,
+                  libraryItem.media.poster,
                   width: 120,
                   fit: BoxFit.contain,
                 ),
@@ -47,7 +47,7 @@ class RecentsListItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: Text(
-                        mediaEntry.title,
+                        libraryItem.media.title,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w400),
@@ -57,7 +57,7 @@ class RecentsListItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: Text(
-                        '${mediaEntry.progress}/${mediaEntry.total == 0 ? "-" : mediaEntry.total}',
+                        '${libraryItem.mediaEntry.progress}/${libraryItem.media.total == 0 ? "-" : libraryItem.media.total}',
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w300),
@@ -65,8 +65,8 @@ class RecentsListItem extends StatelessWidget {
                       ),
                     ),
                     LinearProgressIndicator(
-                      value: mediaEntry.total > 0
-                          ? mediaEntry.progress / mediaEntry.total
+                      value: libraryItem.media.total > 0
+                          ? libraryItem.mediaEntry.progress / libraryItem.media.total
                           : 0.0,
                       backgroundColor: Colors.grey[300],
                     ),

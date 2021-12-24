@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:anitrak/src/models/media_entry.dart';
+import 'package:anitrak/src/models/media_model.dart';
 import 'package:anitrak/src/repositories/accounts_repo.dart';
-import 'package:anitrak/src/repositories/media_entries_repo.dart';
+import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/repositories/preferences_repo.dart';
 import 'package:bloc/bloc.dart';
 
@@ -11,11 +12,13 @@ part 'accounts_state.dart';
 
 class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   AccountsBloc(
-      this._accountsRepo, this._mediaEntriesRepo, this._preferencesRepo)
-      : super(const AccountsState()) {
+    this._accountsRepo,
+    this._mediaLibraryRepo,
+    this._preferencesRepo,
+  ) : super(const AccountsState()) {
     on<AccountsInitializedEvent>((event, emit) async {
       final anilistToken = await _initializeAnilistAccount();
-      _unsyncedStream = _mediaEntriesRepo.getUnsyncedMediaEntries();
+      _unsyncedStream = _mediaLibraryRepo.getUnsyncedMediaEntries();
       if (anilistToken) {
         _syncAnilist();
       }
@@ -52,13 +55,13 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
     });
 
     on<AnilistLibraryImported>((event, emit) async {
-      await _mediaEntriesRepo.importAnilistLibrary();
+      await _importAnilistLibrary(state.anilistUserId);
     });
   }
 
   final AccountsRepo _accountsRepo;
   final PreferencesRepo _preferencesRepo;
-  final MediaEntriesRepo _mediaEntriesRepo;
+  final MediaLibraryRepo _mediaLibraryRepo;
 
   late StreamSubscription<List<MediaEntry>> _unsyncedStreamSub;
   late Stream<List<MediaEntry>> _unsyncedStream;
@@ -89,7 +92,18 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   Future<void> _syncAnilist() async {
     _unsyncedStreamSub = _unsyncedStream.listen((entries) async {
       await Future.wait(
-          entries.map((e) => _mediaEntriesRepo.updateAnilistEntry(e)));
+        entries.map(
+          (e) => _mediaLibraryRepo.updateAnilistEntry(e),
+        ),
+      );
+       await Future.wait(
+        entries.map(
+          (e){
+            final updated = e.copyWith(synced: true);
+            return _mediaLibraryRepo.updateMediaEntry(updated);
+          },
+        ),
+      );
     });
   }
 
@@ -101,5 +115,21 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
     await _preferencesRepo.saveAnilistUserData(
         userId: userId, userName: userName, avatar: avatar);
     return userId;
+  }
+
+  Future<void> _importAnilistLibrary(String userId) async {
+    final jsonList = await _mediaLibraryRepo.getUserMediaList(userId);
+    var mediaList = <MediaModel>[];
+    var mediaEntryList = <MediaEntry>[];
+
+    for (var e in jsonList) {
+      final media = MediaModel.fromAnilistJson(e['media']);
+      final mediaEntry = MediaEntry.fromAnilistJson(e, media.id);
+      mediaList.add(media);
+      mediaEntryList.add(mediaEntry);
+    }
+
+    await _mediaLibraryRepo.replaceAllMedia(mediaList);
+    await _mediaLibraryRepo.replaceAllMediaEntries(mediaEntryList);
   }
 }

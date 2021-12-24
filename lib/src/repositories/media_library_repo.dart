@@ -1,0 +1,65 @@
+import 'package:anitrak/src/database/media_library_dao.dart';
+import 'package:anitrak/src/models/library_item.dart';
+import 'package:anitrak/src/models/media_entry.dart';
+import 'package:anitrak/src/models/media_model.dart';
+import 'package:anitrak/src/services/anilist/anilist_client.dart';
+
+class MediaLibraryRepo {
+  MediaLibraryRepo({
+    required this.mediaLibraryDao,
+    required this.client,
+  });
+
+  final MediaLibraryDao mediaLibraryDao;
+
+  final AnilistClient client;
+
+  Stream<List<MediaEntry>> getAllMediaEntries() { 
+    return mediaLibraryDao.getAllMediaEntries();
+  }
+
+  Stream<List<MediaEntry>> getMediaEntries({String status = "CURRENT", int limit = 0}) {
+    return mediaLibraryDao.getMediaEntries(status: status, limit: limit);
+  }
+
+  Stream<List<MediaEntry>> getUnsyncedMediaEntries() {
+    return mediaLibraryDao.getUnsyncedMediaEntries();
+  }
+
+  Future<void> updateMediaEntry(MediaEntry entry) async {
+    await mediaLibraryDao.updateMediaEntry(entry);
+  }
+
+  Future<void> updateAnilistEntry(MediaEntry entry) async {
+    final varMap = entry.toAnilistMap();
+    await client.saveMediaListEntry(varMap);
+  }
+
+  Future<List<dynamic>> getUserMediaList(String userId) async {
+    final json = await client.getMediaListCollection(int.parse(userId), "ANIME");
+    final lists = json['lists'] as List;
+    final filteredList =
+        lists.where((element) => !element['isCustomList']).toList();
+    final reducedList = filteredList.map((e){
+      return e['entries'] as List;
+    })
+    .toList()
+    .reduce((value, element) => value + element);
+    return reducedList;
+  }
+
+   Future<void> replaceAllMediaEntries(List<MediaEntry> mediaList) async{
+    await mediaLibraryDao.replaceAllEntries(mediaList);
+  }
+
+  // ---- Media ----
+  Future<void> replaceAllMedia(List<MediaModel> mediaList) async{
+    await mediaLibraryDao.replaceAllMedia(mediaList);
+  }
+
+  // ---- Library Item ----
+  Stream<List<LibraryItem>> getLibraryStream({String status = "CURRENT", int limit = 0}) {
+    return mediaLibraryDao.watchLibraryItems(status: status, limit: limit);
+  }
+
+}

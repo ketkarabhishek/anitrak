@@ -1,7 +1,8 @@
 import 'package:anitrak/src/bloc/lib_page_bloc/lib_page_bloc.dart';
+import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
 import 'package:anitrak/src/pages/lib_item_edit_page.dart';
-import 'package:anitrak/src/repositories/media_entries_repo.dart';
+import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/ui_widgets/lib_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,7 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final repo = RepositoryProvider.of<MediaEntriesRepo>(context);
+        final repo = RepositoryProvider.of<MediaLibraryRepo>(context);
         return LibPageBloc(repo)..add(LibraryFetchedEvent());
       },
       child: DefaultTabController(
@@ -68,8 +69,8 @@ class _LibraryPageState extends State<LibraryPage> {
     );
   }
 
-  Widget _libraryListView(Stream<List<MediaEntry>> stream) {
-    return StreamBuilder<List<MediaEntry>>(
+  Widget _libraryListView(Stream<List<LibraryItem>> stream) {
+    return StreamBuilder<List<LibraryItem>>(
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -84,18 +85,21 @@ class _LibraryPageState extends State<LibraryPage> {
           return ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) => LibListItem(
-              mediaEntry: data[index],
+              libraryItem: data[index],
               onTap: () async {
                 final result = await Navigator.push<MediaEntry>(
                   context,
                   MaterialPageRoute(
                     builder: (context) => LibItemEditPage(
-                      mediaEntry: data[index],
+                      libraryItem: data[index],
                     ),
                   ),
                 );
+                if (result == null) {
+                  return;
+                }
                 BlocProvider.of<LibPageBloc>(context)
-                    .add(LibraryEntryUpdated(result!));
+                    .add(LibraryEntryUpdated(result));
               },
             ),
           );

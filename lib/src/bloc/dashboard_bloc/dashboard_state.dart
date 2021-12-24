@@ -7,5 +7,5 @@ class DashboardInitial extends DashboardState {}
 class DashboardData extends DashboardState{
   DashboardData(this.recentsStream);
 
-  final Stream<List<MediaEntry>> recentsStream;
+  final Stream<List<LibraryItem>> recentsStream;
 }

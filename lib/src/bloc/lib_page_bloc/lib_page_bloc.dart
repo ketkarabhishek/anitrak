@@ -1,5 +1,6 @@
+import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
-import 'package:anitrak/src/repositories/media_entries_repo.dart';
+import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,13 +10,13 @@ part 'lib_page_state.dart';
 class LibPageBloc extends Bloc<LibPageEvent, LibPageState> {
   LibPageBloc(this.mediaEntriesRepo) : super(LibPageLoading()) {
     on<LibraryFetchedEvent>((event, emit) {
-      final currentStream = mediaEntriesRepo.getMediaEntries(status: 'CURRENT');
+      final currentStream = mediaEntriesRepo.getLibraryStream(status: 'CURRENT');
       final completedStream =
-          mediaEntriesRepo.getMediaEntries(status: 'COMPLETED');
+          mediaEntriesRepo.getLibraryStream(status: 'COMPLETED');
       final plannedStream =
-          mediaEntriesRepo.getMediaEntries(status: 'PLANNING');
-      final droppedStream = mediaEntriesRepo.getMediaEntries(status: 'DROPPED');
-      final onholdStream = mediaEntriesRepo.getMediaEntries(status: 'PAUSED');
+          mediaEntriesRepo.getLibraryStream(status: 'PLANNING');
+      final droppedStream = mediaEntriesRepo.getLibraryStream(status: 'DROPPED');
+      final onholdStream = mediaEntriesRepo.getLibraryStream(status: 'PAUSED');
 
       emit(
         LibPageData(
@@ -33,5 +34,5 @@ class LibPageBloc extends Bloc<LibPageEvent, LibPageState> {
     });
   }
 
-  final MediaEntriesRepo mediaEntriesRepo;
+  final MediaLibraryRepo mediaEntriesRepo;
 }

@@ -1,3 +1,4 @@
+import 'package:anitrak/src/database/media_table.dart';
 import 'package:anitrak/src/models/media_entry.dart';
 import 'package:drift/drift.dart';
 
@@ -5,7 +6,6 @@ import 'package:drift/drift.dart';
 class MediaEntries extends Table {
   TextColumn get id => text()();
   IntColumn get alEntryId => integer()();
-  IntColumn get alMediaId => integer()();
   TextColumn get status => text()();
   IntColumn get score => integer()();
   IntColumn get progress => integer()();
@@ -13,13 +13,9 @@ class MediaEntries extends Table {
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 
-  TextColumn get title => text()();
-  TextColumn get poster => text()();
-  TextColumn get color => text()();
-  IntColumn get total => integer()();
-  IntColumn get malMediaId => integer().nullable()();
-
   BoolColumn get synced => boolean()();
+
+  TextColumn get media => text().nullable().references(Media, #id)();
 
   @override
   Set<Column> get primaryKey => {id};

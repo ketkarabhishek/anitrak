@@ -8,7 +8,7 @@ query ($id: Int, $page: Int, $perPage: Int, $search: String) {
       hasNextPage
       perPage
     }
-    media (id: $id, search: $search, type: ANIME) {
+    media (id: $id, search: $search, type: ANIME, sort: POPULARITY_DESC) {
       id
       description
       duration

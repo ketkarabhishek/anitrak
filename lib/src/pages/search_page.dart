@@ -13,6 +13,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  TextEditingController _editingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -31,12 +33,21 @@ class _SearchPageState extends State<SearchPage> {
               preferredSize: Size.fromHeight(2.0)),
           title: Builder(builder: (context) {
             return TextField(
+              controller: _editingController,
               onChanged: (String text) {
                 BlocProvider.of<SearchBloc>(context)
                     .add(MediaSearchEvent(search: text));
               },
-              decoration: const InputDecoration(
-                  hintText: "Search...", border: InputBorder.none),
+              decoration: InputDecoration(
+                hintText: "Search...",
+                border: InputBorder.none,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _editingController.clear();
+                  },
+                  icon: const Icon(Icons.close_sharp,),
+                ),
+              ),
             );
           }),
         ),
@@ -59,7 +70,9 @@ class _SearchPageState extends State<SearchPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MediaDetailPage(media: data.mediaList[index],),
+                          builder: (context) => MediaDetailPage(
+                            media: data.mediaList[index],
+                          ),
                         ),
                       );
                     },

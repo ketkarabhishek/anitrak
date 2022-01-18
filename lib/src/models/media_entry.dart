@@ -40,7 +40,8 @@ class MediaEntry extends Insertable<MediaEntry> {
         media = mediaId,
         synced = true;
 
-  MediaEntry.createNewEntry({required String mediaId, String mstatus = "CURRENT"})
+  MediaEntry.createNewEntry(
+      {required String mediaId, String mstatus = "CURRENT"})
       : id = const Uuid().v4(),
         alEntryId = 0,
         status = mstatus,
@@ -66,14 +67,16 @@ class MediaEntry extends Insertable<MediaEntry> {
     };
   }
 
-  Map<String, dynamic> toAnilistMap() {
-    return {
-      'id': alEntryId,
+  Map<String, dynamic> toAnilistMap({required int mediaId}) {
+    var varMap = {
+      'id': alEntryId != 0 ? alEntryId : null,
+      'mediaId': mediaId,
       'status': status,
       'score': score,
       'progress': progress,
       'repeat': repeat,
     };
+    return varMap;
   }
 
   MediaEntry copyWith({
@@ -88,17 +91,16 @@ class MediaEntry extends Insertable<MediaEntry> {
     bool? synced,
   }) {
     return MediaEntry(
-      id: id,
-      alEntryId: alEntryId ?? this.alEntryId,
-      media: media ?? this.media,
-      status: status ?? this.status,
-      score: score ?? this.score,
-      progress: progress ?? this.progress,
-      repeat: repeat ?? this.repeat,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      synced: synced ?? this.synced
-    );
+        id: id,
+        alEntryId: alEntryId ?? this.alEntryId,
+        media: media ?? this.media,
+        status: status ?? this.status,
+        score: score ?? this.score,
+        progress: progress ?? this.progress,
+        repeat: repeat ?? this.repeat,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        synced: synced ?? this.synced);
   }
 
   @override

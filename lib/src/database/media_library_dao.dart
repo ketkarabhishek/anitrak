@@ -96,6 +96,14 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     return query.watch();
   }
 
+  Future<MediaModel> getMedia({required String id,}) async {
+    final query = select(media);
+    if(id.isNotEmpty){
+      query.where((tbl) => tbl.id.equals(id));
+    }
+    return query.getSingle();
+  }
+
   Future<void> replaceAllMedia(List<MediaModel> entries) async {
     await delete(media).go();
 

@@ -82,7 +82,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   libraryItem: entry,
                   onTapNext: () {
                     final updated = entry.mediaEntry
-                        .copyWith(progress: entry.mediaEntry.progress + 1);
+                        .copyWith(progress: entry.mediaEntry.progress + 1, synced: false);
                     BlocProvider.of<DashboardBloc>(context)
                         .add(RecentsUpdated(updated));
                   },

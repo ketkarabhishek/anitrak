@@ -66,13 +66,14 @@ class AnilistClient {
     return result.data?['Viewer'];
   }
 
-  Future<void> saveMediaListEntry(Map<String, dynamic> mediaEntryData) async {
+  Future<int> saveMediaListEntry(Map<String, dynamic> mediaEntryData) async {
     final result = await _graphQLClient.mutate(
       MutationOptions(
           document: gql(mutations.saveMediaListEntry),
           variables: mediaEntryData),
     );
+    final data = result.data?['SaveMediaListEntry']['id'];
     if (result.hasException) throw GraphqlRequestFailure();
-    return;
+    return data;
   }
 }

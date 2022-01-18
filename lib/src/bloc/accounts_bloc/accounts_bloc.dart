@@ -20,7 +20,7 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
       final anilistToken = await _initializeAnilistAccount();
       _unsyncedStream = _mediaLibraryRepo.getUnsyncedMediaEntries();
       if (anilistToken) {
-        // _syncAnilist();
+        _syncAnilist();
       }
       final anilistUserId = await _preferencesRepo.anilistUserId;
       final anilistUserName = await _preferencesRepo.anilistUserName;
@@ -93,12 +93,15 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
     _unsyncedStreamSub = _unsyncedStream.listen((entries) async {
       await Future.wait(
         entries.map(
-          (e) => _mediaLibraryRepo.updateAnilistEntry(e),
+          (e) async {
+            final media = await _mediaLibraryRepo.getMedia(id: e.media!);
+            _mediaLibraryRepo.saveAnilistEntry(e, mediaId: media.alMediaId);
+          },
         ),
       );
-       await Future.wait(
+      await Future.wait(
         entries.map(
-          (e){
+          (e) {
             final updated = e.copyWith(synced: true);
             return _mediaLibraryRepo.updateMediaEntry(updated);
           },

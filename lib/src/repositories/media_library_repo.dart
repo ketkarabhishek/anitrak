@@ -45,6 +45,10 @@ class MediaLibraryRepo {
     await mediaLibraryDao.replaceAllMedia(mediaList);
   }
 
+  Future<MediaModel> getMedia({required String id}) async {
+    return mediaLibraryDao.getMedia(id: id);
+  }
+
   // Library Item
   Stream<List<LibraryItem>> getLibraryStream({String status = "CURRENT", int limit = 0}) {
     return mediaLibraryDao.watchLibraryItems(status: status, limit: limit);
@@ -56,9 +60,9 @@ class MediaLibraryRepo {
   }
 
   // ====Anilist====
-  Future<void> updateAnilistEntry(MediaEntry entry) async {
-    final varMap = entry.toAnilistMap();
-    await client.saveMediaListEntry(varMap);
+  Future<int> saveAnilistEntry(MediaEntry entry, {required int mediaId}) async {
+    final varMap = entry.toAnilistMap(mediaId: mediaId);
+    return client.saveMediaListEntry(varMap);
   }
 
   Future<List<dynamic>> getUserMediaList(String userId) async {

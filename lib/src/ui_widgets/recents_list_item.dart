@@ -1,5 +1,6 @@
 import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class RecentsListItem extends StatelessWidget {
@@ -30,8 +31,8 @@ class RecentsListItem extends StatelessWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  libraryItem.media.poster,
+                child: CachedNetworkImage(
+                  imageUrl: libraryItem.media.poster,
                   width: 120,
                   fit: BoxFit.contain,
                 ),

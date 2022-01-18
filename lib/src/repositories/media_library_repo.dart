@@ -14,6 +14,8 @@ class MediaLibraryRepo {
 
   final AnilistClient client;
 
+  // ====DB====
+  // MediaEntry
   Stream<List<MediaEntry>> getAllMediaEntries() { 
     return mediaLibraryDao.getAllMediaEntries();
   }
@@ -26,10 +28,34 @@ class MediaLibraryRepo {
     return mediaLibraryDao.getUnsyncedMediaEntries();
   }
 
+  Future<MediaEntry?> getMediaEntry({int alMediaId = 0, int malMediaId = 0}){
+    return mediaLibraryDao.getMediaEntry(alMediaId: alMediaId, malMediaId: malMediaId);
+  }
+
   Future<void> updateMediaEntry(MediaEntry entry) async {
     await mediaLibraryDao.updateMediaEntry(entry);
   }
 
+   Future<void> replaceAllMediaEntries(List<MediaEntry> mediaList) async{
+    await mediaLibraryDao.replaceAllEntries(mediaList);
+  }
+
+  // Media
+  Future<void> replaceAllMedia(List<MediaModel> mediaList) async{
+    await mediaLibraryDao.replaceAllMedia(mediaList);
+  }
+
+  // Library Item
+  Stream<List<LibraryItem>> getLibraryStream({String status = "CURRENT", int limit = 0}) {
+    return mediaLibraryDao.watchLibraryItems(status: status, limit: limit);
+  }
+
+  Future<void> insertLibraryItem(LibraryItem item) async {
+    await mediaLibraryDao.insertMedia(item.media);
+    await mediaLibraryDao.insertMediaEntry(item.mediaEntry);
+  }
+
+  // ====Anilist====
   Future<void> updateAnilistEntry(MediaEntry entry) async {
     final varMap = entry.toAnilistMap();
     await client.saveMediaListEntry(varMap);
@@ -47,19 +73,11 @@ class MediaLibraryRepo {
     .reduce((value, element) => value + element);
     return reducedList;
   }
-
-   Future<void> replaceAllMediaEntries(List<MediaEntry> mediaList) async{
-    await mediaLibraryDao.replaceAllEntries(mediaList);
-  }
-
-  // ---- Media ----
-  Future<void> replaceAllMedia(List<MediaModel> mediaList) async{
-    await mediaLibraryDao.replaceAllMedia(mediaList);
-  }
-
-  // ---- Library Item ----
-  Stream<List<LibraryItem>> getLibraryStream({String status = "CURRENT", int limit = 0}) {
-    return mediaLibraryDao.watchLibraryItems(status: status, limit: limit);
+  
+  Future<List<MediaModel>> getAnilistMedia({String? search}) async {
+    final json = await client.getMedia(search: search);
+    final jsonList = json["media"] as List;
+    return jsonList.map((e) => MediaModel.fromAnilistJson(e)).toList();
   }
 
 }

@@ -42,6 +42,30 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     return query.watch();
   }
 
+  Future<MediaEntry?> getMediaEntry(
+      {int alMediaId = 0, int malMediaId = 0}) async {
+    final mediaQuery = select(media)
+      ..limit(1);
+    
+    if(alMediaId !=0){
+      mediaQuery.where((tbl) => tbl.alMediaId.equals(alMediaId));
+    }
+    
+    if(malMediaId != 0){
+      mediaQuery.where((tbl) => tbl.malMediaId.equals(malMediaId));
+    }
+
+     final row = await mediaQuery.join([
+      leftOuterJoin(
+        mediaEntries,
+        mediaEntries.media.equalsExp(media.id),
+      ),
+    ])
+    .getSingleOrNull();
+
+    return row?.readTable(mediaEntries);
+  }
+
   Future<void> replaceAllEntries(List<MediaEntry> entries) async {
     await delete(mediaEntries).go();
     await batch((batch) {
@@ -53,6 +77,10 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
 
   Future<void> updateMediaEntry(MediaEntry entry) async {
     await update(mediaEntries).replace(entry);
+  }
+
+  Future<void> insertMediaEntry(MediaEntry entry) async {
+    await into(mediaEntries).insert(entry);
   }
 
   // Stream<double> getTotalEpisodesWatched(){
@@ -70,10 +98,7 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
 
   Future<void> replaceAllMedia(List<MediaModel> entries) async {
     await delete(media).go();
-    // for(var entry in entries){
-    //   await into(media).insert(entry);
-    // }
-    
+
     await batch((batch) {
       // functions in a batch don't have to be awaited - just
       // await the whole batch afterwards.
@@ -83,6 +108,10 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
 
   Future<void> updateMedia(MediaModel entry) async {
     await update(media).replace(entry);
+  }
+
+  Future<void> insertMedia(MediaModel entry) async {
+    await into(media).insert(entry);
   }
 
   // ---------------

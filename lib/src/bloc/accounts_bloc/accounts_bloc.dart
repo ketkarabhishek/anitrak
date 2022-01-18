@@ -20,7 +20,7 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
       final anilistToken = await _initializeAnilistAccount();
       _unsyncedStream = _mediaLibraryRepo.getUnsyncedMediaEntries();
       if (anilistToken) {
-        _syncAnilist();
+        // _syncAnilist();
       }
       final anilistUserId = await _preferencesRepo.anilistUserId;
       final anilistUserName = await _preferencesRepo.anilistUserName;

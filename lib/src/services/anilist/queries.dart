@@ -8,8 +8,10 @@ query ($id: Int, $page: Int, $perPage: Int, $search: String) {
       hasNextPage
       perPage
     }
-    media (id: $id, search: $search) {
+    media (id: $id, search: $search, type: ANIME) {
       id
+      description
+      duration
       title {
         romaji
       }
@@ -17,6 +19,7 @@ query ($id: Int, $page: Int, $perPage: Int, $search: String) {
         large
         color
       }
+      episodes
     }
   }
 }

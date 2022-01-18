@@ -40,6 +40,18 @@ class MediaEntry extends Insertable<MediaEntry> {
         media = mediaId,
         synced = true;
 
+  MediaEntry.createNewEntry({required String mediaId, String mstatus = "CURRENT"})
+      : id = const Uuid().v4(),
+        alEntryId = 0,
+        status = mstatus,
+        score = 0,
+        progress = 0,
+        repeat = 0,
+        createdAt = DateTime.now(),
+        updatedAt = DateTime.now(),
+        media = mediaId,
+        synced = false;
+
   Map<String, dynamic> toMap() {
     return {
       'alEntryId': alEntryId,

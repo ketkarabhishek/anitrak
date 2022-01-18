@@ -35,7 +35,7 @@ class _AccountsPageState extends State<AccountsPage> {
       child: Card(
         shape: RoundedRectangleBorder(
           side: const BorderSide(
-            color: Colors.white60,
+            // color: Colors.white60,
             width: 1,
           ),
           borderRadius: BorderRadius.circular(10),

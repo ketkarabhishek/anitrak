@@ -20,12 +20,14 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
+        // systemNavigationBarColor: Colors.grey[850],
+        statusBarIconBrightness: Brightness.light
       ),
     );
     return Providers(
       child: MaterialApp(
         title: 'AniTrak',
-        themeMode: ThemeMode.light,
+        themeMode: ThemeMode.dark,
         theme: MyTheme.lightTheme,
         darkTheme: MyTheme.darkTheme,
         home: const App(),

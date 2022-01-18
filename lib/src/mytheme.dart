@@ -16,18 +16,19 @@ class MyTheme {
         labelColor: Colors.black,
       ));
 
-  static ThemeData darkTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0xff121212),
+  static ThemeData darkTheme = ThemeData.dark().copyWith(
+    scaffoldBackgroundColor:  Colors.grey[900],
     colorScheme: const ColorScheme.dark().copyWith(
+      primary: Colors.red,
       secondary: Colors.red,
       secondaryVariant: Colors.red,
     ),
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Color(0xff121212),
+    // bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    //   backgroundColor: Color(0xff121212),
+    // ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.grey[850],
     ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xff121212),
-    ),
-    cardColor: const Color(0xff121212),
+    cardColor: Colors.grey[850],
   );
 }

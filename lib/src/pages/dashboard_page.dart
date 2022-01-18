@@ -1,8 +1,8 @@
 import 'package:anitrak/src/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:anitrak/src/models/library_item.dart';
-import 'package:anitrak/src/models/media_entry.dart';
 import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/ui_widgets/recents_list_item.dart';
+import 'package:anitrak/src/ui_widgets/searchbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,24 +17,38 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        elevation: 0,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            pinned: true,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            centerTitle: true,
+            title: const Text('Anitrak'),
+            bottom: const SearchBar(),
+          ),
+          SliverToBoxAdapter(
+            child: _getBody(),
+          ),
+        ],
       ),
-      body: BlocProvider<DashboardBloc>(
-        create: (context) {
-          final repo = RepositoryProvider.of<MediaLibraryRepo>(context);
-          return DashboardBloc(repo)..add(DashboardInitialized());
+    );
+  }
+
+  Widget _getBody() {
+    return BlocProvider<DashboardBloc>(
+      create: (context) {
+        final repo = RepositoryProvider.of<MediaLibraryRepo>(context);
+        return DashboardBloc(repo)..add(DashboardInitialized());
+      },
+      child: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          if (state is DashboardData) {
+            final data = state;
+            return _recentsList(data.recentsStream);
+          }
+          return const Center(child: CircularProgressIndicator());
         },
-        child: BlocBuilder<DashboardBloc, DashboardState>(
-          builder: (context, state) {
-            if (state is DashboardData) {
-              final data = state;
-              return _recentsList(data.recentsStream);
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
       ),
     );
   }
@@ -67,8 +81,8 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: RecentsListItem(
                   libraryItem: entry,
                   onTapNext: () {
-                    final updated =
-                        entry.mediaEntry.copyWith(progress: entry.mediaEntry.progress + 1);
+                    final updated = entry.mediaEntry
+                        .copyWith(progress: entry.mediaEntry.progress + 1);
                     BlocProvider.of<DashboardBloc>(context)
                         .add(RecentsUpdated(updated));
                   },

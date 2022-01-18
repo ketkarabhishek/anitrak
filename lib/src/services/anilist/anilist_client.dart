@@ -26,7 +26,7 @@ class AnilistClient {
   final GraphQLClient _graphQLClient;
 
   Future<Map<String, dynamic>> getMedia(
-      {int? id, int page = 1, int perPage = 3, String? search}) async {
+      {int? id, int page = 1, int perPage = 10, String? search}) async {
     var variables = <String, dynamic>{
       "search": search,
       "page": page,

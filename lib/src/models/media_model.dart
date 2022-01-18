@@ -28,8 +28,8 @@ class MediaModel extends Insertable<MediaModel> {
   MediaModel.fromAnilistJson(Map<String, dynamic> json)
       : id = const Uuid().v4(),
         alMediaId = json['id'],
-        description = json['description'],
-        duration = json['duration'],
+        description = json['description'] ?? "",
+        duration = json['duration'] ?? 0,
         title = json['title']['romaji'] ?? "",
         poster = json['coverImage']['large'],
         color = json['coverImage']['color'] ?? "",

@@ -9,9 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MediaDetailPage extends StatefulWidget {
-  const MediaDetailPage({Key? key, required this.media}) : super(key: key);
+  const MediaDetailPage({Key? key, required this.media, this.mediaEntry})
+      : super(key: key);
+
+  MediaDetailPage.withLibraryItem({Key? key, required LibraryItem libraryItem})
+      : media = libraryItem.media,
+        mediaEntry = libraryItem.mediaEntry,
+        super(key: key);
 
   final MediaModel media;
+  final MediaEntry? mediaEntry;
 
   @override
   _MediaDetailPageState createState() => _MediaDetailPageState();
@@ -29,7 +36,13 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
         lazy: false,
         create: (context) {
           final repo = RepositoryProvider.of<MediaLibraryRepo>(context);
-          return MediaPageCubit(repo)..getMediaEntry(widget.media.alMediaId);
+          final cubit = MediaPageCubit(repo);
+          if (widget.mediaEntry == null) {
+            cubit.getMediaEntry(widget.media.alMediaId);
+          } else {
+            cubit.setMediaEntry(widget.mediaEntry!);
+          }
+          return cubit;
         },
         child: SingleChildScrollView(
           child: Column(

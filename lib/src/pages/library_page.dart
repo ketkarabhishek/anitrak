@@ -2,6 +2,7 @@ import 'package:anitrak/src/bloc/lib_page_bloc/lib_page_bloc.dart';
 import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
 import 'package:anitrak/src/pages/lib_item_edit_page.dart';
+import 'package:anitrak/src/pages/media_detail_page.dart';
 import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/ui_widgets/lib_list_item.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,7 @@ class _LibraryPageState extends State<LibraryPage> {
                 final result = await Navigator.push<MediaEntry>(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LibItemEditPage(
+                    builder: (context) => MediaDetailPage.withLibraryItem(
                       libraryItem: data[index],
                     ),
                   ),

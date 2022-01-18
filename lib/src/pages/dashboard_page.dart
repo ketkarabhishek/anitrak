@@ -1,5 +1,6 @@
 import 'package:anitrak/src/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:anitrak/src/models/library_item.dart';
+import 'package:anitrak/src/pages/media_detail_page.dart';
 import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/ui_widgets/recents_list_item.dart';
 import 'package:anitrak/src/ui_widgets/searchbar.dart';
@@ -78,14 +79,27 @@ class _DashboardPageState extends State<DashboardPage> {
               final width = MediaQuery.of(context).size.width - 20;
               return SizedBox(
                 width: width,
-                child: RecentsListItem(
-                  libraryItem: entry,
-                  onTapNext: () {
-                    final updated = entry.mediaEntry
-                        .copyWith(progress: entry.mediaEntry.progress + 1, synced: false);
-                    BlocProvider.of<DashboardBloc>(context)
-                        .add(RecentsUpdated(updated));
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MediaDetailPage.withLibraryItem(
+                          libraryItem: entry,
+                        ),
+                      ),
+                    );
                   },
+                  child: RecentsListItem(
+                    libraryItem: entry,
+                    onTapNext: () {
+                      final updated = entry.mediaEntry.copyWith(
+                          progress: entry.mediaEntry.progress + 1,
+                          synced: false);
+                      BlocProvider.of<DashboardBloc>(context)
+                          .add(RecentsUpdated(updated));
+                    },
+                  ),
                 ),
               );
             },

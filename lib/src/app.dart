@@ -60,15 +60,15 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
           unselectedItemColor: Colors.grey,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_rounded),
+              icon: Icon(Icons.dashboard_outlined),
               label: "Dashboard",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.list_rounded),
+              icon: Icon(Icons.list_outlined),
               label: "Library",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz_rounded),
+              icon: Icon(Icons.more_horiz_outlined ),
               label: "More",
             ),
           ],

@@ -35,7 +35,7 @@ class MorePage extends StatelessWidget {
               final data = state as ThemeModeState;
               return ListTile(
                 leading: Icon(
-                  Icons.dark_mode_outlined,
+                  Icons.color_lens_outlined,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 title: const Text("Theme"),
@@ -59,6 +59,7 @@ class MorePage extends StatelessWidget {
 
   Widget _getThemeDialog(BuildContext context) {
     return SimpleDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: const Text('Select App Theme'),
       children: [
         SimpleDialogOption(

@@ -82,7 +82,12 @@ class _LibraryPageState extends State<LibraryPage> {
         if (snapshot.hasData) {
           final data = snapshot.requireData;
           if (data.isEmpty) {
-            return const Center(child: Text("Empty"));
+            return Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: Image.asset('images/no_data.png',),
+              ),
+            );
           }
           return ListView.builder(
             itemCount: data.length,

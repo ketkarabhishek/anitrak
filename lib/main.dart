@@ -1,8 +1,9 @@
 import 'package:anitrak/src/app.dart';
+import 'package:anitrak/src/cubits/theme_cubit/theme_cubit.dart';
 import 'package:anitrak/src/mytheme.dart';
 import 'package:anitrak/src/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,20 +18,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        // systemNavigationBarColor: Colors.grey[850],
-        statusBarIconBrightness: Brightness.light
-      ),
-    );
     return Providers(
-      child: MaterialApp(
-        title: 'AniTrak',
-        themeMode: ThemeMode.dark,
-        theme: MyTheme.lightTheme,
-        darkTheme: MyTheme.darkTheme,
-        home: const App(),
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          final data = state as ThemeModeState;
+          return MaterialApp(
+            title: 'AniTrak',
+            themeMode: data.themeMode,
+            theme: MyTheme.lightTheme,
+            darkTheme: MyTheme.darkTheme,
+            home: const App(),
+          );
+        },
       ),
     );
   }

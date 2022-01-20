@@ -1,4 +1,5 @@
 import 'package:anitrak/src/bloc/accounts_bloc/accounts_bloc.dart';
+import 'package:anitrak/src/cubits/theme_cubit/theme_cubit.dart';
 import 'package:anitrak/src/database/database.dart';
 import 'package:anitrak/src/repositories/accounts_repo.dart';
 import 'package:anitrak/src/repositories/media_library_repo.dart';
@@ -33,16 +34,24 @@ class _ProvidersState extends State<Providers> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      lazy: false,
-      create: (context) => AccountsBloc(
-        _accountsRepo,
-        _mediaLibraryRepo,
-        _preferencesRepo,
-      )..add(
-          AccountsInitializedEvent(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          lazy: false,
+          create: (context) => AccountsBloc(
+            _accountsRepo,
+            _mediaLibraryRepo,
+            _preferencesRepo,
+          )..add(
+              AccountsInitializedEvent(),
+            ),
         ),
-      child: RepositoryProvider<MediaLibraryRepo>(
+        BlocProvider(
+          lazy: false,
+          create: (context) => ThemeCubit()..initializeTheme(),
+        ),
+      ],
+      child:  RepositoryProvider<MediaLibraryRepo>(
         create: (_) {
           return _mediaLibraryRepo;
         },

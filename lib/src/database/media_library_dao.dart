@@ -44,24 +44,22 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
 
   Future<MediaEntry?> getMediaEntry(
       {int alMediaId = 0, int malMediaId = 0}) async {
-    final mediaQuery = select(media)
-      ..limit(1);
-    
-    if(alMediaId !=0){
+    final mediaQuery = select(media)..limit(1);
+
+    if (alMediaId != 0) {
       mediaQuery.where((tbl) => tbl.alMediaId.equals(alMediaId));
     }
-    
-    if(malMediaId != 0){
+
+    if (malMediaId != 0) {
       mediaQuery.where((tbl) => tbl.malMediaId.equals(malMediaId));
     }
 
-     final row = await mediaQuery.join([
+    final row = await mediaQuery.join([
       leftOuterJoin(
         mediaEntries,
         mediaEntries.media.equalsExp(media.id),
       ),
-    ])
-    .getSingleOrNull();
+    ]).getSingleOrNull();
 
     return row?.readTable(mediaEntries);
   }
@@ -96,9 +94,11 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     return query.watch();
   }
 
-  Future<MediaModel> getMedia({required String id,}) async {
+  Future<MediaModel> getMedia({
+    required String id,
+  }) async {
     final query = select(media);
-    if(id.isNotEmpty){
+    if (id.isNotEmpty) {
       query.where((tbl) => tbl.id.equals(id));
     }
     return query.getSingle();
@@ -157,5 +157,24 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
             },
           ).toList(),
         );
+  }
+
+  Future<LibraryItem> getLibraryItem({required String mediaEntryId}) async {
+    final query = select(mediaEntries)
+      ..where((tbl) => tbl.id.equals(mediaEntryId));
+
+    final row = await query.join(
+      [
+        leftOuterJoin(
+          media,
+          media.id.equalsExp(mediaEntries.media),
+        ),
+      ],
+    ).getSingle();
+
+    return LibraryItem(
+      mediaEntry: row.readTable(mediaEntries),
+      media: row.readTable(media),
+    );
   }
 }

@@ -633,14 +633,242 @@ class $MediaEntriesTable extends MediaEntries
   }
 }
 
+class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
+  final Value<String> id;
+  final Value<int> type;
+  final Value<String> mediaEntryId;
+  final Value<bool> anilist;
+  final Value<bool> kitsu;
+  final Value<bool> mal;
+  const LibraryUpdatesCompanion({
+    this.id = const Value.absent(),
+    this.type = const Value.absent(),
+    this.mediaEntryId = const Value.absent(),
+    this.anilist = const Value.absent(),
+    this.kitsu = const Value.absent(),
+    this.mal = const Value.absent(),
+  });
+  LibraryUpdatesCompanion.insert({
+    required String id,
+    required int type,
+    required String mediaEntryId,
+    required bool anilist,
+    required bool kitsu,
+    required bool mal,
+  })  : id = Value(id),
+        type = Value(type),
+        mediaEntryId = Value(mediaEntryId),
+        anilist = Value(anilist),
+        kitsu = Value(kitsu),
+        mal = Value(mal);
+  static Insertable<LibraryUpdate> custom({
+    Expression<String>? id,
+    Expression<int>? type,
+    Expression<String>? mediaEntryId,
+    Expression<bool>? anilist,
+    Expression<bool>? kitsu,
+    Expression<bool>? mal,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (type != null) 'type': type,
+      if (mediaEntryId != null) 'media_entry_id': mediaEntryId,
+      if (anilist != null) 'anilist': anilist,
+      if (kitsu != null) 'kitsu': kitsu,
+      if (mal != null) 'mal': mal,
+    });
+  }
+
+  LibraryUpdatesCompanion copyWith(
+      {Value<String>? id,
+      Value<int>? type,
+      Value<String>? mediaEntryId,
+      Value<bool>? anilist,
+      Value<bool>? kitsu,
+      Value<bool>? mal}) {
+    return LibraryUpdatesCompanion(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      mediaEntryId: mediaEntryId ?? this.mediaEntryId,
+      anilist: anilist ?? this.anilist,
+      kitsu: kitsu ?? this.kitsu,
+      mal: mal ?? this.mal,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<int>(type.value);
+    }
+    if (mediaEntryId.present) {
+      map['media_entry_id'] = Variable<String>(mediaEntryId.value);
+    }
+    if (anilist.present) {
+      map['anilist'] = Variable<bool>(anilist.value);
+    }
+    if (kitsu.present) {
+      map['kitsu'] = Variable<bool>(kitsu.value);
+    }
+    if (mal.present) {
+      map['mal'] = Variable<bool>(mal.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LibraryUpdatesCompanion(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('mediaEntryId: $mediaEntryId, ')
+          ..write('anilist: $anilist, ')
+          ..write('kitsu: $kitsu, ')
+          ..write('mal: $mal')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LibraryUpdatesTable extends LibraryUpdates
+    with TableInfo<$LibraryUpdatesTable, LibraryUpdate> {
+  final GeneratedDatabase _db;
+  final String? _alias;
+  $LibraryUpdatesTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<int?> type = GeneratedColumn<int?>(
+      'type', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _mediaEntryIdMeta =
+      const VerificationMeta('mediaEntryId');
+  @override
+  late final GeneratedColumn<String?> mediaEntryId = GeneratedColumn<String?>(
+      'media_entry_id', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'REFERENCES media_entries (id)');
+  final VerificationMeta _anilistMeta = const VerificationMeta('anilist');
+  @override
+  late final GeneratedColumn<bool?> anilist = GeneratedColumn<bool?>(
+      'anilist', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (anilist IN (0, 1))');
+  final VerificationMeta _kitsuMeta = const VerificationMeta('kitsu');
+  @override
+  late final GeneratedColumn<bool?> kitsu = GeneratedColumn<bool?>(
+      'kitsu', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (kitsu IN (0, 1))');
+  final VerificationMeta _malMeta = const VerificationMeta('mal');
+  @override
+  late final GeneratedColumn<bool?> mal = GeneratedColumn<bool?>(
+      'mal', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (mal IN (0, 1))');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, type, mediaEntryId, anilist, kitsu, mal];
+  @override
+  String get aliasedName => _alias ?? 'library_updates';
+  @override
+  String get actualTableName => 'library_updates';
+  @override
+  VerificationContext validateIntegrity(Insertable<LibraryUpdate> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('media_entry_id')) {
+      context.handle(
+          _mediaEntryIdMeta,
+          mediaEntryId.isAcceptableOrUnknown(
+              data['media_entry_id']!, _mediaEntryIdMeta));
+    } else if (isInserting) {
+      context.missing(_mediaEntryIdMeta);
+    }
+    if (data.containsKey('anilist')) {
+      context.handle(_anilistMeta,
+          anilist.isAcceptableOrUnknown(data['anilist']!, _anilistMeta));
+    } else if (isInserting) {
+      context.missing(_anilistMeta);
+    }
+    if (data.containsKey('kitsu')) {
+      context.handle(
+          _kitsuMeta, kitsu.isAcceptableOrUnknown(data['kitsu']!, _kitsuMeta));
+    } else if (isInserting) {
+      context.missing(_kitsuMeta);
+    }
+    if (data.containsKey('mal')) {
+      context.handle(
+          _malMeta, mal.isAcceptableOrUnknown(data['mal']!, _malMeta));
+    } else if (isInserting) {
+      context.missing(_malMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LibraryUpdate map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LibraryUpdate(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      type: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}type'])!,
+      mediaEntryId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}media_entry_id'])!,
+      anilist: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}anilist'])!,
+      kitsu: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}kitsu'])!,
+      mal: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}mal'])!,
+    );
+  }
+
+  @override
+  $LibraryUpdatesTable createAlias(String alias) {
+    return $LibraryUpdatesTable(_db, alias);
+  }
+}
+
 abstract class _$MyDatabase extends GeneratedDatabase {
   _$MyDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $MediaTable media = $MediaTable(this);
   late final $MediaEntriesTable mediaEntries = $MediaEntriesTable(this);
+  late final $LibraryUpdatesTable libraryUpdates = $LibraryUpdatesTable(this);
   late final MediaLibraryDao mediaLibraryDao =
       MediaLibraryDao(this as MyDatabase);
+  late final LibraryUpdateDao libraryUpdateDao =
+      LibraryUpdateDao(this as MyDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [media, mediaEntries];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [media, mediaEntries, libraryUpdates];
 }

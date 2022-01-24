@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anitrak/src/models/library_update.dart';
 import 'package:anitrak/src/models/media_entry.dart';
 import 'package:anitrak/src/models/media_model.dart';
 import 'package:anitrak/src/repositories/accounts_repo.dart';
@@ -18,7 +19,6 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   ) : super(const AccountsState()) {
     on<AccountsInitializedEvent>((event, emit) async {
       final anilistToken = await _initializeAnilistAccount();
-      _unsyncedStream = _mediaLibraryRepo.getUnsyncedMediaEntries();
       if (anilistToken) {
         _syncAnilist();
       }
@@ -50,7 +50,6 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
 
     on<AnilistLogoutEvent>((event, emit) async {
       await _preferencesRepo.deleteAnilistToken();
-      _unsyncedStreamSub.cancel();
       emit(const AccountsState());
     });
 
@@ -62,9 +61,6 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   final AccountsRepo _accountsRepo;
   final PreferencesRepo _preferencesRepo;
   final MediaLibraryRepo _mediaLibraryRepo;
-
-  late StreamSubscription<List<MediaEntry>> _unsyncedStreamSub;
-  late Stream<List<MediaEntry>> _unsyncedStream;
 
   Future<bool> _initializeAnilistAccount() async {
     final accessToken = await _preferencesRepo.anilistAccessToken;
@@ -90,24 +86,66 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   }
 
   Future<void> _syncAnilist() async {
-    _unsyncedStreamSub = _unsyncedStream.listen((entries) async {
-      await Future.wait(
-        entries.map(
-          (e) async {
-            final media = await _mediaLibraryRepo.getMedia(id: e.media!);
-            _mediaLibraryRepo.saveAnilistEntry(e, mediaId: media.alMediaId);
-          },
-        ),
-      );
-      await Future.wait(
-        entries.map(
-          (e) {
-            final updated = e.copyWith(synced: true);
-            return _mediaLibraryRepo.updateMediaEntry(updated);
-          },
-        ),
-      );
-    });
+    _syncCreated();
+    _syncUpdated();
+  }
+
+  void _syncCreated() async {
+    _mediaLibraryRepo
+        .getLibraryUpdates(type: LibraryUpdateType.create, anilist: false)
+        .listen(
+      (entries) async {
+        final libItems = await Future.wait(
+          entries.map((e) =>
+              _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),
+        );
+
+        await Future.wait(
+          libItems.map(
+            (e) => _mediaLibraryRepo.saveAnilistEntry(
+              e.mediaEntry,
+              mediaId: e.media.alMediaId,
+            ),
+          ),
+        );
+
+        await Future.wait(
+          entries.map((e){
+            final ue = e.copyWith(anilist: true);
+            return _mediaLibraryRepo.updateLibraryUpdate(ue);
+          })
+        );
+      },
+    );
+  }
+
+  void _syncUpdated() async {
+    _mediaLibraryRepo
+        .getLibraryUpdates(type: LibraryUpdateType.create, anilist: false)
+        .listen(
+      (entries) async {
+        final libItems = await Future.wait(
+          entries.map((e) =>
+              _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),
+        );
+
+        await Future.wait(
+          libItems.map(
+            (e) => _mediaLibraryRepo.saveAnilistEntry(
+              e.mediaEntry,
+              mediaId: e.media.alMediaId,
+            ),
+          ),
+        );
+
+        await Future.wait(
+          entries.map((e){
+            final ue = e.copyWith(anilist: true);
+            return _mediaLibraryRepo.updateLibraryUpdate(ue);
+          })
+        );
+      },
+    );
   }
 
   Future<String> _fetchAndSaveAniistUserData() async {

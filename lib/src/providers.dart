@@ -28,7 +28,10 @@ class _ProvidersState extends State<Providers> {
     final anilistClient = AnilistClient.create(repo: _preferencesRepo);
     _accountsRepo = AccountsRepo(anilistClient: anilistClient);
     _mediaLibraryRepo = MediaLibraryRepo(
-        mediaLibraryDao: _db.mediaLibraryDao, client: anilistClient);
+      mediaLibraryDao: _db.mediaLibraryDao,
+      client: anilistClient,
+      libraryUpdateDao: _db.libraryUpdateDao,
+    );
     super.initState();
   }
 
@@ -51,7 +54,7 @@ class _ProvidersState extends State<Providers> {
           create: (context) => ThemeCubit()..initializeTheme(),
         ),
       ],
-      child:  RepositoryProvider<MediaLibraryRepo>(
+      child: RepositoryProvider<MediaLibraryRepo>(
         create: (_) {
           return _mediaLibraryRepo;
         },

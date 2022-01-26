@@ -52,61 +52,71 @@ class _AccountsPageState extends State<AccountsPage> {
                   style: Theme.of(context).textTheme.headline4,
                 ),
               ),
-              anilistState.anilistAuth
-                  ? Align(
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(anilistState.anilistAvatar),
-                            backgroundColor: Colors.transparent,
-                            radius: 50,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              anilistState.anilistUserName,
-                              style: Theme.of(context).textTheme.headline6,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              anilistState.anilistUserId,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            ),
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () async {
-                              final res = await showDialog<bool>(
-                                context: context,
-                                builder: (context) => _getAlertDialog(),
-                              );
-                              if (res != null && res) {
-                                BlocProvider.of<AnilistAccountBloc>(context)
-                                    .add(AnilistLibraryImported());
-                              }
-                            },
-                            icon: const Icon(Icons.sync),
-                            label: const Text('Import Library'),
-                          ),
-                          OutlinedButton(
-                            onPressed: () {
-                              BlocProvider.of<AnilistAccountBloc>(context)
-                                  .add(AnilistAccountLogout());
-                            },
-                            child: const Text('Logout'),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ElevatedButton(
+              BlocBuilder<AnilistAccountBloc, AnilistAccountState>(
+                builder: (context, state) {
+                  if (state is AnilistAccountLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (state is AnilistAccountDisconnected) {
+                    return ElevatedButton(
                       onPressed: () {
                         BlocProvider.of<AnilistAccountBloc>(context)
                             .add(AnilistAccountLogin());
                       },
                       child: const Text('Connect'),
+                    );
+                  }
+                  final data = state as AnilistAccountConnected;
+                  return Align(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(data.anilistAvatar),
+                          backgroundColor: Colors.transparent,
+                          radius: 50,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            data.anilistUserName,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Text(
+                            data.anilistUserId,
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () async {
+                            final res = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => _getAlertDialog(),
+                            );
+                            if (res != null && res) {
+                              BlocProvider.of<AnilistAccountBloc>(context)
+                                  .add(AnilistLibraryImported());
+                            }
+                          },
+                          icon: const Icon(Icons.sync),
+                          label: const Text('Import Library'),
+                        ),
+                        OutlinedButton(
+                          onPressed: () {
+                            BlocProvider.of<AnilistAccountBloc>(context)
+                                .add(AnilistAccountLogout());
+                          },
+                          child: const Text('Logout'),
+                        ),
+                      ],
                     ),
+                  );
+                },
+              ),
             ],
           ),
         ),

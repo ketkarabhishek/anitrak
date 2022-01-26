@@ -11,21 +11,24 @@ import 'package:bloc/bloc.dart';
 part 'anilist_account_event.dart';
 part 'anilist_account_state.dart';
 
-class AnilistAccountBloc extends Bloc<AnilistAccountEvent, AnilistAccountState> {
+class AnilistAccountBloc
+    extends Bloc<AnilistAccountEvent, AnilistAccountState> {
   AnilistAccountBloc(
     this._accountsRepo,
     this._mediaLibraryRepo,
     this._preferencesRepo,
-  ) : super(const AnilistAccountState()) {
+  ) : super(AnilistAccountLoading()) {
     on<AnilistAccountInitialized>((event, emit) async {
       final anilistToken = await _initializeAnilistAccount();
-      if (anilistToken) {
-        _syncAnilist();
+      if (!anilistToken) {
+        emit(AnilistAccountDisconnected());
+        return;
       }
+      _syncAnilist();
       final anilistUserId = await _preferencesRepo.anilistUserId;
       final anilistUserName = await _preferencesRepo.anilistUserName;
       final anilistAvatar = await _preferencesRepo.anilistAvatar;
-      emit(AnilistAccountState(
+      emit(AnilistAccountConnected(
         anilistUserId: anilistUserId ?? "",
         anilistUserName: anilistUserName ?? "",
         anilistAvatar: anilistAvatar ?? "",
@@ -33,15 +36,17 @@ class AnilistAccountBloc extends Bloc<AnilistAccountEvent, AnilistAccountState> 
     });
 
     on<AnilistAccountLogin>((event, emit) async {
+      emit(AnilistAccountLoading());
       final anilistToken = await _loginAnilist();
       if (!anilistToken) {
+        emit(AnilistAccountDisconnected());
         return;
       }
       final anilistUserId = await _fetchAndSaveAniistUserData();
       final anilistUserName = await _preferencesRepo.anilistUserName;
       final anilistAvatar = await _preferencesRepo.anilistAvatar;
       _syncAnilist();
-      emit(AnilistAccountState(
+      emit(AnilistAccountConnected(
         anilistUserId: anilistUserId,
         anilistUserName: anilistUserName ?? "",
         anilistAvatar: anilistAvatar ?? "",
@@ -49,12 +54,15 @@ class AnilistAccountBloc extends Bloc<AnilistAccountEvent, AnilistAccountState> 
     });
 
     on<AnilistAccountLogout>((event, emit) async {
+      emit(AnilistAccountLoading());
       await _preferencesRepo.deleteAnilistToken();
-      emit(const AnilistAccountState());
+      emit(AnilistAccountDisconnected());
     });
 
     on<AnilistLibraryImported>((event, emit) async {
-      await _importAnilistLibrary(state.anilistUserId);
+      final anilistUserId = await _preferencesRepo.anilistUserId;
+      if(anilistUserId == null) return;
+      await _importAnilistLibrary(anilistUserId);
     });
   }
 
@@ -64,9 +72,8 @@ class AnilistAccountBloc extends Bloc<AnilistAccountEvent, AnilistAccountState> 
 
   Future<bool> _initializeAnilistAccount() async {
     final accessToken = await _preferencesRepo.anilistAccessToken;
-    if (accessToken == null) {
-      return false;
-    }
+    if (accessToken == null) return false;
+
     final expiresIn = await _preferencesRepo.anilistExpiresIn;
     if (DateTime.now().difference(DateTime.parse(expiresIn!)).inDays > 0) {
       // TODO - Implement refresh token
@@ -109,12 +116,10 @@ class AnilistAccountBloc extends Bloc<AnilistAccountEvent, AnilistAccountState> 
           ),
         );
 
-        await Future.wait(
-          entries.map((e){
-            final ue = e.copyWith(anilist: true);
-            return _mediaLibraryRepo.updateLibraryUpdate(ue);
-          })
-        );
+        await Future.wait(entries.map((e) {
+          final ue = e.copyWith(anilist: true);
+          return _mediaLibraryRepo.updateLibraryUpdate(ue);
+        }));
       },
     );
   }
@@ -138,12 +143,10 @@ class AnilistAccountBloc extends Bloc<AnilistAccountEvent, AnilistAccountState> 
           ),
         );
 
-        await Future.wait(
-          entries.map((e){
-            final ue = e.copyWith(anilist: true);
-            return _mediaLibraryRepo.updateLibraryUpdate(ue);
-          })
-        );
+        await Future.wait(entries.map((e) {
+          final ue = e.copyWith(anilist: true);
+          return _mediaLibraryRepo.updateLibraryUpdate(ue);
+        }));
       },
     );
   }

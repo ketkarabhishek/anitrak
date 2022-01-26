@@ -1,7 +1,7 @@
-part of 'accounts_bloc.dart';
+part of 'anilist_account_bloc.dart';
 
-class AccountsState {
-  const AccountsState({
+class AnilistAccountState {
+  const AnilistAccountState({
     this.anilistUserId = '',
     this.anilistUserName = '',
     this.anilistAvatar = ''

@@ -1,4 +1,4 @@
-import 'package:anitrak/src/bloc/accounts_bloc/accounts_bloc.dart';
+import 'package:anitrak/src/bloc/anilist_account_bloc/anilist_account_bloc.dart';
 import 'package:anitrak/src/cubits/theme_cubit/theme_cubit.dart';
 import 'package:anitrak/src/database/database.dart';
 import 'package:anitrak/src/repositories/accounts_repo.dart';
@@ -41,12 +41,12 @@ class _ProvidersState extends State<Providers> {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => AccountsBloc(
+          create: (context) => AnilistAccountBloc(
             _accountsRepo,
             _mediaLibraryRepo,
             _preferencesRepo,
           )..add(
-              AccountsInitializedEvent(),
+              AnilistAccountInitialized(),
             ),
         ),
         BlocProvider(

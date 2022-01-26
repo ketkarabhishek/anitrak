@@ -8,16 +8,16 @@ import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/repositories/preferences_repo.dart';
 import 'package:bloc/bloc.dart';
 
-part 'accounts_event.dart';
-part 'accounts_state.dart';
+part 'anilist_account_event.dart';
+part 'anilist_account_state.dart';
 
-class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
-  AccountsBloc(
+class AnilistAccountBloc extends Bloc<AnilistAccountEvent, AnilistAccountState> {
+  AnilistAccountBloc(
     this._accountsRepo,
     this._mediaLibraryRepo,
     this._preferencesRepo,
-  ) : super(const AccountsState()) {
-    on<AccountsInitializedEvent>((event, emit) async {
+  ) : super(const AnilistAccountState()) {
+    on<AnilistAccountInitialized>((event, emit) async {
       final anilistToken = await _initializeAnilistAccount();
       if (anilistToken) {
         _syncAnilist();
@@ -25,14 +25,14 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
       final anilistUserId = await _preferencesRepo.anilistUserId;
       final anilistUserName = await _preferencesRepo.anilistUserName;
       final anilistAvatar = await _preferencesRepo.anilistAvatar;
-      emit(AccountsState(
+      emit(AnilistAccountState(
         anilistUserId: anilistUserId ?? "",
         anilistUserName: anilistUserName ?? "",
         anilistAvatar: anilistAvatar ?? "",
       ));
     });
 
-    on<AnilistLoginEvent>((event, emit) async {
+    on<AnilistAccountLogin>((event, emit) async {
       final anilistToken = await _loginAnilist();
       if (!anilistToken) {
         return;
@@ -41,16 +41,16 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
       final anilistUserName = await _preferencesRepo.anilistUserName;
       final anilistAvatar = await _preferencesRepo.anilistAvatar;
       _syncAnilist();
-      emit(AccountsState(
+      emit(AnilistAccountState(
         anilistUserId: anilistUserId,
         anilistUserName: anilistUserName ?? "",
         anilistAvatar: anilistAvatar ?? "",
       ));
     });
 
-    on<AnilistLogoutEvent>((event, emit) async {
+    on<AnilistAccountLogout>((event, emit) async {
       await _preferencesRepo.deleteAnilistToken();
-      emit(const AccountsState());
+      emit(const AnilistAccountState());
     });
 
     on<AnilistLibraryImported>((event, emit) async {

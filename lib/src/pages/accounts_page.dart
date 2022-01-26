@@ -1,4 +1,4 @@
-import 'package:anitrak/src/bloc/accounts_bloc/accounts_bloc.dart';
+import 'package:anitrak/src/bloc/anilist_account_bloc/anilist_account_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +17,7 @@ class _AccountsPageState extends State<AccountsPage> {
         title: const Text("Tracking Services"),
         elevation: 0,
       ),
-      body: BlocBuilder<AccountsBloc, AccountsState>(
+      body: BlocBuilder<AnilistAccountBloc, AnilistAccountState>(
         builder: (context, state) {
           return ListView(
             children: [
@@ -29,7 +29,7 @@ class _AccountsPageState extends State<AccountsPage> {
     );
   }
 
-  Widget _anilistCard(AccountsState anilistState) {
+  Widget _anilistCard(AnilistAccountState anilistState) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -83,7 +83,7 @@ class _AccountsPageState extends State<AccountsPage> {
                                 builder: (context) => _getAlertDialog(),
                               );
                               if (res != null && res) {
-                                BlocProvider.of<AccountsBloc>(context)
+                                BlocProvider.of<AnilistAccountBloc>(context)
                                     .add(AnilistLibraryImported());
                               }
                             },
@@ -92,8 +92,8 @@ class _AccountsPageState extends State<AccountsPage> {
                           ),
                           OutlinedButton(
                             onPressed: () {
-                              BlocProvider.of<AccountsBloc>(context)
-                                  .add(AnilistLogoutEvent());
+                              BlocProvider.of<AnilistAccountBloc>(context)
+                                  .add(AnilistAccountLogout());
                             },
                             child: const Text('Logout'),
                           ),
@@ -102,8 +102,8 @@ class _AccountsPageState extends State<AccountsPage> {
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        BlocProvider.of<AccountsBloc>(context)
-                            .add(AnilistLoginEvent());
+                        BlocProvider.of<AnilistAccountBloc>(context)
+                            .add(AnilistAccountLogin());
                       },
                       child: const Text('Connect'),
                     ),

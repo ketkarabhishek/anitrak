@@ -1,4 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesRepo {
   //Anilist store Keys
@@ -8,6 +9,7 @@ class PreferencesRepo {
   final String _anilistUserIdKey = "anilist_user_id";
   final String _anilistUserNameKey = "anilist_user_name";
   final String _anilistAvatarKey = "anilist_avatar";
+  final String _anilistSyncKey = "anilist_sync";
 
   // Anilist JSON Keys
   final String _anilistJsonAccessTokenKey = "access_token";
@@ -37,21 +39,43 @@ class PreferencesRepo {
     return await _storage.read(key: _anilistUserNameKey);
   }
 
-   Future<String?> get anilistAvatar async {
+  Future<String?> get anilistAvatar async {
     return await _storage.read(key: _anilistAvatarKey);
   }
 
+  Future<bool?> get anilistSync async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_anilistSyncKey);
+  }
+
+  void setSync(bool newSync) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_anilistSyncKey, newSync);
+  }
+
   Future<void> saveAnilistToken(Map<String, dynamic> tokenMap) async {
-    await _storage.write(key: _anilistAccessTokenKey, value: tokenMap[_anilistJsonAccessTokenKey]);
-    await _storage.write(key: _anilistRefreshTokenKey, value: tokenMap[_anilistJsonRefreshTokenKey]);
-    final expiresIn = DateTime.now().add(Duration(seconds: tokenMap[_anilistJsonExpiresInKey])).subtract(const Duration(days: 7)).toIso8601String();
+    await _storage.write(
+        key: _anilistAccessTokenKey,
+        value: tokenMap[_anilistJsonAccessTokenKey]);
+    await _storage.write(
+        key: _anilistRefreshTokenKey,
+        value: tokenMap[_anilistJsonRefreshTokenKey]);
+    final expiresIn = DateTime.now()
+        .add(Duration(seconds: tokenMap[_anilistJsonExpiresInKey]))
+        .subtract(const Duration(days: 7))
+        .toIso8601String();
     await _storage.write(key: _anilistExpiresInKey, value: expiresIn);
   }
 
-  Future<void> saveAnilistUserData({ required String userId, required String userName, required String avatar}) async {
+  Future<void> saveAnilistUserData(
+      {required String userId,
+      required String userName,
+      required String avatar}) async {
     await _storage.write(key: _anilistUserIdKey, value: userId);
     await _storage.write(key: _anilistUserNameKey, value: userName);
     await _storage.write(key: _anilistAvatarKey, value: avatar);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_anilistSyncKey, true);
   }
 
   Future<void> deleteAnilistToken() async {

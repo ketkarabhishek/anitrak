@@ -17,27 +17,23 @@ class _AccountsPageState extends State<AccountsPage> {
         title: const Text("Tracking Services"),
         elevation: 0,
       ),
-      body: BlocBuilder<AnilistAccountBloc, AnilistAccountState>(
-        builder: (context, state) {
-          return ListView(
-            children: [
-              _anilistCard(state),
-            ],
-          );
-        },
+      body: ListView(
+        children: [
+          _anilistCard(),
+        ],
       ),
     );
   }
 
-  Widget _anilistCard(AnilistAccountState anilistState) {
+  Widget _anilistCard() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
         shape: RoundedRectangleBorder(
-          side: const BorderSide(
-            // color: Colors.white60,
-            width: 1,
-          ),
+          // side: BorderSide(
+          //   color: Colors.blue[300]!,
+          //   width: 1,
+          // ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
@@ -84,15 +80,24 @@ class _AccountsPageState extends State<AccountsPage> {
                             style: Theme.of(context).textTheme.headline6,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Text(
-                            data.anilistUserId,
-                            style: Theme.of(context).textTheme.subtitle1,
+                        const Divider(),
+                        ListTile(
+                          title: const Text("Sync"),
+                          trailing: Switch(
+                            activeColor: Theme.of(context).colorScheme.primary,
+                            value: data.anilistSync,
+                            onChanged: (bool newValue) {
+                              BlocProvider.of<AnilistAccountBloc>(context)
+                                  .add(AnilistSyncToggled(newValue));
+                            },
                           ),
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () async {
+                        const Divider(),
+                        ListTile(
+                          title: const Text("Import"),
+                          subtitle: const Text(
+                              "Import library from your Anilist account"),
+                          onTap: () async {
                             final res = await showDialog<bool>(
                               context: context,
                               builder: (context) => _getAlertDialog(),
@@ -102,9 +107,8 @@ class _AccountsPageState extends State<AccountsPage> {
                                   .add(AnilistLibraryImported());
                             }
                           },
-                          icon: const Icon(Icons.sync),
-                          label: const Text('Import Library'),
                         ),
+                        const Divider(),
                         OutlinedButton(
                           onPressed: () {
                             BlocProvider.of<AnilistAccountBloc>(context)

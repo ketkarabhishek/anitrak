@@ -24,14 +24,16 @@ class AnilistAccountBloc
         emit(AnilistAccountDisconnected());
         return;
       }
-      _syncAnilist();
       final anilistUserId = await _preferencesRepo.anilistUserId;
       final anilistUserName = await _preferencesRepo.anilistUserName;
       final anilistAvatar = await _preferencesRepo.anilistAvatar;
+      final anilistSync = await _preferencesRepo.anilistSync;
+      _syncAnilist();
       emit(AnilistAccountConnected(
         anilistUserId: anilistUserId ?? "",
         anilistUserName: anilistUserName ?? "",
         anilistAvatar: anilistAvatar ?? "",
+        anilistSync: anilistSync ?? false,
       ));
     });
 
@@ -45,11 +47,13 @@ class AnilistAccountBloc
       final anilistUserId = await _fetchAndSaveAniistUserData();
       final anilistUserName = await _preferencesRepo.anilistUserName;
       final anilistAvatar = await _preferencesRepo.anilistAvatar;
+      final anilistSync = await _preferencesRepo.anilistSync;
       _syncAnilist();
       emit(AnilistAccountConnected(
         anilistUserId: anilistUserId,
         anilistUserName: anilistUserName ?? "",
         anilistAvatar: anilistAvatar ?? "",
+        anilistSync: anilistSync ?? false,
       ));
     });
 
@@ -63,6 +67,12 @@ class AnilistAccountBloc
       final anilistUserId = await _preferencesRepo.anilistUserId;
       if(anilistUserId == null) return;
       await _importAnilistLibrary(anilistUserId);
+    });
+
+    on<AnilistSyncToggled>((event, emit) async {
+      _preferencesRepo.setSync(event.newSync);
+      final data = state as AnilistAccountConnected;
+      emit(data.copyWith(anilistSync: event.newSync));
     });
   }
 
@@ -102,6 +112,7 @@ class AnilistAccountBloc
         .getLibraryUpdates(type: LibraryUpdateType.create, anilist: false)
         .listen(
       (entries) async {
+        if(!(state as AnilistAccountConnected).anilistSync) return;
         final libItems = await Future.wait(
           entries.map((e) =>
               _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),
@@ -129,6 +140,7 @@ class AnilistAccountBloc
         .getLibraryUpdates(type: LibraryUpdateType.create, anilist: false)
         .listen(
       (entries) async {
+        if(!(state as AnilistAccountConnected).anilistSync) return;
         final libItems = await Future.wait(
           entries.map((e) =>
               _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),

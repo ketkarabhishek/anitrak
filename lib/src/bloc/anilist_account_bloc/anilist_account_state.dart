@@ -11,13 +11,20 @@ class AnilistAccountConnected extends AnilistAccountState {
     required this.anilistUserId,
     required this.anilistUserName,
     required this.anilistAvatar,
+    required this.anilistSync,
   });
 
   final String anilistUserId;
   final String anilistUserName;
   final String anilistAvatar;
+  final bool anilistSync;
 
-  bool get anilistAuth {
-    return anilistUserId.isNotEmpty;
+  AnilistAccountConnected copyWith({bool? anilistSync}){
+    return AnilistAccountConnected(
+      anilistAvatar: anilistAvatar,
+      anilistUserId: anilistUserId,
+      anilistUserName: anilistUserName,
+      anilistSync: anilistSync ?? this.anilistSync,
+    );
   }
 }

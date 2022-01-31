@@ -44,6 +44,14 @@ class _DashboardPageState extends State<DashboardPage> {
       },
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
+          if (state is DashboardEmpty) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: Center(
+                child: Text('It\'s very empty here.', style: Theme.of(context).textTheme.subtitle1,),
+              ),
+            );
+          }
           if (state is DashboardData) {
             final data = state;
             return SingleChildScrollView(
@@ -196,7 +204,7 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: const EdgeInsets.all(8.0),
       width: double.infinity,
       child: Card(
-         shape: RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
@@ -205,10 +213,8 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               Text(
                 days.toString(),
-                style: Theme.of(context)
-                    .textTheme
-                    .headline1
-                    ?.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                style: Theme.of(context).textTheme.headline1?.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground),
               ),
               Text(
                 ' days spent watching Anime',

@@ -11,6 +11,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DashboardInitialized>((event, emit) {
       final recentsStream = _mediaLibraryRepo.getLibraryStream();
       recentsStream.listen((library) {
+        if (library.isEmpty) {
+          add(
+            DashboardStateUpdated(
+              DashboardEmpty(),
+            ),
+          );
+          return;
+        }
         final recentsList = library
             .where((item) => item.mediaEntry.status == "CURRENT")
             .take(10)

@@ -4,6 +4,8 @@ abstract class DashboardState {}
 
 class DashboardInitial extends DashboardState {}
 
+class DashboardEmpty extends DashboardState{}
+
 class DashboardData extends DashboardState {
   DashboardData(
     this.recentsList,

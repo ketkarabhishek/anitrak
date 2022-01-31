@@ -14,7 +14,7 @@ class AnilistClient {
     final _authLink = AuthLink(
       getToken: () async {
         final authToken = await repo.anilistAccessToken;
-        return 'Bearer $authToken';
+        return authToken != null ? 'Bearer $authToken' : null;
       },
     );
     final link = /*Link.from([_httpLink]);*/ _authLink.concat(_httpLink);

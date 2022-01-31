@@ -11,7 +11,7 @@ class RecentsUpdated extends DashboardEvent{
 }
 
 class DashboardStateUpdated extends DashboardEvent{
-  final DashboardData dashboardState;
+  final DashboardState dashboardState;
 
   DashboardStateUpdated(this.dashboardState);
 }

@@ -65,13 +65,14 @@ class _DashboardPageState extends State<DashboardPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 16.0),
                     child: Text(
-                      "Anime Count",
+                      "Anime Stats",
                       style: Theme.of(context).textTheme.headline6?.copyWith(
                           color: Theme.of(context).colorScheme.primary),
                       textAlign: TextAlign.start,
                     ),
                   ),
                   _entriesCount(data),
+                  _animeTime(data.totalTime),
                 ],
               ),
             );
@@ -187,6 +188,39 @@ class _DashboardPageState extends State<DashboardPage> {
               fontWeight: FontWeight.w300),
         ),
       ],
+    );
+  }
+
+  Widget _animeTime(int days) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      width: double.infinity,
+      child: Card(
+         shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                days.toString(),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    ?.copyWith(color: Theme.of(context).colorScheme.onBackground),
+              ),
+              Text(
+                ' days spent watching Anime',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

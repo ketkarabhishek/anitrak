@@ -47,7 +47,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           onHoldCount,
           droppedCount,
           totalEpisodes,
-          totalTime,
+          Duration(minutes: totalTime).inDays,
         )));
       });
     });

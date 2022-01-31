@@ -46,7 +46,35 @@ class _DashboardPageState extends State<DashboardPage> {
         builder: (context, state) {
           if (state is DashboardData) {
             final data = state;
-            return _recentsList(data.recentsStream);
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: Text(
+                      "Recents",
+                      style: Theme.of(context).textTheme.headline6?.copyWith(
+                          color: Theme.of(context).colorScheme.primary),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  _recentsList(data.recentsList),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
+                    child: Text(
+                      "Anime Count",
+                      style: Theme.of(context).textTheme.headline6?.copyWith(
+                          color: Theme.of(context).colorScheme.primary),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  _entriesCount(data),
+                ],
+              ),
+            );
           }
           return const Center(child: CircularProgressIndicator());
         },
@@ -54,58 +82,111 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _recentsList(Stream<List<LibraryItem>> recentsStream) {
-    return StreamBuilder<List<LibraryItem>>(
-      stream: recentsStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Center(
-            child: Text('Error'),
-          );
-        }
-        if (!snapshot.hasData) {
-          return const Center(
-            child: Text('Empty'),
-          );
-        }
-        final list = snapshot.data!;
-        return SizedBox(
-          height: 190,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: list.length,
-            itemBuilder: (context, index) {
-              final entry = list[index];
-              final width = MediaQuery.of(context).size.width - 20;
-              return SizedBox(
-                width: width,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MediaDetailPage.withLibraryItem(
-                          libraryItem: entry,
-                        ),
-                      ),
-                    );
-                  },
-                  child: RecentsListItem(
-                    libraryItem: entry,
-                    onTapNext: () {
-                      final updated = entry.mediaEntry.copyWith(
-                          progress: entry.mediaEntry.progress + 1,
-                          synced: false);
-                      BlocProvider.of<DashboardBloc>(context)
-                          .add(RecentsUpdated(updated));
-                    },
+  Widget _recentsList(List<LibraryItem> list) {
+    return SizedBox(
+      height: 190,
+      child: ListView.builder(
+        padding: const EdgeInsets.only(left: 8.0),
+        scrollDirection: Axis.horizontal,
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          final entry = list[index];
+          final width = MediaQuery.of(context).size.width - 20;
+          return SizedBox(
+            width: width,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MediaDetailPage.withLibraryItem(
+                      libraryItem: entry,
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+              child: RecentsListItem(
+                libraryItem: entry,
+                onTapNext: () {
+                  final updated = entry.mediaEntry.copyWith(
+                      progress: entry.mediaEntry.progress + 1, synced: false);
+                  BlocProvider.of<DashboardBloc>(context)
+                      .add(RecentsUpdated(updated));
+                },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _entriesCount(DashboardData data) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Text('Total',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+              Text(
+                data.totalEntries.toString(),
+                style: Theme.of(context).textTheme.headline1?.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground),
+              ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _countWidget(
+                      title: 'Current', value: data.currentCount.toString()),
+                  _countWidget(
+                      title: 'Completed',
+                      value: data.completedCount.toString()),
+                  _countWidget(
+                      title: 'Planned', value: data.plannedCount.toString()),
+                ],
+              ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _countWidget(
+                      title: 'On Hold', value: data.onHoldCount.toString()),
+                  _countWidget(
+                      title: 'Dropped', value: data.droppedCount.toString()),
+                ],
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
+    );
+  }
+
+  Widget _countWidget({required String title, required String value}) {
+    return Column(
+      children: [
+        Text(title,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                ?.copyWith(color: Theme.of(context).colorScheme.primary)),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.headline3?.copyWith(
+              color: Theme.of(context).colorScheme.onBackground,
+              fontWeight: FontWeight.w300),
+        ),
+      ],
     );
   }
 }

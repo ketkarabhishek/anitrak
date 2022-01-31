@@ -60,7 +60,7 @@ class MediaLibraryRepo {
 
   // Library Item
   Stream<List<LibraryItem>> getLibraryStream(
-      {String status = "CURRENT", int limit = 0}) {
+      {String? status, int? limit}) {
     return mediaLibraryDao.watchLibraryItems(status: status, limit: limit);
   }
 

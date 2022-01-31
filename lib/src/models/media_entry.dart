@@ -15,6 +15,12 @@ class MediaEntry extends Insertable<MediaEntry> {
   final String? media;
   final bool synced;
 
+  static const String current = 'CURRENT';
+  static const String completed = 'COMPLETED';
+  static const String planned = 'PLANNING';
+  static const String onHold = 'PAUSED';
+  static const String dropped = 'DROPPED';
+
   MediaEntry({
     required this.id,
     required this.alEntryId,

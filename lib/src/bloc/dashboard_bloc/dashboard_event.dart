@@ -9,3 +9,9 @@ class RecentsUpdated extends DashboardEvent{
 
   RecentsUpdated(this.updatedMediaEntry);
 }
+
+class DashboardStateUpdated extends DashboardEvent{
+  final DashboardData dashboardState;
+
+  DashboardStateUpdated(this.dashboardState);
+}

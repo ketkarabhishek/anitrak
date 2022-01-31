@@ -81,12 +81,12 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     await into(mediaEntries).insert(entry);
   }
 
-  // Stream<double> getTotalEpisodesWatched(){
-  //   final progressExp = mediaEntries.progress.total();
-  //   final query = selectOnly(mediaEntries)..addColumns([progressExp]);
+  Stream<double?> getTotalEpisodesWatched() {
+    final progressExp = mediaEntries.progress.total();
+    final query = selectOnly(mediaEntries)..addColumns([progressExp]);
 
-  //   final res =  query.map((row) => row.read(progressExp));
-  // }
+    return query.map((row) => row.read(progressExp)).watchSingle();
+  }
 
   // ---- Media ----
   Stream<List<MediaModel>> getAllMedia() {
@@ -125,15 +125,15 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
   // ---------------
 
   Stream<List<LibraryItem>> watchLibraryItems(
-      {String status = "CURRENT", int limit = 0}) {
+      {String? status = "CURRENT", int? limit}) {
     final query = select(mediaEntries)
       ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]);
 
-    if (status.isNotEmpty) {
+    if (status != null && status.isNotEmpty) {
       query.where((tbl) => tbl.status.equals(status));
     }
 
-    if (limit > 0) {
+    if (limit != null && limit > 0) {
       query.limit(limit);
     }
 

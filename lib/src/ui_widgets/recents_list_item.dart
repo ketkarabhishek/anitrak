@@ -1,5 +1,4 @@
 import 'package:anitrak/src/models/library_item.dart';
-import 'package:anitrak/src/models/media_entry.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 

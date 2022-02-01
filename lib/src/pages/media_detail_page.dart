@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:anitrak/src/bloc/lib_page_bloc/lib_page_bloc.dart';
 import 'package:anitrak/src/cubits/media_page_cubit/media_page_cubit.dart';
 import 'package:anitrak/src/models/library_item.dart';
@@ -49,9 +51,10 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.38,
+                height: MediaQuery.of(context).size.height * 0.46,
                 child: Stack(
-                  clipBehavior: Clip.none,
+                  clipBehavior: Clip.hardEdge,
+                  fit: StackFit.loose,
                   children: [
                     Container(
                       height: MediaQuery.of(context).size.height * 0.25,
@@ -66,9 +69,10 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
                     ),
                     Positioned(
                       top: MediaQuery.of(context).size.height * 0.15,
-                      left: 0,
-                      right: 0,
+                      left: 16,
+                      right: 16,
                       child: Align(
+                        alignment: Alignment.centerLeft,
                         child: Card(
                           clipBehavior: Clip.hardEdge,
                           shape: RoundedRectangleBorder(
@@ -80,8 +84,78 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
                           ),
                           child: CachedNetworkImage(
                             imageUrl: widget.media.poster,
-                            height: MediaQuery.of(context).size.height * 0.24,
+                            height: MediaQuery.of(context).size.height * 0.30,
                           ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: MediaQuery.of(context).size.height * 0.32,
+                      left: 16,
+                      right: 16,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: BlocBuilder<MediaPageCubit, MediaPageCubitState>(
+                          builder: (context, state) {
+                            if (state is MediaPageInitial) {
+                              return ElevatedButton.icon(
+                                  label: const Text('Add to Library'),
+                                  onPressed: () {
+                                    final cubit =
+                                        BlocProvider.of<MediaPageCubit>(
+                                            context);
+                                    final entry = MediaEntry.createNewEntry(
+                                      mediaId: widget.media.id,
+                                    );
+                                    final item = LibraryItem(
+                                        media: widget.media, mediaEntry: entry);
+                                    cubit.insertLibraryEntry(item);
+                                  },
+                                  icon: const Icon(Icons.add));
+                            }
+
+                            final data = state as MediaPageWithEntry;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '${data.mediaEntry.score == 0 ? "-" : data.mediaEntry.score} / 10 \u2b50',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w300),
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: OutlinedButton.icon(
+                                    label: Text(data.mediaEntry.status),
+                                    onPressed: () async {
+                                      final result =
+                                          await Navigator.push<MediaEntry>(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => LibItemEditPage(
+                                            libraryItem: LibraryItem(
+                                                media: widget.media,
+                                                mediaEntry: data.mediaEntry),
+                                          ),
+                                        ),
+                                      );
+                                      if (result == null) return;
+
+                                      BlocProvider.of<MediaPageCubit>(context)
+                                          .updateMediaEntry(result);
+                                    },
+                                    icon: const Icon(Icons.edit_sharp),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -89,76 +163,25 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 24.0, 8.0, 8.0),
+                padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
                 child: Text(
                   widget.media.title,
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 ),
               ),
-              BlocBuilder<MediaPageCubit, MediaPageCubitState>(
-                builder: (context, state) {
-                  if (state is MediaPageInitial) {
-                    return SizedBox(
-                      child: ElevatedButton.icon(
-                          label: const Text('Add to Library'),
-                          onPressed: () {
-                            final cubit =
-                                BlocProvider.of<MediaPageCubit>(context);
-                            final entry = MediaEntry.createNewEntry(
-                              mediaId: widget.media.id,
-                            );
-                            final item = LibraryItem(
-                                media: widget.media, mediaEntry: entry);
-                            cubit.insertLibraryEntry(item);
-                          },
-                          icon: const Icon(Icons.add)),
-                    );
-                  }
-
-                  final data = state as MediaPageWithEntry;
-                  return SizedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        // IconButton(onPressed: onPressed, icon: icon),
-                        OutlinedButton.icon(
-                          label: Text(data.mediaEntry.status),
-                          onPressed: () async {
-                            final result = await Navigator.push<MediaEntry>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LibItemEditPage(
-                                  libraryItem: LibraryItem(
-                                      media: widget.media,
-                                      mediaEntry: data.mediaEntry),
-                                ),
-                              ),
-                            );
-                            if (result == null) return;
-                            
-                            BlocProvider.of<MediaPageCubit>(context)
-                                .updateMediaEntry(result);
-                          },
-                          icon: const Icon(Icons.edit_sharp),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            '${data.mediaEntry.score == 0 ? "-" : data.mediaEntry.score} / 10 \u2b50',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w300),
-                            maxLines: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('${widget.media.duration} minutes', style: Theme.of(context).textTheme.subtitle1,),
+                    Text('${widget.media.total} episodes', style: Theme.of(context).textTheme.subtitle1,)
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Text(widget.media.description),
               ),
             ],

@@ -94,7 +94,7 @@ class _LibraryPageState extends State<LibraryPage> {
             itemBuilder: (context, index) => LibListItem(
               libraryItem: data[index],
               onTap: () async {
-                final result = await Navigator.push<MediaEntry>(
+                Navigator.push<MediaEntry>(
                   context,
                   MaterialPageRoute(
                     builder: (context) => MediaDetailPage.withLibraryItem(
@@ -102,11 +102,6 @@ class _LibraryPageState extends State<LibraryPage> {
                     ),
                   ),
                 );
-                if (result == null) {
-                  return;
-                }
-                BlocProvider.of<LibPageBloc>(context)
-                    .add(LibraryEntryUpdated(result));
               },
             ),
           );

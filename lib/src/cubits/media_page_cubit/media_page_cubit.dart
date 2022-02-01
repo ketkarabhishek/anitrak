@@ -21,6 +21,11 @@ class MediaPageCubit extends Cubit<MediaPageCubitState> {
     emit(MediaPageWithEntry(libraryItem.mediaEntry));
   }
 
+  void updateMediaEntry(MediaEntry mediaEntry) async {
+    await mediaLibraryRepo.updateMediaEntry(mediaEntry);
+    emit(MediaPageWithEntry(mediaEntry));
+  }
+
   void setMediaEntry(MediaEntry mediaEntry){
     emit(MediaPageWithEntry(mediaEntry));
   }

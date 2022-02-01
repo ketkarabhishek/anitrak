@@ -1,3 +1,4 @@
+import 'package:anitrak/src/bloc/lib_page_bloc/lib_page_bloc.dart';
 import 'package:anitrak/src/cubits/media_page_cubit/media_page_cubit.dart';
 import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
@@ -123,8 +124,8 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
                         // IconButton(onPressed: onPressed, icon: icon),
                         OutlinedButton.icon(
                           label: Text(data.mediaEntry.status),
-                          onPressed: () {
-                            Navigator.push(
+                          onPressed: () async {
+                            final result = await Navigator.push<MediaEntry>(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => LibItemEditPage(
@@ -134,6 +135,10 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
                                 ),
                               ),
                             );
+                            if (result == null) return;
+                            
+                            BlocProvider.of<MediaPageCubit>(context)
+                                .updateMediaEntry(result);
                           },
                           icon: const Icon(Icons.edit_sharp),
                         ),

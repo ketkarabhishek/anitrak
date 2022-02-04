@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:anitrak/src/bloc/lib_page_bloc/lib_page_bloc.dart';
 import 'package:anitrak/src/cubits/media_page_cubit/media_page_cubit.dart';
 import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
@@ -10,6 +7,7 @@ import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simple_html_css/simple_html_css.dart';
 
 class MediaDetailPage extends StatefulWidget {
   const MediaDetailPage({Key? key, required this.media, this.mediaEntry})
@@ -175,14 +173,28 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('${widget.media.duration} minutes', style: Theme.of(context).textTheme.subtitle1,),
-                    Text('${widget.media.total} episodes', style: Theme.of(context).textTheme.subtitle1,)
+                    Text(
+                      '${widget.media.duration} minutes',
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    Text(
+                      '${widget.media.total} episodes',
+                      style: Theme.of(context).textTheme.subtitle1,
+                    )
                   ],
                 ),
               ),
-              Padding(
+              Container(
                 padding: const EdgeInsets.all(16.0),
-                child: Text(widget.media.description),
+                child: Builder(
+                  builder: (context) {
+                    return Text.rich(
+                      HTML.toTextSpan(context, widget.media.description,
+                          defaultTextStyle:
+                              Theme.of(context).textTheme.bodyText1),
+                    );
+                  },
+                ),
               ),
             ],
           ),

@@ -2,6 +2,7 @@ import 'package:anitrak/src/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/pages/media_detail_page.dart';
 import 'package:anitrak/src/repositories/media_library_repo.dart';
+import 'package:anitrak/src/ui_widgets/donut_chart.dart';
 import 'package:anitrak/src/ui_widgets/recents_list_item.dart';
 import 'package:anitrak/src/ui_widgets/searchbar.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,14 @@ class _DashboardPageState extends State<DashboardPage> {
                       textAlign: TextAlign.start,
                     ),
                   ),
-                  _entriesCount(data),
+                  DonutChart(
+                    currentCount: data.currentCount,
+                    completedCount: data.completedCount,
+                    plannedCount: data.plannedCount,
+                    onHoldCount: data.onHoldCount,
+                    droppedCount: data.droppedCount,
+                    totalCount: data.totalEntries,
+                  ), 
                   _animeTime(data.totalTime),
                 ],
               ),

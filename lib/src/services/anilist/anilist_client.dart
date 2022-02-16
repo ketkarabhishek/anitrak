@@ -72,8 +72,7 @@ class AnilistClient {
           document: gql(mutations.saveMediaListEntry),
           variables: mediaEntryData),
     );
-    final data = result.data?['SaveMediaListEntry']['id'];
     if (result.hasException) throw GraphqlRequestFailure();
-    return data;
+    return 0;
   }
 }

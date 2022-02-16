@@ -64,13 +64,16 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     return row?.readTable(mediaEntries);
   }
 
-  Future<void> replaceAllEntries(List<MediaEntry> entries) async {
-    await delete(mediaEntries).go();
+  Future<void> insertAllEntries(List<MediaEntry> entries) async {
     await batch((batch) {
       // functions in a batch don't have to be awaited - just
       // await the whole batch afterwards.
       batch.insertAll(mediaEntries, entries);
     });
+  }
+
+   Future<void> deleteAllEntries() async {
+    await delete(mediaEntries).go();
   }
 
   Future<void> updateMediaEntry(MediaEntry entry) async {
@@ -104,14 +107,16 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     return query.getSingle();
   }
 
-  Future<void> replaceAllMedia(List<MediaModel> entries) async {
-    await delete(media).go();
-
+  Future<void> insertAllMedia(List<MediaModel> entries) async {
     await batch((batch) {
       // functions in a batch don't have to be awaited - just
       // await the whole batch afterwards.
       batch.insertAll(media, entries);
     });
+  }
+
+  Future<void> deleteAllMedia() async {
+    await delete(media).go();
   }
 
   Future<void> updateMedia(MediaModel entry) async {

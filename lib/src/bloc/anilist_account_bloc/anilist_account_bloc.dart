@@ -185,7 +185,8 @@ class AnilistAccountBloc
       mediaEntryList.add(mediaEntry);
     }
 
-    await _mediaLibraryRepo.replaceAllMedia(mediaList);
-    await _mediaLibraryRepo.replaceAllMediaEntries(mediaEntryList);
+    await _mediaLibraryRepo.deleteLibrary();
+    await _mediaLibraryRepo.insertAllMedia(mediaList);
+    await _mediaLibraryRepo.insertAllMediaEntries(mediaEntryList);
   }
 }

@@ -23,9 +23,6 @@ class MyTheme {
       secondary: Colors.red,
       secondaryVariant: Colors.red,
     ),
-    // bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    //   backgroundColor: Color(0xff121212),
-    // ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.grey[850],
     ),

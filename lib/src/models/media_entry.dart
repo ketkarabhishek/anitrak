@@ -75,7 +75,7 @@ class MediaEntry extends Insertable<MediaEntry> {
 
   Map<String, dynamic> toAnilistMap({required int mediaId}) {
     var varMap = {
-      'id': alEntryId != 0 ? alEntryId : null,
+      // 'id': alEntryId != 0 ? alEntryId : null,
       'mediaId': mediaId,
       'status': status,
       'score': score,

@@ -38,6 +38,7 @@ class MyDatabase extends _$MyDatabase {
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     }
+    
   );
   
 }

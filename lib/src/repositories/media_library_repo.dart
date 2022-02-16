@@ -45,13 +45,13 @@ class MediaLibraryRepo {
     libraryUpdateDao.insertLibraryUpdate(update);
   }
 
-  Future<void> replaceAllMediaEntries(List<MediaEntry> mediaList) async {
-    await mediaLibraryDao.replaceAllEntries(mediaList);
+  Future<void> insertAllMediaEntries(List<MediaEntry> mediaList) async {
+    await mediaLibraryDao.insertAllEntries(mediaList);
   }
 
   // Media
-  Future<void> replaceAllMedia(List<MediaModel> mediaList) async {
-    await mediaLibraryDao.replaceAllMedia(mediaList);
+  Future<void> insertAllMedia(List<MediaModel> mediaList) async {
+    await mediaLibraryDao.insertAllMedia(mediaList);
   }
 
   Future<MediaModel> getMedia({required String id}) async {
@@ -75,6 +75,11 @@ class MediaLibraryRepo {
   Future<LibraryItem> getLibraryItem({required String mediaEntryId}) async {
     return mediaLibraryDao.getLibraryItem(mediaEntryId: mediaEntryId);
   }
+
+  Future<void> deleteLibrary() async {
+    await mediaLibraryDao.deleteAllEntries();
+    await mediaLibraryDao.deleteAllMedia();
+  }  
 
   // Library Update
   Stream<List<LibraryUpdate>> getLibraryUpdates({

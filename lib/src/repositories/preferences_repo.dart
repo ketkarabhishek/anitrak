@@ -75,7 +75,7 @@ class PreferencesRepo {
     await _storage.write(key: _anilistUserNameKey, value: userName);
     await _storage.write(key: _anilistAvatarKey, value: avatar);
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_anilistSyncKey, true);
+    await prefs.setBool(_anilistSyncKey, false);
   }
 
   Future<void> deleteAnilistToken() async {

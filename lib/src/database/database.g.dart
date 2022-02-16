@@ -144,9 +144,10 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
 }
 
 class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MediaTable(this._db, [this._alias]);
+  $MediaTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
@@ -303,7 +304,7 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
 
   @override
   $MediaTable createAlias(String alias) {
-    return $MediaTable(_db, alias);
+    return $MediaTable(attachedDatabase, alias);
   }
 }
 
@@ -457,9 +458,10 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
 
 class $MediaEntriesTable extends MediaEntries
     with TableInfo<$MediaEntriesTable, MediaEntry> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MediaEntriesTable(this._db, [this._alias]);
+  $MediaEntriesTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
@@ -629,7 +631,7 @@ class $MediaEntriesTable extends MediaEntries
 
   @override
   $MediaEntriesTable createAlias(String alias) {
-    return $MediaEntriesTable(_db, alias);
+    return $MediaEntriesTable(attachedDatabase, alias);
   }
 }
 
@@ -736,9 +738,10 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
 
 class $LibraryUpdatesTable extends LibraryUpdates
     with TableInfo<$LibraryUpdatesTable, LibraryUpdate> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $LibraryUpdatesTable(this._db, [this._alias]);
+  $LibraryUpdatesTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
@@ -853,7 +856,7 @@ class $LibraryUpdatesTable extends LibraryUpdates
 
   @override
   $LibraryUpdatesTable createAlias(String alias) {
-    return $LibraryUpdatesTable(_db, alias);
+    return $LibraryUpdatesTable(attachedDatabase, alias);
   }
 }
 

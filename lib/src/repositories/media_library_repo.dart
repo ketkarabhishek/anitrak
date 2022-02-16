@@ -77,6 +77,7 @@ class MediaLibraryRepo {
   }
 
   Future<void> deleteLibrary() async {
+    await libraryUpdateDao.deleteAllLibraryUpdates();
     await mediaLibraryDao.deleteAllEntries();
     await mediaLibraryDao.deleteAllMedia();
   }  

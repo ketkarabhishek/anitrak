@@ -31,4 +31,8 @@ class LibraryUpdateDao extends DatabaseAccessor<MyDatabase> with _$LibraryUpdate
    Future<void> updateLibraryUpdate(LibraryUpdate entry) async {
     await update(libraryUpdates).replace(entry);
   }
+
+  Future<void> deleteAllLibraryUpdates() async {
+    await delete(libraryUpdates).go();
+  }
 }

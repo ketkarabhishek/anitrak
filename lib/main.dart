@@ -1,6 +1,6 @@
 import 'package:anitrak/src/app.dart';
 import 'package:anitrak/src/cubits/theme_cubit/theme_cubit.dart';
-import 'package:anitrak/src/mytheme.dart';
+import 'package:anitrak/src/app_theme.dart';
 import 'package:anitrak/src/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'AniTrak',
             themeMode: data.themeMode,
-            theme: MyTheme.lightTheme,
-            darkTheme: MyTheme.darkTheme,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
             home: const App(),
           );
         },

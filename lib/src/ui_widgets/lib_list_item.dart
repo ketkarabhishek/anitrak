@@ -28,8 +28,8 @@ class LibListItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        shadowColor: Colors.black,
-        elevation: 3,
+        // shadowColor: Colors.black,
+        // elevation: 3,
         shape: RoundedRectangleBorder(
           side: BorderSide(
             color: libraryItem.media.color.toColor() ?? Colors.white60,

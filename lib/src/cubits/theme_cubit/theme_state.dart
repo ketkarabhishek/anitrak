@@ -10,11 +10,11 @@ class ThemeModeState extends ThemeState {
   Color get navColor {
     switch (themeMode) {
       case ThemeMode.dark:
-        return Colors.grey[900]!;
+        return Colors.black;
       case ThemeMode.system:
         if (SchedulerBinding.instance!.window.platformBrightness ==
             Brightness.dark) {
-          return Colors.grey[900]!;
+          return Colors.black;
         }
         break;
       default:

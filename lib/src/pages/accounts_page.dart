@@ -97,6 +97,7 @@ class _AccountsPageState extends State<AccountsPage> {
                           title: const Text("Import"),
                           subtitle: const Text(
                               "Import library from your Anilist account"),
+                          trailing: data.isImporting ? const CircularProgressIndicator() : null,
                           onTap: () async {
                             final res = await showDialog<bool>(
                               context: context,
@@ -143,7 +144,7 @@ class _AccountsPageState extends State<AccountsPage> {
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, true),
-          child: const Text('OK'),
+          child: const Text('Import'),
         ),
       ],
     );

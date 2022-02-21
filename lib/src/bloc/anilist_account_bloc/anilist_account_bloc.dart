@@ -34,6 +34,7 @@ class AnilistAccountBloc
         anilistUserName: anilistUserName ?? "",
         anilistAvatar: anilistAvatar ?? "",
         anilistSync: anilistSync ?? false,
+        isImporting: false,
       ));
     });
 
@@ -54,6 +55,7 @@ class AnilistAccountBloc
         anilistUserName: anilistUserName ?? "",
         anilistAvatar: anilistAvatar ?? "",
         anilistSync: anilistSync ?? false,
+        isImporting: false
       ));
     });
 
@@ -64,9 +66,12 @@ class AnilistAccountBloc
     });
 
     on<AnilistLibraryImported>((event, emit) async {
+      final data = state as AnilistAccountConnected;
+      emit(data.copyWith(isImporting: true));
       final anilistUserId = await _preferencesRepo.anilistUserId;
       if(anilistUserId == null) return;
       await _importAnilistLibrary(anilistUserId);
+      emit(data.copyWith(isImporting: false));
     });
 
     on<AnilistSyncToggled>((event, emit) async {

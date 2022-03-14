@@ -20,7 +20,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           return;
         }
         final recentsList = library
-            .where((item) => item.mediaEntry.status == "CURRENT")
+            .where((item) => item.mediaEntry.entryStatus == MediaEntryStatus.watching)
             .take(10)
             .toList();
         final totalEpisodes = library
@@ -30,19 +30,19 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             .map((e) => e.mediaEntry.progress * e.media.duration)
             .reduce((value, element) => value + element);
         final currentCount = library
-            .where((item) => item.mediaEntry.status == MediaEntry.current)
+            .where((item) => item.mediaEntry.entryStatus == MediaEntryStatus.watching)
             .length;
         final completedCount = library
-            .where((item) => item.mediaEntry.status == MediaEntry.completed)
+            .where((item) => item.mediaEntry.entryStatus == MediaEntryStatus.completed)
             .length;
         final plannedCount = library
-            .where((item) => item.mediaEntry.status == MediaEntry.planned)
+            .where((item) => item.mediaEntry.entryStatus == MediaEntryStatus.planned)
             .length;
         final onHoldCount = library
-            .where((item) => item.mediaEntry.status == MediaEntry.onHold)
+            .where((item) => item.mediaEntry.entryStatus == MediaEntryStatus.onHold)
             .length;
         final droppedCount = library
-            .where((item) => item.mediaEntry.status == MediaEntry.dropped)
+            .where((item) => item.mediaEntry.entryStatus == MediaEntryStatus.dropped)
             .length;
         final totalEntries = library.length;
 

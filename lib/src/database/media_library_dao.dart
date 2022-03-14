@@ -15,19 +15,16 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
 
   Stream<List<MediaEntry>> getAllMediaEntries() {
     final query = select(mediaEntries)
-      ..where((tbl) => tbl.status.equals("CURRENT"))
+      ..where((tbl) => tbl.status.equals(1))
       ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]);
     return query.watch();
   }
 
   Stream<List<MediaEntry>> getMediaEntries(
-      {String status = "CURRENT", int limit = 0}) {
+      {MediaEntryStatus status = MediaEntryStatus.watching, int limit = 0}) {
     final query = select(mediaEntries)
-      ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]);
-
-    if (status.isNotEmpty) {
-      query.where((tbl) => tbl.status.equals(status));
-    }
+      ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
+      ..where((tbl) => tbl.status.equals(status.index));
 
     if (limit > 0) {
       query.limit(limit);
@@ -130,12 +127,12 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
   // ---------------
 
   Stream<List<LibraryItem>> watchLibraryItems(
-      {String? status = "CURRENT", int? limit}) {
+      {MediaEntryStatus? status = MediaEntryStatus.watching, int? limit}) {
     final query = select(mediaEntries)
       ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)]);
 
-    if (status != null && status.isNotEmpty) {
-      query.where((tbl) => tbl.status.equals(status));
+    if (status != null) {
+      query.where((tbl) => tbl.status.equals(status.index));
     }
 
     if (limit != null && limit > 0) {

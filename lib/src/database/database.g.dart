@@ -311,12 +311,14 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
 class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
   final Value<String> id;
   final Value<int> alEntryId;
-  final Value<String> status;
+  final Value<int> status;
   final Value<int> score;
   final Value<int> progress;
   final Value<int> repeat;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<DateTime> startedAt;
+  final Value<DateTime> completedAt;
   final Value<bool> synced;
   final Value<String?> media;
   const MediaEntriesCompanion({
@@ -328,18 +330,22 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     this.repeat = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.completedAt = const Value.absent(),
     this.synced = const Value.absent(),
     this.media = const Value.absent(),
   });
   MediaEntriesCompanion.insert({
     required String id,
     required int alEntryId,
-    required String status,
+    required int status,
     required int score,
     required int progress,
     required int repeat,
     required DateTime createdAt,
     required DateTime updatedAt,
+    required DateTime startedAt,
+    required DateTime completedAt,
     required bool synced,
     this.media = const Value.absent(),
   })  : id = Value(id),
@@ -350,16 +356,20 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
         repeat = Value(repeat),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt),
+        startedAt = Value(startedAt),
+        completedAt = Value(completedAt),
         synced = Value(synced);
   static Insertable<MediaEntry> custom({
     Expression<String>? id,
     Expression<int>? alEntryId,
-    Expression<String>? status,
+    Expression<int>? status,
     Expression<int>? score,
     Expression<int>? progress,
     Expression<int>? repeat,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<DateTime>? startedAt,
+    Expression<DateTime>? completedAt,
     Expression<bool>? synced,
     Expression<String?>? media,
   }) {
@@ -372,6 +382,8 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
       if (repeat != null) 'repeat': repeat,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (startedAt != null) 'started_at': startedAt,
+      if (completedAt != null) 'completed_at': completedAt,
       if (synced != null) 'synced': synced,
       if (media != null) 'media': media,
     });
@@ -380,12 +392,14 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
   MediaEntriesCompanion copyWith(
       {Value<String>? id,
       Value<int>? alEntryId,
-      Value<String>? status,
+      Value<int>? status,
       Value<int>? score,
       Value<int>? progress,
       Value<int>? repeat,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
+      Value<DateTime>? startedAt,
+      Value<DateTime>? completedAt,
       Value<bool>? synced,
       Value<String?>? media}) {
     return MediaEntriesCompanion(
@@ -397,6 +411,8 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
       repeat: repeat ?? this.repeat,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      startedAt: startedAt ?? this.startedAt,
+      completedAt: completedAt ?? this.completedAt,
       synced: synced ?? this.synced,
       media: media ?? this.media,
     );
@@ -412,7 +428,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
       map['al_entry_id'] = Variable<int>(alEntryId.value);
     }
     if (status.present) {
-      map['status'] = Variable<String>(status.value);
+      map['status'] = Variable<int>(status.value);
     }
     if (score.present) {
       map['score'] = Variable<int>(score.value);
@@ -428,6 +444,12 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<DateTime>(startedAt.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<DateTime>(completedAt.value);
     }
     if (synced.present) {
       map['synced'] = Variable<bool>(synced.value);
@@ -449,6 +471,8 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
           ..write('repeat: $repeat, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('completedAt: $completedAt, ')
           ..write('synced: $synced, ')
           ..write('media: $media')
           ..write(')'))
@@ -474,9 +498,9 @@ class $MediaEntriesTable extends MediaEntries
       type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
-  late final GeneratedColumn<String?> status = GeneratedColumn<String?>(
+  late final GeneratedColumn<int?> status = GeneratedColumn<int?>(
       'status', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _scoreMeta = const VerificationMeta('score');
   @override
   late final GeneratedColumn<int?> score = GeneratedColumn<int?>(
@@ -502,6 +526,17 @@ class $MediaEntriesTable extends MediaEntries
   late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
       'updated_at', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _startedAtMeta = const VerificationMeta('startedAt');
+  @override
+  late final GeneratedColumn<DateTime?> startedAt = GeneratedColumn<DateTime?>(
+      'started_at', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _completedAtMeta =
+      const VerificationMeta('completedAt');
+  @override
+  late final GeneratedColumn<DateTime?> completedAt =
+      GeneratedColumn<DateTime?>('completed_at', aliasedName, false,
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _syncedMeta = const VerificationMeta('synced');
   @override
   late final GeneratedColumn<bool?> synced = GeneratedColumn<bool?>(
@@ -526,6 +561,8 @@ class $MediaEntriesTable extends MediaEntries
         repeat,
         createdAt,
         updatedAt,
+        startedAt,
+        completedAt,
         synced,
         media
       ];
@@ -587,6 +624,20 @@ class $MediaEntriesTable extends MediaEntries
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
+    if (data.containsKey('started_at')) {
+      context.handle(_startedAtMeta,
+          startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta));
+    } else if (isInserting) {
+      context.missing(_startedAtMeta);
+    }
+    if (data.containsKey('completed_at')) {
+      context.handle(
+          _completedAtMeta,
+          completedAt.isAcceptableOrUnknown(
+              data['completed_at']!, _completedAtMeta));
+    } else if (isInserting) {
+      context.missing(_completedAtMeta);
+    }
     if (data.containsKey('synced')) {
       context.handle(_syncedMeta,
           synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
@@ -612,7 +663,7 @@ class $MediaEntriesTable extends MediaEntries
           .mapFromDatabaseResponse(data['${effectivePrefix}al_entry_id'])!,
       media: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}media']),
-      status: const StringType()
+      status: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
       score: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}score'])!,
@@ -624,6 +675,10 @@ class $MediaEntriesTable extends MediaEntries
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
+      startedAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}started_at'])!,
+      completedAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}completed_at'])!,
       synced: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
     );

@@ -181,7 +181,7 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                                   ),
                                   _infoCard(
                                     title: 'Status',
-                                    value: data.mediaEntry.status.capitalize(),
+                                    value: data.mediaEntry.entryStatus.displayTitle,
                                   ),
                                 ],
                               ),
@@ -225,7 +225,7 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                           return Text.rich(
                             HTML.toTextSpan(context, widget.media.description,
                                 defaultTextStyle:
-                                    Theme.of(context).textTheme.bodyText1),
+                                    Theme.of(context).textTheme.bodyMedium),
                           );
                         },
                       ),

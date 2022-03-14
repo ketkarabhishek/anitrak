@@ -10,13 +10,13 @@ part 'lib_page_state.dart';
 class LibPageBloc extends Bloc<LibPageEvent, LibPageState> {
   LibPageBloc(this.mediaEntriesRepo) : super(LibPageLoading()) {
     on<LibraryFetchedEvent>((event, emit) {
-      final currentStream = mediaEntriesRepo.getLibraryStream(status: 'CURRENT');
+      final currentStream = mediaEntriesRepo.getLibraryStream(status: MediaEntryStatus.watching);
       final completedStream =
-          mediaEntriesRepo.getLibraryStream(status: 'COMPLETED');
+          mediaEntriesRepo.getLibraryStream(status: MediaEntryStatus.completed);
       final plannedStream =
-          mediaEntriesRepo.getLibraryStream(status: 'PLANNING');
-      final droppedStream = mediaEntriesRepo.getLibraryStream(status: 'DROPPED');
-      final onholdStream = mediaEntriesRepo.getLibraryStream(status: 'PAUSED');
+          mediaEntriesRepo.getLibraryStream(status: MediaEntryStatus.planned);
+      final droppedStream = mediaEntriesRepo.getLibraryStream(status: MediaEntryStatus.dropped);
+      final onholdStream = mediaEntriesRepo.getLibraryStream(status: MediaEntryStatus.onHold);
 
       emit(
         LibPageData(

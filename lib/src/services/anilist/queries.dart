@@ -44,6 +44,16 @@ query ($id: Int, $page: Int, $perPage: Int, $userId: Int, $userName: String, $ty
       repeat
       createdAt
       updatedAt
+      startedAt{
+        year
+        month
+        day
+      }
+      completedAt{
+        year
+        month
+        day
+      }
       media{
         title {
           romaji
@@ -75,6 +85,16 @@ query ($userId: Int, $type: MediaType) {
         repeat
         createdAt
         updatedAt
+        startedAt{
+        year
+        month
+        day
+      }
+      completedAt{
+        year
+        month
+        day
+      }
         media {
           id
           description

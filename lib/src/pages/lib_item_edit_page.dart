@@ -17,7 +17,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
   final _formKey = GlobalKey<FormState>();
 
   late int _rating = widget.libraryItem.mediaEntry.score;
-  late String _status = widget.libraryItem.mediaEntry.status;
+  late MediaEntryStatus _status = widget.libraryItem.mediaEntry.entryStatus;
 
   final TextEditingController _progressTextController = TextEditingController();
   final TextEditingController _repeatTextController = TextEditingController();
@@ -34,7 +34,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
         progress: progress,
         repeat: repeat,
         score: _rating,
-        status: _status,
+        status: _status.index,
         synced: false,
         updatedAt: DateTime.now(),
       );
@@ -145,7 +145,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                   child: DropdownButtonFormField(
                     value: _status,
-                    onChanged: (String? value) {
+                    onChanged: (MediaEntryStatus? value) {
                       setState(() {
                         _status = value!;
                       });
@@ -154,10 +154,10 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                       border: OutlineInputBorder(),
                       label: Text('Status'),
                     ),
-                    items: statusList
+                    items: MediaEntryStatus.values
                         .map(
                           (e) => DropdownMenuItem(
-                            child: Text(e),
+                            child: Text(e.displayTitle),
                             value: e,
                           ),
                         )

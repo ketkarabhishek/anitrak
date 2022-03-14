@@ -6,12 +6,14 @@ import 'package:drift/drift.dart';
 class MediaEntries extends Table {
   TextColumn get id => text()();
   IntColumn get alEntryId => integer()();
-  TextColumn get status => text()();
+  IntColumn get status => integer()();
   IntColumn get score => integer()();
   IntColumn get progress => integer()();
   IntColumn get repeat => integer()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get startedAt => dateTime()();
+  DateTimeColumn get completedAt => dateTime()();
 
   BoolColumn get synced => boolean()();
 

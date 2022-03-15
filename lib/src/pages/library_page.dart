@@ -83,9 +83,21 @@ class _LibraryPageState extends State<LibraryPage> {
           final data = snapshot.requireData;
           if (data.isEmpty) {
             return Center(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
-                child: Image.asset('images/no_data.png',),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.20,
+                      child: Image.asset('images/no_data.png',),
+                    ),
+                  ),
+                   Text(
+                      'There\'s nothing here.',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                ],
               ),
             );
           }

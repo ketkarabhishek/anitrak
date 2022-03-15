@@ -49,7 +49,28 @@ class _DashboardPageState extends State<DashboardPage> {
             return SizedBox(
               height: MediaQuery.of(context).size.height * 0.75,
               child: Center(
-                child: Text('It\'s very empty here.', style: Theme.of(context).textTheme.subtitle1,),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        child: Image.asset(
+                          "images/home_cinema.png",
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'It\'s very empty here.',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                     Text(
+                      'Search and add your anime or import from your tracking account.',
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                  ],
+                ),
               ),
             );
           }
@@ -87,7 +108,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     onHoldCount: data.onHoldCount,
                     droppedCount: data.droppedCount,
                     totalCount: data.totalEntries,
-                  ), 
+                  ),
                   _animeTime(data.totalTime),
                 ],
               ),

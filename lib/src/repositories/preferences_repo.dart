@@ -16,7 +16,15 @@ class PreferencesRepo {
   final String _anilistJsonRefreshTokenKey = "refresh_token";
   final String _anilistJsonExpiresInKey = "expires_in";
 
+  // First time
+  final String _firstTime = "first_time";
+
   final _storage = const FlutterSecureStorage();
+
+  Future<bool?> get firstTime async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_firstTime);
+  }
 
   // Anilist token getters
   Future<String?> get anilistAccessToken async {
@@ -82,5 +90,10 @@ class PreferencesRepo {
     await _storage.delete(key: _anilistAccessTokenKey);
     await _storage.delete(key: _anilistRefreshTokenKey);
     await _storage.delete(key: _anilistExpiresInKey);
+  }
+
+  void setFirstTime(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_firstTime, value);
   }
 }

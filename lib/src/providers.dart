@@ -38,28 +38,32 @@ class _ProvidersState extends State<Providers> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          lazy: false,
-          create: (context) => AnilistAccountBloc(
-            _accountsRepo,
-            _mediaLibraryRepo,
-            _preferencesRepo,
-          )..add(
-              AnilistAccountInitialized(),
+        providers: [
+          BlocProvider(
+            lazy: false,
+            create: (context) => AnilistAccountBloc(
+              _accountsRepo,
+              _mediaLibraryRepo,
+              _preferencesRepo,
+            )..add(
+                AnilistAccountInitialized(),
+              ),
+          ),
+          BlocProvider(
+            lazy: false,
+            create: (context) => ThemeCubit()..initializeTheme(),
+          ),
+        ],
+        child: MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider<MediaLibraryRepo>(
+              create: (_) => _mediaLibraryRepo,
             ),
-        ),
-        BlocProvider(
-          lazy: false,
-          create: (context) => ThemeCubit()..initializeTheme(),
-        ),
-      ],
-      child: RepositoryProvider<MediaLibraryRepo>(
-        create: (_) {
-          return _mediaLibraryRepo;
-        },
-        child: widget.child,
-      ),
-    );
+            RepositoryProvider<PreferencesRepo>(
+              create: (_) => _preferencesRepo,
+            ),
+          ],
+          child: widget.child,
+        ));
   }
 }

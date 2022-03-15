@@ -2,8 +2,6 @@ import 'package:anitrak/src/cubits/theme_cubit/theme_cubit.dart';
 import 'package:anitrak/src/pages/accounts_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path/path.dart';
-
 class MorePage extends StatelessWidget {
   const MorePage({Key? key}) : super(key: key);
 

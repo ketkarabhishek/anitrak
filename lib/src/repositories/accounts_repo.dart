@@ -1,6 +1,5 @@
 import 'package:anitrak/src/services/anilist/anilist_client.dart';
 import 'package:anitrak/src/services/anilist/auth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AccountsRepo{
   AccountsRepo({required this.anilistClient});

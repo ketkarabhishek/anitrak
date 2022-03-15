@@ -213,6 +213,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                       if (value == null || value.isEmpty) {
                         return "Please enter a number";
                       }
+                      return null;
                     },
                   ),
                 ),

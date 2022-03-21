@@ -40,23 +40,27 @@ class AnilistAccountBloc
 
     on<AnilistAccountLogin>((event, emit) async {
       emit(AnilistAccountLoading());
-      final anilistToken = await _loginAnilist();
-      if (!anilistToken) {
+      try {
+        final anilistToken = await _loginAnilist();
+        if (!anilistToken) {
+          emit(AnilistAccountDisconnected());
+          return;
+        }
+        final anilistUserId = await _fetchAndSaveAniistUserData();
+        final anilistUserName = await _preferencesRepo.anilistUserName;
+        final anilistAvatar = await _preferencesRepo.anilistAvatar;
+        final anilistSync = await _preferencesRepo.anilistSync;
+        _syncAnilist();
+        emit(AnilistAccountConnected(
+            anilistUserId: anilistUserId,
+            anilistUserName: anilistUserName ?? "",
+            anilistAvatar: anilistAvatar ?? "",
+            anilistSync: anilistSync ?? false,
+            isImporting: false));
+      } catch (e) {
         emit(AnilistAccountDisconnected());
         return;
       }
-      final anilistUserId = await _fetchAndSaveAniistUserData();
-      final anilistUserName = await _preferencesRepo.anilistUserName;
-      final anilistAvatar = await _preferencesRepo.anilistAvatar;
-      final anilistSync = await _preferencesRepo.anilistSync;
-      _syncAnilist();
-      emit(AnilistAccountConnected(
-        anilistUserId: anilistUserId,
-        anilistUserName: anilistUserName ?? "",
-        anilistAvatar: anilistAvatar ?? "",
-        anilistSync: anilistSync ?? false,
-        isImporting: false
-      ));
     });
 
     on<AnilistAccountLogout>((event, emit) async {
@@ -69,7 +73,7 @@ class AnilistAccountBloc
       final data = state as AnilistAccountConnected;
       emit(data.copyWith(isImporting: true));
       final anilistUserId = await _preferencesRepo.anilistUserId;
-      if(anilistUserId == null) return;
+      if (anilistUserId == null) return;
       await _importAnilistLibrary(anilistUserId);
       emit(data.copyWith(isImporting: false));
     });
@@ -110,6 +114,7 @@ class AnilistAccountBloc
   Future<void> _syncAnilist() async {
     _syncCreated();
     _syncUpdated();
+    _syncDeleted();
   }
 
   void _syncCreated() async {
@@ -117,7 +122,7 @@ class AnilistAccountBloc
         .getLibraryUpdates(type: LibraryUpdateType.create, anilist: false)
         .listen(
       (entries) async {
-        if(!(state as AnilistAccountConnected).anilistSync) return;
+        if (!(state as AnilistAccountConnected).anilistSync) return;
         final libItems = await Future.wait(
           entries.map((e) =>
               _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),
@@ -142,10 +147,10 @@ class AnilistAccountBloc
 
   void _syncUpdated() async {
     _mediaLibraryRepo
-        .getLibraryUpdates(type: LibraryUpdateType.create, anilist: false)
+        .getLibraryUpdates(type: LibraryUpdateType.update, anilist: false)
         .listen(
       (entries) async {
-        if(!(state as AnilistAccountConnected).anilistSync) return;
+        if (!(state as AnilistAccountConnected).anilistSync) return;
         final libItems = await Future.wait(
           entries.map((e) =>
               _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),
@@ -164,6 +169,29 @@ class AnilistAccountBloc
           final ue = e.copyWith(anilist: true);
           return _mediaLibraryRepo.updateLibraryUpdate(ue);
         }));
+      },
+    );
+  }
+
+  void _syncDeleted() async {
+    _mediaLibraryRepo
+        .getLibraryUpdates(type: LibraryUpdateType.delete, anilist: false)
+        .listen(
+      (entries) async {
+        if (!(state as AnilistAccountConnected).anilistSync) return;
+        await Future.wait(
+          entries.map(
+            (e) async {
+              final res = await _mediaLibraryRepo.deleteAnilistEntry(
+                  mediaId: e.alEntryId);
+              if (res) {
+                final ue = e.copyWith(anilist: true);
+                return _mediaLibraryRepo.updateLibraryUpdate(ue);
+              }
+              return;
+            },
+          ),
+        );
       },
     );
   }

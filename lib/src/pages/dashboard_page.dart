@@ -84,7 +84,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 16.0),
                     child: Text(
-                      "Recents",
+                      "Recently watching",
                       style: Theme.of(context).textTheme.headline6?.copyWith(
                           color: Theme.of(context).colorScheme.primary),
                       textAlign: TextAlign.start,
@@ -121,6 +121,14 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _recentsList(List<LibraryItem> list) {
+    if(list.isEmpty){
+      return SizedBox(
+        height: 190,
+        child: Center(
+          child: Text("You are not watching anything."),
+        ),
+      );
+    }
     return SizedBox(
       height: 190,
       child: ListView.builder(

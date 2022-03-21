@@ -13,6 +13,16 @@ class MediaModel extends Insertable<MediaModel> {
   final int? malMediaId;
   final String color;
 
+  final int format;
+  final int season;
+  final int year;
+  final int status;
+  final String coverImage;
+
+  MediaFormat get mediaFormat => MediaFormat.values[format];
+  MediaSeason get mediaSeason => MediaSeason.values[season];
+  MediaStatus get mediaStatus => MediaStatus.values[status];
+
   MediaModel({
     required this.id,
     required this.title,
@@ -23,6 +33,11 @@ class MediaModel extends Insertable<MediaModel> {
     required this.color,
     required this.total,
     required this.malMediaId,
+    required this.format,
+    required this.season,
+    required this.year,
+    required this.status,
+    required this.coverImage,
   });
 
   MediaModel.fromAnilistJson(Map<String, dynamic> json)
@@ -34,7 +49,13 @@ class MediaModel extends Insertable<MediaModel> {
         poster = json['coverImage']['large'],
         color = json['coverImage']['color'] ?? "",
         total = json['episodes'] ?? 0,
-        malMediaId = json['idMal'] ?? 0;
+        malMediaId = json['idMal'] ?? 0,
+        format = formatFromAnilist(json['format']).index,
+        season = seasonFromAnilist(json['season'] ?? "").index,
+        status = statusFromAnilist(json['status']).index,
+        year = json['seasonYear'] ?? 0,
+        coverImage = json['bannerImage'] ?? json['coverImage']['large'];
+
 
   Map<String, dynamic> toMap() {
     return {
@@ -48,17 +69,6 @@ class MediaModel extends Insertable<MediaModel> {
       'malMediaId': malMediaId,
     };
   }
-
-  // Map<String, dynamic> toAnilistMap() {
-  //   return {
-  //     'id': alEntryId,
-  //     'mediaId': alMediaId,
-  //     'status': status,
-  //     'score': score,
-  //     'progress': progress,
-  //     'repeat': repeat,
-  //   };
-  // }
 
   MediaModel copyWith({
     int? alMediaId,
@@ -80,7 +90,68 @@ class MediaModel extends Insertable<MediaModel> {
       color: color ?? this.color,
       total: total ?? this.total,
       malMediaId: malMediaId ?? this.malMediaId,
+      format: format,
+      season: season,
+      status: status,
+      year: year,
+      coverImage: coverImage
     );
+  }
+
+  static MediaType typeFromAnilist(String anilistType){
+    switch (anilistType) {
+      case "ANIME":
+        return MediaType.anime;
+      case "MANGA":
+        return MediaType.manga;
+      default:
+        return MediaType.anime;
+    }
+  }
+
+  static MediaSeason seasonFromAnilist(String anilistSeason){
+    switch (anilistSeason) {
+      case "WINTER":
+        return MediaSeason.winter;
+      case "SPRING":
+        return MediaSeason.spring;
+      case "SUMMER":
+        return MediaSeason.summer;
+      case "FALL":
+        return MediaSeason.fall;
+      default:
+        return MediaSeason.winter;
+    }
+  }
+
+   static MediaFormat formatFromAnilist(String anilistFormat){
+    switch (anilistFormat) {
+      case "TV":
+        return MediaFormat.tv;
+      case "TV_SHORT":
+        return MediaFormat.tv;
+      case "MOVIE":
+        return MediaFormat.movie;
+      case "SPECIAL":
+        return MediaFormat.special;
+      case "OVA":
+        return MediaFormat.ova;
+      case "ONA":
+        return MediaFormat.ona;
+      default:
+        return MediaFormat.tv;
+    }
+  }
+
+  static MediaStatus statusFromAnilist(String anilistFormat){
+    switch (anilistFormat) {
+      case "FINISHED":
+        return MediaStatus.finished;
+      case "RELEASING":
+        return MediaStatus.current;
+      default:
+        return MediaStatus.tba;
+    }
   }
 
   @override
@@ -95,6 +166,83 @@ class MediaModel extends Insertable<MediaModel> {
       color: Value(color),
       total: Value(total),
       malMediaId: Value(malMediaId),
+      format: Value(format),
+      status: Value(status),
+      year: Value(year),
+      season: Value(season),
+      coverImage: Value(coverImage),
     ).toColumns(nullToAbsent);
+  }
+}
+
+
+// Media Type
+enum MediaType {anime, manga}
+
+extension MediaTypeExt on MediaType{
+  String get displayTitle {
+    switch(this){
+      case MediaType.anime:
+        return "Anime";
+      case MediaType.manga:
+        return "Manga";
+    }
+  }
+}
+
+
+// Season
+enum MediaSeason {winter, spring, summer, fall}
+
+extension MediaSeasonExt on MediaSeason{
+  String get displayTitle {
+    switch(this){
+      case MediaSeason.winter:
+        return "Winter";
+      case MediaSeason.spring:
+        return "Spring";
+      case MediaSeason.summer:
+        return "Summer";
+      case MediaSeason.fall:
+        return "Fall";
+    }
+  }
+}
+
+// Format
+enum MediaFormat {tv, movie, special, ova, ona, music}
+
+extension MediaFormatExt on MediaFormat{
+  String get displayTitle {
+    switch(this){
+      case MediaFormat.tv:
+        return "TV";
+      case MediaFormat.movie:
+        return "Movie";
+      case MediaFormat.special:
+        return "Special";
+      case MediaFormat.ova:
+        return "OVA";
+      case MediaFormat.ona:
+        return "ONA";
+      case MediaFormat.music:
+        return "Music";
+    }
+  }
+}
+
+ //Airing Status
+enum MediaStatus {finished, current, tba}
+
+extension MediaStatusExt on MediaStatus{
+  String get displayTitle {
+    switch(this){
+      case MediaStatus.finished:
+        return "Finished";
+      case MediaStatus.current:
+        return "Airing";
+      case MediaStatus.tba:
+        return "TBA";
+    }
   }
 }

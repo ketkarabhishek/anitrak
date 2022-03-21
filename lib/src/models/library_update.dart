@@ -15,6 +15,7 @@ class LibraryUpdate extends Insertable<LibraryUpdate> {
   final bool anilist;
   final bool kitsu;
   final bool mal;
+  final int alEntryId;
 
   LibraryUpdate({
     required this.id,
@@ -23,14 +24,16 @@ class LibraryUpdate extends Insertable<LibraryUpdate> {
     required this.anilist,
     required this.kitsu,
     required this.mal,
+    required this.alEntryId,
   });
 
-  LibraryUpdate.createNewUpdate(LibraryUpdateType type, this.mediaEntryId)
+  LibraryUpdate.createNewUpdate(LibraryUpdateType type, this.mediaEntryId, {int? alEntryId})
       : id = const Uuid().v4(),
         type = type.index,
         anilist = false,
         kitsu = false,
-        mal = false;
+        mal = false,
+        alEntryId = alEntryId ?? 0;
 
   LibraryUpdate copyWith({
     bool? anilist,
@@ -41,6 +44,7 @@ class LibraryUpdate extends Insertable<LibraryUpdate> {
       id: id,
       mediaEntryId: mediaEntryId,
       type: type,
+      alEntryId: alEntryId,
       kitsu: kitsu ?? this.kitsu,
       mal: mal ?? this.mal,
       anilist: anilist ?? this.anilist,
@@ -56,6 +60,7 @@ class LibraryUpdate extends Insertable<LibraryUpdate> {
       anilist: Value(anilist),
       kitsu: Value(kitsu),
       mal: Value(mal),
+      alEntryId: Value(alEntryId)
     ).toColumns(nullToAbsent);
   }
 }

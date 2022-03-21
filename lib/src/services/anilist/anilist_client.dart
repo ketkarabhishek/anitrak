@@ -73,6 +73,16 @@ class AnilistClient {
           variables: mediaEntryData),
     );
     if (result.hasException) throw GraphqlRequestFailure();
-    return 0;
+    return result.data?['SaveMediaListEntry']['id'];
+  }
+
+  Future<bool> deleteMediaListEntry(Map<String, dynamic> mediaEntryData) async {
+    final result = await _graphQLClient.mutate(
+      MutationOptions(
+          document: gql(mutations.deleteMediaListEntry),
+          variables: mediaEntryData),
+    );
+    if (result.hasException) throw GraphqlRequestFailure();
+    return result.data?['DeleteMediaListEntry']['deleted'];
   }
 }

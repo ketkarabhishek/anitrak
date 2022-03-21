@@ -28,10 +28,6 @@ class LibPageBloc extends Bloc<LibPageEvent, LibPageState> {
         ),
       );
     });
-
-    on<LibraryEntryUpdated>((event, emit) async {
-      await mediaEntriesRepo.updateMediaEntry(event.updatedMediaEntry);
-    });
   }
 
   final MediaLibraryRepo mediaEntriesRepo;

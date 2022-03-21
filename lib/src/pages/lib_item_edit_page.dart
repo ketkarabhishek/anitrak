@@ -1,11 +1,13 @@
 import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
+import 'package:anitrak/src/models/media_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class LibItemEditPage extends StatefulWidget {
-  const LibItemEditPage({Key? key, required this.libraryItem}) : super(key: key);
+  const LibItemEditPage({Key? key, required this.libraryItem})
+      : super(key: key);
 
   final LibraryItem libraryItem;
 
@@ -24,8 +26,6 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
   final FocusNode _progressFocusNode = FocusNode();
   final FocusNode _repeatFocusNode = FocusNode();
 
-  final statusList = ['CURRENT', 'COMPLETED', 'PLANNING', 'DROPPED', 'PAUSED'];
-
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       final progress = int.parse(_progressTextController.text);
@@ -42,10 +42,26 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
     }
   }
 
+  List<MediaEntryStatus> getStatusList() {
+    switch (widget.libraryItem.media.mediaStatus) {
+      case MediaStatus.tba:
+        return [MediaEntryStatus.planned];
+      case MediaStatus.current:
+        List<MediaEntryStatus> res =
+            MediaEntryStatus.values.toList(growable: true);
+        res.remove(MediaEntryStatus.completed);
+        return res;
+      case MediaStatus.finished:
+        return MediaEntryStatus.values;
+    }
+  }
+
   @override
   void initState() {
-    _progressTextController.text = widget.libraryItem.mediaEntry.progress.toString();
-    _repeatTextController.text = widget.libraryItem.mediaEntry.repeat.toString();
+    _progressTextController.text =
+        widget.libraryItem.mediaEntry.progress.toString();
+    _repeatTextController.text =
+        widget.libraryItem.mediaEntry.repeat.toString();
     _progressFocusNode.addListener(() {
       if (_progressFocusNode.hasFocus) {
         _progressTextController.selection = TextSelection(
@@ -62,7 +78,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
           extentOffset: _repeatTextController.text.length,
         );
       }
-    });    
+    });
     super.initState();
   }
 
@@ -119,6 +135,8 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                   child: TextFormField(
+                    enabled:
+                        widget.libraryItem.media.mediaStatus != MediaStatus.tba,
                     controller: _progressTextController,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     keyboardType: TextInputType.number,
@@ -126,7 +144,8 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                     decoration: InputDecoration(
                         border: const OutlineInputBorder(),
                         label: const Text('Progress'),
-                        suffixText: 'of  ${widget.libraryItem.media.total} Episodes'),
+                        suffixText:
+                            'of  ${widget.libraryItem.media.total} Episodes'),
                     validator: (String? value) {
                       if (value == null || value.isEmpty) {
                         return "Please enter a number";
@@ -154,7 +173,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                       border: OutlineInputBorder(),
                       label: Text('Status'),
                     ),
-                    items: MediaEntryStatus.values
+                    items: getStatusList()
                         .map(
                           (e) => DropdownMenuItem(
                             child: Text(e.displayTitle),
@@ -217,11 +236,45 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                     },
                   ),
                 ),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(textStyle: TextStyle(fontSize: 20)),
+                  onPressed: () async {
+                    final res = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => _getAlertDialog(),
+                    );
+                    if (res != null && res) {
+                      Navigator.pop(context, res);
+                    }
+                  },
+                  icon: Icon(Icons.delete_forever),
+                  label: Text("Delete"),
+                ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _getAlertDialog() {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      title: const Text('Delete'),
+      content: const Text('Are you sure you want to delete this entry?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('Delete'),
+        ),
+      ],
     );
   }
 }

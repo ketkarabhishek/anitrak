@@ -20,49 +20,11 @@ query ($id: Int, $page: Int, $perPage: Int, $search: String) {
         color
       }
       episodes
-    }
-  }
-}
-''';
-
-const getMediaList = r'''
-query ($id: Int, $page: Int, $perPage: Int, $userId: Int, $userName: String, $type: MediaType, $status: MediaListStatus, $mediaId: Int) {
-  Page (page: $page, perPage: $perPage) {
-    pageInfo {
-      total
-      currentPage
-      lastPage
-      hasNextPage
-      perPage
-    }
-    mediaList (id: $id, userId: $userId, userName: $userName, type: $type, status: $status, mediaId: $mediaId) {
-      id
-      mediaId
       status
-      score
-      progress
-      repeat
-      createdAt
-      updatedAt
-      startedAt{
-        year
-        month
-        day
-      }
-      completedAt{
-        year
-        month
-        day
-      }
-      media{
-        title {
-          romaji
-        }
-        coverImage{
-          large
-          color
-        }
-      }
+      format
+      season
+      seasonYear
+      bannerImage
     }
   }
 }
@@ -85,16 +47,16 @@ query ($userId: Int, $type: MediaType) {
         repeat
         createdAt
         updatedAt
-        startedAt{
-        year
-        month
-        day
-      }
-      completedAt{
-        year
-        month
-        day
-      }
+        startedAt {
+          year
+          month
+          day
+        }
+        completedAt {
+          year
+          month
+          day
+        }
         media {
           id
           description
@@ -107,6 +69,11 @@ query ($userId: Int, $type: MediaType) {
             color
           }
           episodes
+          status
+          format
+          season
+          seasonYear
+          bannerImage
         }
       }
     }

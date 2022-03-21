@@ -13,6 +13,12 @@ class Media extends Table {
   IntColumn get malMediaId => integer().nullable()();
   TextColumn get color => text()();
 
+  IntColumn get status => integer()();
+  IntColumn get format => integer()();
+  IntColumn get season => integer()();
+  IntColumn get year => integer()();
+  TextColumn get coverImage => text()();
+
   @override
   Set<Column> get primaryKey => {id};
 }

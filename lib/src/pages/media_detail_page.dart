@@ -40,6 +40,19 @@ class _MediaDetailPageState extends State<MediaDetailPage>
     return false;
   }
 
+   List<MediaEntryStatus> getStatusList(){
+    switch (widget.media.mediaStatus) {
+      case MediaStatus.tba:
+        return [MediaEntryStatus.planned];
+      case MediaStatus.current:
+        List<MediaEntryStatus> res = MediaEntryStatus.values.toList(growable: true);
+        res.remove(MediaEntryStatus.completed);
+        return res;
+      case MediaStatus.finished:
+        return MediaEntryStatus.values;
+    }
+  }
+
   @override
   void initState() {
     _colorAnimationController =
@@ -86,7 +99,7 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                               image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: CachedNetworkImageProvider(
-                                  widget.media.poster,
+                                  widget.media.coverImage,
                                 ),
                               ),
                             ),
@@ -122,24 +135,24 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                       padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 8.0),
                       child: Text(
                         widget.media.title,
-                        style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.headlineMedium,
                         textAlign: TextAlign.center,
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            '${widget.media.duration} minutes',
-                            style: Theme.of(context).textTheme.subtitle1,
-                          ),
-                          Text(
-                            '${widget.media.total} episodes',
-                            style: Theme.of(context).textTheme.subtitle1,
-                          )
-                        ],
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        '${widget.media.mediaFormat.displayTitle} | ${widget.media.mediaSeason.displayTitle}, ${widget.media.year}',
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        '${widget.media.mediaStatus.displayTitle} | ${widget.media.duration} mins | ${widget.media.total > 0 ? widget.media.total : " -"} eps',
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     BlocBuilder<MediaPageCubit, MediaPageCubitState>(
@@ -147,11 +160,14 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                         if (state is MediaPageInitial) {
                           return ElevatedButton.icon(
                               label: const Text('Add to Library'),
-                              onPressed: () {
+                              onPressed: () async {
+                                final status = await showDialog<MediaEntryStatus>(context: context, builder: (context) => _getAddDialog(context));
+                                if(status == null) return;
                                 final cubit =
                                     BlocProvider.of<MediaPageCubit>(context);
                                 final entry = MediaEntry.createNewEntry(
                                   mediaId: widget.media.id,
+                                  mstatus: status.index,
                                 );
                                 final item = LibraryItem(
                                     media: widget.media, mediaEntry: entry);
@@ -162,58 +178,69 @@ class _MediaDetailPageState extends State<MediaDetailPage>
 
                         final data = state as MediaPageWithEntry;
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  _infoCard(
-                                    title: 'Progress',
-                                    value:
-                                        "${data.mediaEntry.progress.toString()}/${widget.media.total.toString()}",
-                                  ),
-                                  _infoCard(
-                                    title: 'Rating',
-                                    value:
-                                        '${data.mediaEntry.score == 0 ? "-" : data.mediaEntry.score}/10',
-                                  ),
-                                  _infoCard(
-                                    title: 'Status',
-                                    value: data.mediaEntry.entryStatus.displayTitle,
-                                  ),
-                                ],
-                              ),
-                              ElevatedButton.icon(
-                                style: OutlinedButton.styleFrom(
-                                    fixedSize: Size(
-                                      MediaQuery.of(context).size.width,
-                                      40,
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Card(
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    _infoCard(
+                                      title: 'Progress',
+                                      value:
+                                          "${data.mediaEntry.progress.toString()}",
                                     ),
-                                    textStyle:
-                                        const TextStyle(fontSize: 18)),
-                                label: const Text("Edit"),
-                                onPressed: () async {
-                                  final result =
-                                      await Navigator.push<MediaEntry>(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => LibItemEditPage(
-                                        libraryItem: LibraryItem(
-                                            media: widget.media,
-                                            mediaEntry: data.mediaEntry),
-                                      ),
+                                    _infoCard(
+                                      title: 'Rating',
+                                      value:
+                                          '${data.mediaEntry.score == 0 ? "-" : data.mediaEntry.score}/10',
                                     ),
-                                  );
-                                  if (result == null) return;
-
-                                  BlocProvider.of<MediaPageCubit>(context)
-                                      .updateMediaEntry(result);
-                                },
-                                icon: const Icon(Icons.edit_outlined),
-                              ),
-                            ],
+                                    _infoCard(
+                                      title: 'Status',
+                                      value: data
+                                          .mediaEntry.entryStatus.displayTitle,
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ElevatedButton.icon(
+                                    style: OutlinedButton.styleFrom(
+                                        fixedSize: Size(
+                                          MediaQuery.of(context).size.width,
+                                          40,
+                                        ),
+                                        textStyle: const TextStyle(fontSize: 18)),
+                                    label: const Text("Edit"),
+                                    onPressed: () async {
+                                      final result =
+                                          await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          fullscreenDialog: true,
+                                          builder: (context) => LibItemEditPage(
+                                            libraryItem: LibraryItem(
+                                                media: widget.media,
+                                                mediaEntry: data.mediaEntry),
+                                          ),
+                                        ),
+                                      );
+                                      if (result == null) return;
+                                      if(result is MediaEntry){
+                                        BlocProvider.of<MediaPageCubit>(context)
+                                          .updateMediaEntry(result);
+                                          return;
+                                      }
+                                      BlocProvider.of<MediaPageCubit>(context)
+                                          .deleteMediaEntry(LibraryItem(media: widget.media, mediaEntry: widget.mediaEntry!));
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(Icons.edit_outlined),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -225,7 +252,7 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                           return Text.rich(
                             HTML.toTextSpan(context, widget.media.description,
                                 defaultTextStyle:
-                                    Theme.of(context).textTheme.bodyMedium),
+                                    Theme.of(context).textTheme.bodyLarge),
                           );
                         },
                       ),
@@ -277,10 +304,27 @@ class _MediaDetailPageState extends State<MediaDetailPage>
       ),
     );
   }
+
+  Widget _getAddDialog(BuildContext context) {
+    return SimpleDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      title: const Text('Select Status'),
+      children: getStatusList().map((e) => SimpleDialogOption(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              e.displayTitle,
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          onPressed: () => Navigator.pop(context, e),
+        ),).toList(),
+    );
+  }
 }
 
 extension StringExtension on String {
-    String capitalize() {
-      return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
-    }
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
+  }
 }

@@ -50,7 +50,7 @@ class MediaEntry extends Insertable<MediaEntry> {
         media = mediaId,
         synced = true;
 
-  MediaEntry.createNewEntry({required String mediaId, int mstatus = 1})
+  MediaEntry.createNewEntry({required String mediaId, int mstatus = 0})
       : id = const Uuid().v4(),
         alEntryId = 0,
         status = mstatus,
@@ -67,7 +67,7 @@ class MediaEntry extends Insertable<MediaEntry> {
   Map<String, dynamic> toMap() {
     return {
       'alEntryId': alEntryId,
-      'status': status,
+      'status': entryStatus.toAnilistStatus,
       'score': score,
       'progress': progress,
       'repeat': repeat,
@@ -82,7 +82,7 @@ class MediaEntry extends Insertable<MediaEntry> {
     var varMap = {
       // 'id': alEntryId != 0 ? alEntryId : null,
       'mediaId': mediaId,
-      'status': status,
+      'status': entryStatus.toAnilistStatus,
       'score': score,
       'progress': progress,
       'repeat': repeat,
@@ -164,11 +164,26 @@ extension MediaEntryStatusExt on MediaEntryStatus {
       case MediaEntryStatus.completed:
         return "Completed";
       case MediaEntryStatus.planned:
-        return "Planned";
+        return "Planning";
       case MediaEntryStatus.onHold:
         return "On Hold";
       case MediaEntryStatus.dropped:
         return "Dropped";
+    }
+  }
+
+  String get toAnilistStatus {
+    switch (this) {
+      case MediaEntryStatus.watching:
+        return "CURRENT";
+      case MediaEntryStatus.completed:
+        return "COMPLETED";
+      case MediaEntryStatus.planned:
+        return "Planned";
+      case MediaEntryStatus.onHold:
+        return "PAUSED";
+      case MediaEntryStatus.dropped:
+        return "DROPPED";
     }
   }
 }

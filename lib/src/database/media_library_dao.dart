@@ -69,7 +69,7 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     });
   }
 
-   Future<void> deleteAllEntries() async {
+  Future<void> deleteAllEntries() async {
     await delete(mediaEntries).go();
   }
 
@@ -79,6 +79,12 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
 
   Future<void> insertMediaEntry(MediaEntry entry) async {
     await into(mediaEntries).insert(entry);
+  }
+
+  Future<void> deleteMediaEntry({required String mediaEntryId}) async {
+    final query = delete(mediaEntries)
+      ..where((tbl) => tbl.id.equals(mediaEntryId));
+    await query.go();
   }
 
   Stream<double?> getTotalEpisodesWatched() {
@@ -114,6 +120,12 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
 
   Future<void> deleteAllMedia() async {
     await delete(media).go();
+  }
+
+   Future<void> deleteMedia({required String mediaId}) async {
+    final query = delete(media)
+      ..where((tbl) => tbl.id.equals(mediaId));
+    await query.go();
   }
 
   Future<void> updateMedia(MediaModel entry) async {

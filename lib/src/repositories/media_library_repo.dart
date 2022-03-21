@@ -80,17 +80,28 @@ class MediaLibraryRepo {
     await libraryUpdateDao.deleteAllLibraryUpdates();
     await mediaLibraryDao.deleteAllEntries();
     await mediaLibraryDao.deleteAllMedia();
-  }  
+  }
+
+  Future<void> deleteLibraryItem(LibraryItem item) async {
+    await libraryUpdateDao.deleteLibraryUpdate(
+        mediaEntryId: item.mediaEntry.id);
+    await mediaLibraryDao.deleteMediaEntry(mediaEntryId: item.mediaEntry.id);
+    await mediaLibraryDao.deleteMedia(mediaId: item.media.id);
+    final update = LibraryUpdate.createNewUpdate(
+        LibraryUpdateType.delete, item.mediaEntry.id,
+        alEntryId: item.mediaEntry.alEntryId);
+    libraryUpdateDao.insertLibraryUpdate(update);
+  }
 
   // Library Update
   Stream<List<LibraryUpdate>> getLibraryUpdates({
-    LibraryUpdateType type = LibraryUpdateType.update,
+    LibraryUpdateType? type,
     bool? anilist,
     bool? kitsu,
     bool? mal,
   }) {
     return libraryUpdateDao.getLibraryUpdates(
-      type: type.index,
+      type: type?.index,
       anilist: anilist,
       kitsu: kitsu,
       mal: mal,
@@ -103,9 +114,20 @@ class MediaLibraryRepo {
 
   // ====Online====
   // Anilist
-  Future<int> saveAnilistEntry(MediaEntry entry, {required int mediaId}) async {
+  Future<void> saveAnilistEntry(MediaEntry entry,
+      {required int mediaId}) async {
     final varMap = entry.toAnilistMap(mediaId: mediaId);
-    return client.saveMediaListEntry(varMap);
+    final id = await client.saveMediaListEntry(varMap);
+    if (entry.alEntryId == 0) {
+      final newEntry = entry.copyWith(alEntryId: id);
+      await mediaLibraryDao.updateMediaEntry(newEntry);
+    }
+    return;
+  }
+
+  Future<bool> deleteAnilistEntry({required int mediaId}) async {
+    final varMap = {'id': mediaId};
+    return client.deleteMediaListEntry(varMap);
   }
 
   Future<List<dynamic>> getUserMediaList(String userId) async {

@@ -17,6 +17,11 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
   final Value<int> alMediaId;
   final Value<int?> malMediaId;
   final Value<String> color;
+  final Value<int> status;
+  final Value<int> format;
+  final Value<int> season;
+  final Value<int> year;
+  final Value<String> coverImage;
   const MediaCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -27,6 +32,11 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
     this.alMediaId = const Value.absent(),
     this.malMediaId = const Value.absent(),
     this.color = const Value.absent(),
+    this.status = const Value.absent(),
+    this.format = const Value.absent(),
+    this.season = const Value.absent(),
+    this.year = const Value.absent(),
+    this.coverImage = const Value.absent(),
   });
   MediaCompanion.insert({
     required String id,
@@ -38,6 +48,11 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
     required int alMediaId,
     this.malMediaId = const Value.absent(),
     required String color,
+    required int status,
+    required int format,
+    required int season,
+    required int year,
+    required String coverImage,
   })  : id = Value(id),
         title = Value(title),
         poster = Value(poster),
@@ -45,7 +60,12 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
         total = Value(total),
         duration = Value(duration),
         alMediaId = Value(alMediaId),
-        color = Value(color);
+        color = Value(color),
+        status = Value(status),
+        format = Value(format),
+        season = Value(season),
+        year = Value(year),
+        coverImage = Value(coverImage);
   static Insertable<MediaModel> custom({
     Expression<String>? id,
     Expression<String>? title,
@@ -56,6 +76,11 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
     Expression<int>? alMediaId,
     Expression<int?>? malMediaId,
     Expression<String>? color,
+    Expression<int>? status,
+    Expression<int>? format,
+    Expression<int>? season,
+    Expression<int>? year,
+    Expression<String>? coverImage,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -67,6 +92,11 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
       if (alMediaId != null) 'al_media_id': alMediaId,
       if (malMediaId != null) 'mal_media_id': malMediaId,
       if (color != null) 'color': color,
+      if (status != null) 'status': status,
+      if (format != null) 'format': format,
+      if (season != null) 'season': season,
+      if (year != null) 'year': year,
+      if (coverImage != null) 'cover_image': coverImage,
     });
   }
 
@@ -79,7 +109,12 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
       Value<int>? duration,
       Value<int>? alMediaId,
       Value<int?>? malMediaId,
-      Value<String>? color}) {
+      Value<String>? color,
+      Value<int>? status,
+      Value<int>? format,
+      Value<int>? season,
+      Value<int>? year,
+      Value<String>? coverImage}) {
     return MediaCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
@@ -90,6 +125,11 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
       alMediaId: alMediaId ?? this.alMediaId,
       malMediaId: malMediaId ?? this.malMediaId,
       color: color ?? this.color,
+      status: status ?? this.status,
+      format: format ?? this.format,
+      season: season ?? this.season,
+      year: year ?? this.year,
+      coverImage: coverImage ?? this.coverImage,
     );
   }
 
@@ -123,6 +163,21 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
     if (color.present) {
       map['color'] = Variable<String>(color.value);
     }
+    if (status.present) {
+      map['status'] = Variable<int>(status.value);
+    }
+    if (format.present) {
+      map['format'] = Variable<int>(format.value);
+    }
+    if (season.present) {
+      map['season'] = Variable<int>(season.value);
+    }
+    if (year.present) {
+      map['year'] = Variable<int>(year.value);
+    }
+    if (coverImage.present) {
+      map['cover_image'] = Variable<String>(coverImage.value);
+    }
     return map;
   }
 
@@ -137,7 +192,12 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
           ..write('duration: $duration, ')
           ..write('alMediaId: $alMediaId, ')
           ..write('malMediaId: $malMediaId, ')
-          ..write('color: $color')
+          ..write('color: $color, ')
+          ..write('status: $status, ')
+          ..write('format: $format, ')
+          ..write('season: $season, ')
+          ..write('year: $year, ')
+          ..write('coverImage: $coverImage')
           ..write(')'))
         .toString();
   }
@@ -194,6 +254,31 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
   late final GeneratedColumn<String?> color = GeneratedColumn<String?>(
       'color', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<int?> status = GeneratedColumn<int?>(
+      'status', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _formatMeta = const VerificationMeta('format');
+  @override
+  late final GeneratedColumn<int?> format = GeneratedColumn<int?>(
+      'format', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _seasonMeta = const VerificationMeta('season');
+  @override
+  late final GeneratedColumn<int?> season = GeneratedColumn<int?>(
+      'season', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _yearMeta = const VerificationMeta('year');
+  @override
+  late final GeneratedColumn<int?> year = GeneratedColumn<int?>(
+      'year', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _coverImageMeta = const VerificationMeta('coverImage');
+  @override
+  late final GeneratedColumn<String?> coverImage = GeneratedColumn<String?>(
+      'cover_image', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -204,7 +289,12 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
         duration,
         alMediaId,
         malMediaId,
-        color
+        color,
+        status,
+        format,
+        season,
+        year,
+        coverImage
       ];
   @override
   String get aliasedName => _alias ?? 'media';
@@ -272,6 +362,38 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
     } else if (isInserting) {
       context.missing(_colorMeta);
     }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('format')) {
+      context.handle(_formatMeta,
+          format.isAcceptableOrUnknown(data['format']!, _formatMeta));
+    } else if (isInserting) {
+      context.missing(_formatMeta);
+    }
+    if (data.containsKey('season')) {
+      context.handle(_seasonMeta,
+          season.isAcceptableOrUnknown(data['season']!, _seasonMeta));
+    } else if (isInserting) {
+      context.missing(_seasonMeta);
+    }
+    if (data.containsKey('year')) {
+      context.handle(
+          _yearMeta, year.isAcceptableOrUnknown(data['year']!, _yearMeta));
+    } else if (isInserting) {
+      context.missing(_yearMeta);
+    }
+    if (data.containsKey('cover_image')) {
+      context.handle(
+          _coverImageMeta,
+          coverImage.isAcceptableOrUnknown(
+              data['cover_image']!, _coverImageMeta));
+    } else if (isInserting) {
+      context.missing(_coverImageMeta);
+    }
     return context;
   }
 
@@ -299,6 +421,16 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
           .mapFromDatabaseResponse(data['${effectivePrefix}total'])!,
       malMediaId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}mal_media_id']),
+      format: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}format'])!,
+      season: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}season'])!,
+      year: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}year'])!,
+      status: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
+      coverImage: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}cover_image'])!,
     );
   }
 
@@ -697,6 +829,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
   final Value<bool> anilist;
   final Value<bool> kitsu;
   final Value<bool> mal;
+  final Value<int> alEntryId;
   const LibraryUpdatesCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -704,6 +837,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
     this.anilist = const Value.absent(),
     this.kitsu = const Value.absent(),
     this.mal = const Value.absent(),
+    this.alEntryId = const Value.absent(),
   });
   LibraryUpdatesCompanion.insert({
     required String id,
@@ -712,12 +846,14 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
     required bool anilist,
     required bool kitsu,
     required bool mal,
+    required int alEntryId,
   })  : id = Value(id),
         type = Value(type),
         mediaEntryId = Value(mediaEntryId),
         anilist = Value(anilist),
         kitsu = Value(kitsu),
-        mal = Value(mal);
+        mal = Value(mal),
+        alEntryId = Value(alEntryId);
   static Insertable<LibraryUpdate> custom({
     Expression<String>? id,
     Expression<int>? type,
@@ -725,6 +861,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
     Expression<bool>? anilist,
     Expression<bool>? kitsu,
     Expression<bool>? mal,
+    Expression<int>? alEntryId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -733,6 +870,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
       if (anilist != null) 'anilist': anilist,
       if (kitsu != null) 'kitsu': kitsu,
       if (mal != null) 'mal': mal,
+      if (alEntryId != null) 'al_entry_id': alEntryId,
     });
   }
 
@@ -742,7 +880,8 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
       Value<String>? mediaEntryId,
       Value<bool>? anilist,
       Value<bool>? kitsu,
-      Value<bool>? mal}) {
+      Value<bool>? mal,
+      Value<int>? alEntryId}) {
     return LibraryUpdatesCompanion(
       id: id ?? this.id,
       type: type ?? this.type,
@@ -750,6 +889,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
       anilist: anilist ?? this.anilist,
       kitsu: kitsu ?? this.kitsu,
       mal: mal ?? this.mal,
+      alEntryId: alEntryId ?? this.alEntryId,
     );
   }
 
@@ -774,6 +914,9 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
     if (mal.present) {
       map['mal'] = Variable<bool>(mal.value);
     }
+    if (alEntryId.present) {
+      map['al_entry_id'] = Variable<int>(alEntryId.value);
+    }
     return map;
   }
 
@@ -785,7 +928,8 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
           ..write('mediaEntryId: $mediaEntryId, ')
           ..write('anilist: $anilist, ')
           ..write('kitsu: $kitsu, ')
-          ..write('mal: $mal')
+          ..write('mal: $mal, ')
+          ..write('alEntryId: $alEntryId')
           ..write(')'))
         .toString();
   }
@@ -812,9 +956,7 @@ class $LibraryUpdatesTable extends LibraryUpdates
   @override
   late final GeneratedColumn<String?> mediaEntryId = GeneratedColumn<String?>(
       'media_entry_id', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: true,
-      defaultConstraints: 'REFERENCES media_entries (id)');
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _anilistMeta = const VerificationMeta('anilist');
   @override
   late final GeneratedColumn<bool?> anilist = GeneratedColumn<bool?>(
@@ -836,9 +978,14 @@ class $LibraryUpdatesTable extends LibraryUpdates
       type: const BoolType(),
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (mal IN (0, 1))');
+  final VerificationMeta _alEntryIdMeta = const VerificationMeta('alEntryId');
+  @override
+  late final GeneratedColumn<int?> alEntryId = GeneratedColumn<int?>(
+      'al_entry_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, type, mediaEntryId, anilist, kitsu, mal];
+      [id, type, mediaEntryId, anilist, kitsu, mal, alEntryId];
   @override
   String get aliasedName => _alias ?? 'library_updates';
   @override
@@ -885,6 +1032,14 @@ class $LibraryUpdatesTable extends LibraryUpdates
     } else if (isInserting) {
       context.missing(_malMeta);
     }
+    if (data.containsKey('al_entry_id')) {
+      context.handle(
+          _alEntryIdMeta,
+          alEntryId.isAcceptableOrUnknown(
+              data['al_entry_id']!, _alEntryIdMeta));
+    } else if (isInserting) {
+      context.missing(_alEntryIdMeta);
+    }
     return context;
   }
 
@@ -906,6 +1061,8 @@ class $LibraryUpdatesTable extends LibraryUpdates
           .mapFromDatabaseResponse(data['${effectivePrefix}kitsu'])!,
       mal: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}mal'])!,
+      alEntryId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}al_entry_id'])!,
     );
   }
 

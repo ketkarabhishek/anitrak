@@ -5,3 +5,11 @@ mutation ($id: Int, $mediaId: Int, $status: MediaListStatus, $score: Float, $pro
   }
 }
 ''';
+
+const deleteMediaListEntry = r'''
+mutation($id: Int){
+  DeleteMediaListEntry(id: $id){
+    deleted
+  }
+}
+''';

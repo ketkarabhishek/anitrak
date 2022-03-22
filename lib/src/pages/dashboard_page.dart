@@ -26,7 +26,10 @@ class _DashboardPageState extends State<DashboardPage> {
             pinned: true,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             centerTitle: true,
-            title: const Text('Anitrak'),
+            title: Text(
+              'Anitrak',
+              style: TextStyle(fontFamily: 'Naruto', color: Theme.of(context).colorScheme.primary),
+            ),
             bottom: const SearchBar(),
           ),
           SliverToBoxAdapter(
@@ -65,7 +68,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       'It\'s very empty here.',
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                     Text(
+                    Text(
                       'Search and add your anime or import from your tracking account.',
                       style: Theme.of(context).textTheme.caption,
                     ),
@@ -121,7 +124,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Widget _recentsList(List<LibraryItem> list) {
-    if(list.isEmpty){
+    if (list.isEmpty) {
       return SizedBox(
         height: 190,
         child: Center(

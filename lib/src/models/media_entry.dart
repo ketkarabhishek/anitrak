@@ -179,7 +179,7 @@ extension MediaEntryStatusExt on MediaEntryStatus {
       case MediaEntryStatus.completed:
         return "COMPLETED";
       case MediaEntryStatus.planned:
-        return "Planned";
+        return "PLANNING";
       case MediaEntryStatus.onHold:
         return "PAUSED";
       case MediaEntryStatus.dropped:

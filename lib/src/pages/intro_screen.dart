@@ -28,6 +28,18 @@ class IntroScreen extends StatelessWidget {
             title: 'Track your shows',
             body: 'Keep track all your Anime by adding them to your library.',
             decoration: pageDecoration),
+         PageViewModel(
+            image: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.asset('images/sync.png'),
+            ),
+            title: 'Sync',
+            body: 'Sync your library with your favourite tracking service.',
+            footer: Text(
+              'Only supports Anilist for now. Kitsu and MyAnimeList support is planned to be added in the future.',
+              textAlign: TextAlign.center,
+            ),
+            decoration: pageDecoration),
         PageViewModel(
             image: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -40,23 +52,11 @@ class IntroScreen extends StatelessWidget {
         PageViewModel(
             image: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Image.asset('images/sync.png'),
-            ),
-            title: 'Sync',
-            body: 'Sync your library with your favourite tracking service.',
-            footer: Text(
-              'Currently only supports Anilist. Kitsu and MyAnimeList support will also be added in the future.',
-              textAlign: TextAlign.center,
-            ),
-            decoration: pageDecoration),
-        PageViewModel(
-            image: Padding(
-              padding: const EdgeInsets.all(16.0),
               child: Image.asset('images/warning.png'),
             ),
             title: 'This app is stll under construction.',
             body:
-                'As this is a beta application, please be mindful that there will be a few bugs and there might also be a risk of data loss.',
+                'Please be mindful that there may be a few bugs while using the app..',
             decoration: pageDecoration),
       ],
       onDone: () {

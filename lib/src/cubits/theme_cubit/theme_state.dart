@@ -5,7 +5,7 @@ abstract class ThemeState {}
 class ThemeModeState extends ThemeState {
   final ThemeMode themeMode;
 
-  ThemeModeState({this.themeMode = ThemeMode.dark});
+  ThemeModeState({this.themeMode = ThemeMode.system});
 
   Color get navColor {
     switch (themeMode) {

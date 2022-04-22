@@ -17,10 +17,10 @@ class LibraryUpdateDao extends DatabaseAccessor<MyDatabase>
       query.where((tbl) => tbl.anilist.equals(anilist));
     }
     if (kitsu != null) {
-      query.where((tbl) => tbl.anilist.equals(kitsu));
+      query.where((tbl) => tbl.kitsu.equals(kitsu));
     }
     if (mal != null) {
-      query.where((tbl) => tbl.anilist.equals(mal));
+      query.where((tbl) => tbl.mal.equals(mal));
     }
 
     if (type != null) {

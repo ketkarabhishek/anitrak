@@ -189,7 +189,7 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                                     _infoCard(
                                       title: 'Progress',
                                       value:
-                                          "${data.mediaEntry.progress.toString()}",
+                                          data.mediaEntry.progress.toString(),
                                     ),
                                     _infoCard(
                                       title: 'Rating',

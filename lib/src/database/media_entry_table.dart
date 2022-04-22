@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 class MediaEntries extends Table {
   TextColumn get id => text()();
   IntColumn get alEntryId => integer()();
+  IntColumn get kitsuEntryId => integer()();
   IntColumn get status => integer()();
   IntColumn get score => integer()();
   IntColumn get progress => integer()();

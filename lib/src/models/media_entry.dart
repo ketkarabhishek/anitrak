@@ -1,10 +1,12 @@
 import 'package:anitrak/src/database/database.dart';
+import 'package:anitrak/src/models/library_update.dart';
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 class MediaEntry extends Insertable<MediaEntry> {
   final String id;
   final int alEntryId;
+  final int kitsuEntryId;
   final int status;
   final int score;
   final int progress;
@@ -22,6 +24,7 @@ class MediaEntry extends Insertable<MediaEntry> {
   MediaEntry({
     required this.id,
     required this.alEntryId,
+    required this.kitsuEntryId,
     required this.media,
     required this.status,
     required this.score,
@@ -37,6 +40,7 @@ class MediaEntry extends Insertable<MediaEntry> {
   MediaEntry.fromAnilistJson(Map<String, dynamic> json, String mediaId)
       : id = const Uuid().v4(),
         alEntryId = json['id'],
+        kitsuEntryId = 0,
         status = _convertAnilistStatus(json['status']).index,
         score = json['score'],
         progress = json['progress'] ?? 0,
@@ -50,9 +54,25 @@ class MediaEntry extends Insertable<MediaEntry> {
         media = mediaId,
         synced = true;
 
+  MediaEntry.fromKitsuJson(Map<String, dynamic> json, String mediaId)
+      : id = const Uuid().v4(),
+        alEntryId = 0,
+        kitsuEntryId = int.parse(json['id']),
+        status = _convertKitsuStatus(json['status']).index,
+        score = ((json['rating'] ?? 0) as int) ~/ 2,
+        progress = json['progress'] ?? 0,
+        repeat = json['reconsumeCount'],
+        createdAt = DateTime.parse(json['createdAt']),
+        updatedAt = DateTime.parse(json['updatedAt']),
+        startedAt = DateTime.parse(json['startedAt'] ?? "19700101"),
+        completedAt = DateTime.parse(json['finishedAt'] ?? "19700101"),
+        media = mediaId,
+        synced = true;
+
   MediaEntry.createNewEntry({required String mediaId, int mstatus = 0})
       : id = const Uuid().v4(),
         alEntryId = 0,
+        kitsuEntryId = 0,
         status = mstatus,
         score = 0,
         progress = 0,
@@ -90,8 +110,38 @@ class MediaEntry extends Insertable<MediaEntry> {
     return varMap;
   }
 
+  Map<String, dynamic> toKitsuMap(
+      {int? mediaId, required LibraryUpdateType updateType}) {
+    var varMap = {
+      'status': entryStatus.toKitsuStatus,
+      'rating': score != 0 ? score * 2 : null,
+      'progress': progress,
+      'reconsumeCount': repeat,
+    };
+
+    switch(updateType){
+      
+      case LibraryUpdateType.create:
+        varMap.addAll({
+          'mediaId': mediaId!,
+          'mediaType': 'ANIME'
+        });
+        break;
+      case LibraryUpdateType.update:
+        varMap.addAll({
+          'id': kitsuEntryId,
+        });
+        break;
+      case LibraryUpdateType.delete:
+        varMap = {'id': kitsuEntryId};
+        break;
+    }
+    return varMap;
+  }
+
   MediaEntry copyWith({
     int? alEntryId,
+    int? kitsuEntryId,
     int? status,
     int? score,
     int? progress,
@@ -106,6 +156,7 @@ class MediaEntry extends Insertable<MediaEntry> {
     return MediaEntry(
         id: id,
         alEntryId: alEntryId ?? this.alEntryId,
+        kitsuEntryId: kitsuEntryId ?? this.kitsuEntryId,
         media: media ?? this.media,
         status: status ?? this.status,
         score: score ?? this.score,
@@ -123,6 +174,7 @@ class MediaEntry extends Insertable<MediaEntry> {
     return MediaEntriesCompanion(
       id: Value(id),
       alEntryId: Value(alEntryId),
+      kitsuEntryId: Value(kitsuEntryId),
       status: Value(status),
       score: Value(score),
       progress: Value(progress),
@@ -145,6 +197,23 @@ class MediaEntry extends Insertable<MediaEntry> {
       case "PLANNING":
         return MediaEntryStatus.planned;
       case "PAUSED":
+        return MediaEntryStatus.onHold;
+      case "DROPPED":
+        return MediaEntryStatus.dropped;
+      default:
+        return MediaEntryStatus.watching;
+    }
+  }
+
+  static MediaEntryStatus _convertKitsuStatus(String kitsuStatus) {
+    switch (kitsuStatus) {
+      case "CURRENT":
+        return MediaEntryStatus.watching;
+      case "COMPLETED":
+        return MediaEntryStatus.completed;
+      case "PLANNED":
+        return MediaEntryStatus.planned;
+      case "ON_HOLD":
         return MediaEntryStatus.onHold;
       case "DROPPED":
         return MediaEntryStatus.dropped;
@@ -182,6 +251,21 @@ extension MediaEntryStatusExt on MediaEntryStatus {
         return "PLANNING";
       case MediaEntryStatus.onHold:
         return "PAUSED";
+      case MediaEntryStatus.dropped:
+        return "DROPPED";
+    }
+  }
+
+  String get toKitsuStatus {
+    switch (this) {
+      case MediaEntryStatus.watching:
+        return "CURRENT";
+      case MediaEntryStatus.completed:
+        return "COMPLETED";
+      case MediaEntryStatus.planned:
+        return "PLANNED";
+      case MediaEntryStatus.onHold:
+        return "ON_HOLD";
       case MediaEntryStatus.dropped:
         return "DROPPED";
     }

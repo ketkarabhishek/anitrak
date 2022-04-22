@@ -10,6 +10,7 @@ class LibraryUpdates extends Table{
   BoolColumn get kitsu => boolean()();
   BoolColumn get mal => boolean()();
   IntColumn get alEntryId => integer()();
+  IntColumn get kitsuEntryId => integer()();
 
    @override
   Set<Column> get primaryKey => {id};

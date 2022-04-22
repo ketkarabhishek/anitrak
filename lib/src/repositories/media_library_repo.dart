@@ -5,18 +5,21 @@ import 'package:anitrak/src/models/library_update.dart';
 import 'package:anitrak/src/models/media_entry.dart';
 import 'package:anitrak/src/models/media_model.dart';
 import 'package:anitrak/src/services/anilist/anilist_client.dart';
+import 'package:anitrak/src/services/kitsu/kitsu.dart';
 
 class MediaLibraryRepo {
   MediaLibraryRepo({
     required this.mediaLibraryDao,
     required this.libraryUpdateDao,
-    required this.client,
+    required this.anilistClient,
+    required this.kitsuClient,
   });
 
   final MediaLibraryDao mediaLibraryDao;
   final LibraryUpdateDao libraryUpdateDao;
 
-  final AnilistClient client;
+  final AnilistClient anilistClient;
+  final Kitsu kitsuClient;
 
   // ====DB====
   // MediaEntry
@@ -89,7 +92,8 @@ class MediaLibraryRepo {
     await mediaLibraryDao.deleteMedia(mediaId: item.media.id);
     final update = LibraryUpdate.createNewUpdate(
         LibraryUpdateType.delete, item.mediaEntry.id,
-        alEntryId: item.mediaEntry.alEntryId);
+        alEntryId: item.mediaEntry.alEntryId,
+        kitsuEntryId: item.mediaEntry.kitsuEntryId);
     libraryUpdateDao.insertLibraryUpdate(update);
   }
 
@@ -117,7 +121,7 @@ class MediaLibraryRepo {
   Future<void> saveAnilistEntry(MediaEntry entry,
       {required int mediaId}) async {
     final varMap = entry.toAnilistMap(mediaId: mediaId);
-    final id = await client.saveMediaListEntry(varMap);
+    final id = await anilistClient.saveMediaListEntry(varMap);
     if (entry.alEntryId == 0) {
       final newEntry = entry.copyWith(alEntryId: id);
       await mediaLibraryDao.updateMediaEntry(newEntry);
@@ -127,12 +131,12 @@ class MediaLibraryRepo {
 
   Future<bool> deleteAnilistEntry({required int mediaId}) async {
     final varMap = {'id': mediaId};
-    return client.deleteMediaListEntry(varMap);
+    return anilistClient.deleteMediaListEntry(varMap);
   }
 
   Future<List<dynamic>> getUserMediaList(String userId) async {
     final json =
-        await client.getMediaListCollection(int.parse(userId), "ANIME");
+        await anilistClient.getMediaListCollection(int.parse(userId), "ANIME");
     final lists = json['lists'] as List;
     final filteredList =
         lists.where((element) => !element['isCustomList']).toList();
@@ -146,8 +150,38 @@ class MediaLibraryRepo {
   }
 
   Future<List<MediaModel>> getAnilistMedia({String? search}) async {
-    final json = await client.getMedia(search: search);
+    final json = await anilistClient.getMedia(search: search);
     final jsonList = json["media"] as List;
     return jsonList.map((e) => MediaModel.fromAnilistJson(e)).toList();
   }
+
+  // Kitsu
+  Future<List<dynamic>> getUserKitsuLibrary(String userId) async {
+    final json = await kitsuClient.getLibrary(userId: int.parse(userId));
+    return json['nodes'] as List;
+  }
+
+  Future<void> createKitsuEntry(MediaEntry entry,
+      {required int mediaId}) async {
+    final varMap = entry.toKitsuMap(mediaId: mediaId, updateType: LibraryUpdateType.create);
+    final id = await kitsuClient.createLibraryEntry(varMap);
+    if (entry.kitsuEntryId == 0) {
+      final newEntry = entry.copyWith(alEntryId: id);
+      await mediaLibraryDao.updateMediaEntry(newEntry);
+    }
+    return;
+  }
+
+  Future<void> updateKitsuEntry(MediaEntry entry) async {
+    final varMap = entry.toKitsuMap(updateType: LibraryUpdateType.update);
+    await kitsuClient.updateLibraryEntry(varMap);
+    return;
+  }
+
+  Future<bool> deleteKitsuEntry({required int mediaEntryId}) async {
+    final varMap = {'id': mediaEntryId};
+    final res = await kitsuClient.deleteLibraryEntry(varMap);
+    return res == mediaEntryId;
+  }
+
 }

@@ -23,6 +23,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             .where((item) => item.mediaEntry.entryStatus == MediaEntryStatus.watching)
             .take(10)
             .toList();
+        recentsList.sort(((a, b) => b.mediaEntry.updatedAt.compareTo(a.mediaEntry.updatedAt)));
         final totalEpisodes = library
             .map((e) => e.mediaEntry.progress)
             .reduce((value, element) => value + element);

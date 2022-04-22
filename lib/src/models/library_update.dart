@@ -16,6 +16,9 @@ class LibraryUpdate extends Insertable<LibraryUpdate> {
   final bool kitsu;
   final bool mal;
   final int alEntryId;
+  final int kitsuEntryId;
+
+  LibraryUpdateType get updateType => LibraryUpdateType.values[type];
 
   LibraryUpdate({
     required this.id,
@@ -25,15 +28,17 @@ class LibraryUpdate extends Insertable<LibraryUpdate> {
     required this.kitsu,
     required this.mal,
     required this.alEntryId,
+    required this.kitsuEntryId,
   });
 
-  LibraryUpdate.createNewUpdate(LibraryUpdateType type, this.mediaEntryId, {int? alEntryId})
+  LibraryUpdate.createNewUpdate(LibraryUpdateType type, this.mediaEntryId, {int? alEntryId, int? kitsuEntryId})
       : id = const Uuid().v4(),
         type = type.index,
         anilist = false,
         kitsu = false,
         mal = false,
-        alEntryId = alEntryId ?? 0;
+        alEntryId = alEntryId ?? 0,
+        kitsuEntryId = kitsuEntryId ?? 0;
 
   LibraryUpdate copyWith({
     bool? anilist,
@@ -45,6 +50,7 @@ class LibraryUpdate extends Insertable<LibraryUpdate> {
       mediaEntryId: mediaEntryId,
       type: type,
       alEntryId: alEntryId,
+      kitsuEntryId: kitsuEntryId,
       kitsu: kitsu ?? this.kitsu,
       mal: mal ?? this.mal,
       anilist: anilist ?? this.anilist,
@@ -60,7 +66,8 @@ class LibraryUpdate extends Insertable<LibraryUpdate> {
       anilist: Value(anilist),
       kitsu: Value(kitsu),
       mal: Value(mal),
-      alEntryId: Value(alEntryId)
+      alEntryId: Value(alEntryId),
+      kitsuEntryId: Value(kitsuEntryId),
     ).toColumns(nullToAbsent);
   }
 }

@@ -28,7 +28,9 @@ class _DashboardPageState extends State<DashboardPage> {
             centerTitle: true,
             title: Text(
               'Anitrak',
-              style: TextStyle(fontFamily: 'Naruto', color: Theme.of(context).colorScheme.primary),
+              style: TextStyle(
+                  fontFamily: 'Naruto',
+                  color: Theme.of(context).colorScheme.primary),
             ),
             bottom: const SearchBar(),
           ),
@@ -125,7 +127,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _recentsList(List<LibraryItem> list) {
     if (list.isEmpty) {
-      return SizedBox(
+      return const SizedBox(
         height: 190,
         child: Center(
           child: Text("You are not watching anything."),
@@ -158,7 +160,10 @@ class _DashboardPageState extends State<DashboardPage> {
                 libraryItem: entry,
                 onTapNext: () {
                   final updated = entry.mediaEntry.copyWith(
-                      progress: entry.mediaEntry.progress + 1, synced: false);
+                    progress: entry.mediaEntry.progress + 1,
+                    synced: false,
+                    updatedAt: DateTime.now(),
+                  );
                   BlocProvider.of<DashboardBloc>(context)
                       .add(RecentsUpdated(updated));
                 },

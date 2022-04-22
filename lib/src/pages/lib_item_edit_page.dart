@@ -237,7 +237,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                   ),
                 ),
                 ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(textStyle: TextStyle(fontSize: 20)),
+                  style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
                   onPressed: () async {
                     final res = await showDialog<bool>(
                       context: context,
@@ -247,8 +247,8 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                       Navigator.pop(context, res);
                     }
                   },
-                  icon: Icon(Icons.delete_forever),
-                  label: Text("Delete"),
+                  icon: const Icon(Icons.delete_forever),
+                  label: const Text("Delete"),
                 ),
               ],
             ),

@@ -10,7 +10,8 @@ class Media extends Table {
   IntColumn get total => integer()();
   IntColumn get duration => integer()();
   IntColumn get alMediaId => integer()();
-  IntColumn get malMediaId => integer().nullable()();
+  IntColumn get malMediaId => integer()();
+  IntColumn get kitsuMediaId => integer()();
   TextColumn get color => text()();
 
   IntColumn get status => integer()();

@@ -15,7 +15,8 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
   final Value<int> total;
   final Value<int> duration;
   final Value<int> alMediaId;
-  final Value<int?> malMediaId;
+  final Value<int> malMediaId;
+  final Value<int> kitsuMediaId;
   final Value<String> color;
   final Value<int> status;
   final Value<int> format;
@@ -31,6 +32,7 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
     this.duration = const Value.absent(),
     this.alMediaId = const Value.absent(),
     this.malMediaId = const Value.absent(),
+    this.kitsuMediaId = const Value.absent(),
     this.color = const Value.absent(),
     this.status = const Value.absent(),
     this.format = const Value.absent(),
@@ -46,7 +48,8 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
     required int total,
     required int duration,
     required int alMediaId,
-    this.malMediaId = const Value.absent(),
+    required int malMediaId,
+    required int kitsuMediaId,
     required String color,
     required int status,
     required int format,
@@ -60,6 +63,8 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
         total = Value(total),
         duration = Value(duration),
         alMediaId = Value(alMediaId),
+        malMediaId = Value(malMediaId),
+        kitsuMediaId = Value(kitsuMediaId),
         color = Value(color),
         status = Value(status),
         format = Value(format),
@@ -74,7 +79,8 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
     Expression<int>? total,
     Expression<int>? duration,
     Expression<int>? alMediaId,
-    Expression<int?>? malMediaId,
+    Expression<int>? malMediaId,
+    Expression<int>? kitsuMediaId,
     Expression<String>? color,
     Expression<int>? status,
     Expression<int>? format,
@@ -91,6 +97,7 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
       if (duration != null) 'duration': duration,
       if (alMediaId != null) 'al_media_id': alMediaId,
       if (malMediaId != null) 'mal_media_id': malMediaId,
+      if (kitsuMediaId != null) 'kitsu_media_id': kitsuMediaId,
       if (color != null) 'color': color,
       if (status != null) 'status': status,
       if (format != null) 'format': format,
@@ -108,7 +115,8 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
       Value<int>? total,
       Value<int>? duration,
       Value<int>? alMediaId,
-      Value<int?>? malMediaId,
+      Value<int>? malMediaId,
+      Value<int>? kitsuMediaId,
       Value<String>? color,
       Value<int>? status,
       Value<int>? format,
@@ -124,6 +132,7 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
       duration: duration ?? this.duration,
       alMediaId: alMediaId ?? this.alMediaId,
       malMediaId: malMediaId ?? this.malMediaId,
+      kitsuMediaId: kitsuMediaId ?? this.kitsuMediaId,
       color: color ?? this.color,
       status: status ?? this.status,
       format: format ?? this.format,
@@ -158,7 +167,10 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
       map['al_media_id'] = Variable<int>(alMediaId.value);
     }
     if (malMediaId.present) {
-      map['mal_media_id'] = Variable<int?>(malMediaId.value);
+      map['mal_media_id'] = Variable<int>(malMediaId.value);
+    }
+    if (kitsuMediaId.present) {
+      map['kitsu_media_id'] = Variable<int>(kitsuMediaId.value);
     }
     if (color.present) {
       map['color'] = Variable<String>(color.value);
@@ -192,6 +204,7 @@ class MediaCompanion extends UpdateCompanion<MediaModel> {
           ..write('duration: $duration, ')
           ..write('alMediaId: $alMediaId, ')
           ..write('malMediaId: $malMediaId, ')
+          ..write('kitsuMediaId: $kitsuMediaId, ')
           ..write('color: $color, ')
           ..write('status: $status, ')
           ..write('format: $format, ')
@@ -247,8 +260,14 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
   final VerificationMeta _malMediaIdMeta = const VerificationMeta('malMediaId');
   @override
   late final GeneratedColumn<int?> malMediaId = GeneratedColumn<int?>(
-      'mal_media_id', aliasedName, true,
-      type: const IntType(), requiredDuringInsert: false);
+      'mal_media_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _kitsuMediaIdMeta =
+      const VerificationMeta('kitsuMediaId');
+  @override
+  late final GeneratedColumn<int?> kitsuMediaId = GeneratedColumn<int?>(
+      'kitsu_media_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
   late final GeneratedColumn<String?> color = GeneratedColumn<String?>(
@@ -289,6 +308,7 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
         duration,
         alMediaId,
         malMediaId,
+        kitsuMediaId,
         color,
         status,
         format,
@@ -355,6 +375,16 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
           _malMediaIdMeta,
           malMediaId.isAcceptableOrUnknown(
               data['mal_media_id']!, _malMediaIdMeta));
+    } else if (isInserting) {
+      context.missing(_malMediaIdMeta);
+    }
+    if (data.containsKey('kitsu_media_id')) {
+      context.handle(
+          _kitsuMediaIdMeta,
+          kitsuMediaId.isAcceptableOrUnknown(
+              data['kitsu_media_id']!, _kitsuMediaIdMeta));
+    } else if (isInserting) {
+      context.missing(_kitsuMediaIdMeta);
     }
     if (data.containsKey('color')) {
       context.handle(
@@ -420,7 +450,9 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
       total: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}total'])!,
       malMediaId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}mal_media_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}mal_media_id'])!,
+      kitsuMediaId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}kitsu_media_id'])!,
       format: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}format'])!,
       season: const IntType()
@@ -443,6 +475,7 @@ class $MediaTable extends Media with TableInfo<$MediaTable, MediaModel> {
 class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
   final Value<String> id;
   final Value<int> alEntryId;
+  final Value<int> kitsuEntryId;
   final Value<int> status;
   final Value<int> score;
   final Value<int> progress;
@@ -456,6 +489,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
   const MediaEntriesCompanion({
     this.id = const Value.absent(),
     this.alEntryId = const Value.absent(),
+    this.kitsuEntryId = const Value.absent(),
     this.status = const Value.absent(),
     this.score = const Value.absent(),
     this.progress = const Value.absent(),
@@ -470,6 +504,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
   MediaEntriesCompanion.insert({
     required String id,
     required int alEntryId,
+    required int kitsuEntryId,
     required int status,
     required int score,
     required int progress,
@@ -482,6 +517,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     this.media = const Value.absent(),
   })  : id = Value(id),
         alEntryId = Value(alEntryId),
+        kitsuEntryId = Value(kitsuEntryId),
         status = Value(status),
         score = Value(score),
         progress = Value(progress),
@@ -494,6 +530,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
   static Insertable<MediaEntry> custom({
     Expression<String>? id,
     Expression<int>? alEntryId,
+    Expression<int>? kitsuEntryId,
     Expression<int>? status,
     Expression<int>? score,
     Expression<int>? progress,
@@ -508,6 +545,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (alEntryId != null) 'al_entry_id': alEntryId,
+      if (kitsuEntryId != null) 'kitsu_entry_id': kitsuEntryId,
       if (status != null) 'status': status,
       if (score != null) 'score': score,
       if (progress != null) 'progress': progress,
@@ -524,6 +562,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
   MediaEntriesCompanion copyWith(
       {Value<String>? id,
       Value<int>? alEntryId,
+      Value<int>? kitsuEntryId,
       Value<int>? status,
       Value<int>? score,
       Value<int>? progress,
@@ -537,6 +576,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     return MediaEntriesCompanion(
       id: id ?? this.id,
       alEntryId: alEntryId ?? this.alEntryId,
+      kitsuEntryId: kitsuEntryId ?? this.kitsuEntryId,
       status: status ?? this.status,
       score: score ?? this.score,
       progress: progress ?? this.progress,
@@ -558,6 +598,9 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     }
     if (alEntryId.present) {
       map['al_entry_id'] = Variable<int>(alEntryId.value);
+    }
+    if (kitsuEntryId.present) {
+      map['kitsu_entry_id'] = Variable<int>(kitsuEntryId.value);
     }
     if (status.present) {
       map['status'] = Variable<int>(status.value);
@@ -597,6 +640,7 @@ class MediaEntriesCompanion extends UpdateCompanion<MediaEntry> {
     return (StringBuffer('MediaEntriesCompanion(')
           ..write('id: $id, ')
           ..write('alEntryId: $alEntryId, ')
+          ..write('kitsuEntryId: $kitsuEntryId, ')
           ..write('status: $status, ')
           ..write('score: $score, ')
           ..write('progress: $progress, ')
@@ -627,6 +671,12 @@ class $MediaEntriesTable extends MediaEntries
   @override
   late final GeneratedColumn<int?> alEntryId = GeneratedColumn<int?>(
       'al_entry_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _kitsuEntryIdMeta =
+      const VerificationMeta('kitsuEntryId');
+  @override
+  late final GeneratedColumn<int?> kitsuEntryId = GeneratedColumn<int?>(
+      'kitsu_entry_id', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
@@ -687,6 +737,7 @@ class $MediaEntriesTable extends MediaEntries
   List<GeneratedColumn> get $columns => [
         id,
         alEntryId,
+        kitsuEntryId,
         status,
         score,
         progress,
@@ -719,6 +770,14 @@ class $MediaEntriesTable extends MediaEntries
               data['al_entry_id']!, _alEntryIdMeta));
     } else if (isInserting) {
       context.missing(_alEntryIdMeta);
+    }
+    if (data.containsKey('kitsu_entry_id')) {
+      context.handle(
+          _kitsuEntryIdMeta,
+          kitsuEntryId.isAcceptableOrUnknown(
+              data['kitsu_entry_id']!, _kitsuEntryIdMeta));
+    } else if (isInserting) {
+      context.missing(_kitsuEntryIdMeta);
     }
     if (data.containsKey('status')) {
       context.handle(_statusMeta,
@@ -793,6 +852,8 @@ class $MediaEntriesTable extends MediaEntries
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       alEntryId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}al_entry_id'])!,
+      kitsuEntryId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}kitsu_entry_id'])!,
       media: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}media']),
       status: const IntType()
@@ -830,6 +891,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
   final Value<bool> kitsu;
   final Value<bool> mal;
   final Value<int> alEntryId;
+  final Value<int> kitsuEntryId;
   const LibraryUpdatesCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -838,6 +900,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
     this.kitsu = const Value.absent(),
     this.mal = const Value.absent(),
     this.alEntryId = const Value.absent(),
+    this.kitsuEntryId = const Value.absent(),
   });
   LibraryUpdatesCompanion.insert({
     required String id,
@@ -847,13 +910,15 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
     required bool kitsu,
     required bool mal,
     required int alEntryId,
+    required int kitsuEntryId,
   })  : id = Value(id),
         type = Value(type),
         mediaEntryId = Value(mediaEntryId),
         anilist = Value(anilist),
         kitsu = Value(kitsu),
         mal = Value(mal),
-        alEntryId = Value(alEntryId);
+        alEntryId = Value(alEntryId),
+        kitsuEntryId = Value(kitsuEntryId);
   static Insertable<LibraryUpdate> custom({
     Expression<String>? id,
     Expression<int>? type,
@@ -862,6 +927,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
     Expression<bool>? kitsu,
     Expression<bool>? mal,
     Expression<int>? alEntryId,
+    Expression<int>? kitsuEntryId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -871,6 +937,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
       if (kitsu != null) 'kitsu': kitsu,
       if (mal != null) 'mal': mal,
       if (alEntryId != null) 'al_entry_id': alEntryId,
+      if (kitsuEntryId != null) 'kitsu_entry_id': kitsuEntryId,
     });
   }
 
@@ -881,7 +948,8 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
       Value<bool>? anilist,
       Value<bool>? kitsu,
       Value<bool>? mal,
-      Value<int>? alEntryId}) {
+      Value<int>? alEntryId,
+      Value<int>? kitsuEntryId}) {
     return LibraryUpdatesCompanion(
       id: id ?? this.id,
       type: type ?? this.type,
@@ -890,6 +958,7 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
       kitsu: kitsu ?? this.kitsu,
       mal: mal ?? this.mal,
       alEntryId: alEntryId ?? this.alEntryId,
+      kitsuEntryId: kitsuEntryId ?? this.kitsuEntryId,
     );
   }
 
@@ -917,6 +986,9 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
     if (alEntryId.present) {
       map['al_entry_id'] = Variable<int>(alEntryId.value);
     }
+    if (kitsuEntryId.present) {
+      map['kitsu_entry_id'] = Variable<int>(kitsuEntryId.value);
+    }
     return map;
   }
 
@@ -929,7 +1001,8 @@ class LibraryUpdatesCompanion extends UpdateCompanion<LibraryUpdate> {
           ..write('anilist: $anilist, ')
           ..write('kitsu: $kitsu, ')
           ..write('mal: $mal, ')
-          ..write('alEntryId: $alEntryId')
+          ..write('alEntryId: $alEntryId, ')
+          ..write('kitsuEntryId: $kitsuEntryId')
           ..write(')'))
         .toString();
   }
@@ -983,9 +1056,15 @@ class $LibraryUpdatesTable extends LibraryUpdates
   late final GeneratedColumn<int?> alEntryId = GeneratedColumn<int?>(
       'al_entry_id', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _kitsuEntryIdMeta =
+      const VerificationMeta('kitsuEntryId');
+  @override
+  late final GeneratedColumn<int?> kitsuEntryId = GeneratedColumn<int?>(
+      'kitsu_entry_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, type, mediaEntryId, anilist, kitsu, mal, alEntryId];
+      [id, type, mediaEntryId, anilist, kitsu, mal, alEntryId, kitsuEntryId];
   @override
   String get aliasedName => _alias ?? 'library_updates';
   @override
@@ -1040,6 +1119,14 @@ class $LibraryUpdatesTable extends LibraryUpdates
     } else if (isInserting) {
       context.missing(_alEntryIdMeta);
     }
+    if (data.containsKey('kitsu_entry_id')) {
+      context.handle(
+          _kitsuEntryIdMeta,
+          kitsuEntryId.isAcceptableOrUnknown(
+              data['kitsu_entry_id']!, _kitsuEntryIdMeta));
+    } else if (isInserting) {
+      context.missing(_kitsuEntryIdMeta);
+    }
     return context;
   }
 
@@ -1063,6 +1150,8 @@ class $LibraryUpdatesTable extends LibraryUpdates
           .mapFromDatabaseResponse(data['${effectivePrefix}mal'])!,
       alEntryId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}al_entry_id'])!,
+      kitsuEntryId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}kitsu_entry_id'])!,
     );
   }
 

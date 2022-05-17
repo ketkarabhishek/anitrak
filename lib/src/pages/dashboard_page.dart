@@ -30,7 +30,8 @@ class _DashboardPageState extends State<DashboardPage> {
               'Anitrak',
               style: TextStyle(
                   fontFamily: 'Naruto',
-                  color: Theme.of(context).colorScheme.primary),
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 30),
             ),
             bottom: const SearchBar(),
           ),

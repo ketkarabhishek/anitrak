@@ -1,6 +1,5 @@
 import 'package:anitrak/src/database/database.dart';
 import 'package:drift/drift.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
 class MediaModel extends Insertable<MediaModel> {

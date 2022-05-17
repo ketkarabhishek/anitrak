@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
-    useMaterial3: true,
+    // useMaterial3: true,
     scaffoldBackgroundColor: Colors.white,
     colorScheme: const ColorScheme.light().copyWith(
       primary: Colors.red,
@@ -26,7 +26,7 @@ class AppTheme {
   );
 
   static ThemeData darkTheme = ThemeData.dark().copyWith(
-    useMaterial3: true,
+    // useMaterial3: true,
     scaffoldBackgroundColor: Colors.black,
     colorScheme: const ColorScheme.dark().copyWith(
       primary: Colors.red,

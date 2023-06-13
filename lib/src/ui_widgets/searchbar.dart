@@ -22,11 +22,11 @@ class SearchBar extends StatelessWidget implements PreferredSizeWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Center(
+          child: const Center(
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(12.0),
               child: Row(
-                children: const [
+                children: [
                   Icon(Icons.search),
                   Padding(
                     padding: EdgeInsets.only(left: 8.0),

@@ -72,7 +72,7 @@ class InfiniteGridList<T> extends StatelessWidget {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Error!", style: Theme.of(context).textTheme.headline4),
+          Text("Error!", style: Theme.of(context).textTheme.headlineMedium),
           Text(errorMessage),
           IconButton(
               icon: const Icon(Icons.refresh),
@@ -119,7 +119,7 @@ class InfiniteGridList<T> extends StatelessWidget {
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
                   title!,
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
             ),

@@ -18,12 +18,12 @@ class ThemeCubit extends Cubit<ThemeState> {
       final newState =
           ThemeModeState(themeMode: ThemeMode.values[themeModeIndex]);
       emit(newState);
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            systemNavigationBarColor: newState.navColor,
-            statusBarIconBrightness: Brightness.light),
-      );
+      // SystemChrome.setSystemUIOverlayStyle(
+      //   SystemUiOverlayStyle(
+      //       statusBarColor: Colors.transparent,
+      //       systemNavigationBarColor: newState.navColor,
+      //       statusBarIconBrightness: Brightness.light),
+      // );
     }
   }
 
@@ -33,11 +33,11 @@ class ThemeCubit extends Cubit<ThemeState> {
     final newState =
         ThemeModeState(themeMode: ThemeMode.values[themeModeIndex]);
     emit(newState);
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          systemNavigationBarColor: newState.navColor,
-          statusBarIconBrightness: Brightness.light),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(
+    //       statusBarColor: Colors.transparent,
+    //       systemNavigationBarColor: newState.navColor,
+    //       statusBarIconBrightness: Brightness.light),
+    // );
   }
 }

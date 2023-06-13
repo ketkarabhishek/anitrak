@@ -292,13 +292,13 @@ class _MediaDetailPageState extends State<MediaDetailPage>
               title,
               style: Theme.of(context)
                   .textTheme
-                  .subtitle2
+                  .titleSmall
                   ?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
           ),
           Text(
             value,
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headlineSmall,
           )
         ],
       ),
@@ -311,10 +311,10 @@ class _MediaDetailPageState extends State<MediaDetailPage>
       title: const Text('Select Status'),
       children: getStatusList().map((e) => SimpleDialogOption(
           child: Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
               e.displayTitle,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ),
           onPressed: () => Navigator.pop(context, e),

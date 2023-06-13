@@ -63,7 +63,7 @@ class MediaModel extends Insertable<MediaModel> {
       : id = const Uuid().v4(),
         alMediaId = 0,
         kitsuMediaId = int.parse(json['id']),
-        description = json['description']['en'] ?? "",
+        description = json['description']['en'],
         duration = Duration(seconds: json['episodeLength'] ?? 0).inMinutes,
         title = json['titles']['romanized'] ?? "",
         poster = json['posterImage']['original']['url'],
@@ -74,7 +74,7 @@ class MediaModel extends Insertable<MediaModel> {
         season = seasonFromApi(json['season'] ?? "").index,
         status = statusFromApi(json['status']).index,
         year = DateTime.parse(json['startDate']).year,
-        coverImage = (json['bannerImage']['views'] as List).isNotEmpty ? json['bannerImage']['views'][0]['url'] : json['posterImage']['original']['url'];
+        coverImage = /*(json['bannerImage']['views'] as List).isNotEmpty ? json['bannerImage']['views'][0]['url'] : */json['posterImage']['original']['url'];
 
   Map<String, dynamic> toMap() {
     return {

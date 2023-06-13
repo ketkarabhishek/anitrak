@@ -88,12 +88,12 @@ class _DonutChartState extends State<DonutChart> {
                       children: [
                         Text(
                           'Total',
-                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               color: Theme.of(context).colorScheme.primary),
                         ),
                         Text(
                           widget.totalCount.toString(),
-                          style: Theme.of(context).textTheme.headline2?.copyWith(
+                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
                               color: Theme.of(context).colorScheme.onBackground),
                         ),
                       ],
@@ -137,11 +137,11 @@ class _DonutChartState extends State<DonutChart> {
         Text(title,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1
+                .titleMedium
                 ?.copyWith(color: color ?? Theme.of(context).colorScheme.primary)),
         Text(
           value,
-          style: Theme.of(context).textTheme.headline3?.copyWith(
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(
               color: Theme.of(context).colorScheme.onBackground,
               fontWeight: FontWeight.w300),
         ),

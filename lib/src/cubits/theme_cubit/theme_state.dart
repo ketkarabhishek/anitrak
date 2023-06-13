@@ -12,7 +12,7 @@ class ThemeModeState extends ThemeState {
       case ThemeMode.dark:
         return Colors.black;
       case ThemeMode.system:
-        if (SchedulerBinding.instance!.window.platformBrightness ==
+        if (SchedulerBinding.instance.window.platformBrightness ==
             Brightness.dark) {
           return Colors.black;
         }

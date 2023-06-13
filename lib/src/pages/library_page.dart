@@ -29,14 +29,14 @@ class _LibraryPageState extends State<LibraryPage> {
               floatHeaderSlivers: true,
               headerSliverBuilder: (context, _) {
                 return <Widget>[
-                  SliverAppBar(
-                    title: const Text('Library'),
+                  const SliverAppBar(
+                    title: Text('Library'),
                     pinned: true,
                     floating: true,
                     bottom: TabBar(
                       isScrollable: true,
-                      indicatorColor: Theme.of(context).colorScheme.secondary,
-                      tabs: const [
+                      // indicatorColor: Theme.of(context).colorScheme.secondary,
+                      tabs:  [
                         Tab(child: Text('Watching')),
                         Tab(child: Text('Completed')),
                         Tab(child: Text('Planned')),
@@ -93,7 +93,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   ),
                    Text(
                       'There\'s nothing here.',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                 ],
               ),

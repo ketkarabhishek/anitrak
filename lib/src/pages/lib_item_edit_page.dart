@@ -127,7 +127,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     widget.libraryItem.media.title,
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineSmall,
                     textAlign: TextAlign.start,
                   ),
                 ),
@@ -189,7 +189,7 @@ class _LibItemEditPageState extends State<LibItemEditPage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Rating',
-                      style: Theme.of(context).textTheme.caption?.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.primary),
                       textAlign: TextAlign.start,
                     ),

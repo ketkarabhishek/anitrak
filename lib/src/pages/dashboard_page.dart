@@ -4,7 +4,7 @@ import 'package:anitrak/src/pages/media_detail_page.dart';
 import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/ui_widgets/donut_chart.dart';
 import 'package:anitrak/src/ui_widgets/recents_list_item.dart';
-import 'package:anitrak/src/ui_widgets/searchbar.dart';
+import 'package:anitrak/src/ui_widgets/searchbar.dart' as search_bar;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,7 +33,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   color: Theme.of(context).colorScheme.primary,
                   fontSize: 30),
             ),
-            bottom: const SearchBar(),
+            bottom: const search_bar.SearchBar(),
           ),
           SliverToBoxAdapter(
             child: _getBody(),
@@ -69,11 +69,11 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     Text(
                       'It\'s very empty here.',
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(
                       'Search and add your anime or import from your tracking account.',
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
@@ -91,7 +91,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         vertical: 8.0, horizontal: 16.0),
                     child: Text(
                       "Recently watching",
-                      style: Theme.of(context).textTheme.headline6?.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary),
                       textAlign: TextAlign.start,
                     ),
@@ -102,7 +102,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         vertical: 8.0, horizontal: 16.0),
                     child: Text(
                       "Anime Stats",
-                      style: Theme.of(context).textTheme.headline6?.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Theme.of(context).colorScheme.primary),
                       textAlign: TextAlign.start,
                     ),
@@ -190,14 +190,14 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               Text(
                 days.toString(),
-                style: Theme.of(context).textTheme.headline1?.copyWith(
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
               ),
               Text(
                 ' days spent watching Anime',
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle1
+                    .titleMedium
                     ?.copyWith(color: Theme.of(context).colorScheme.primary),
               )
             ],

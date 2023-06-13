@@ -25,14 +25,14 @@ class _FloatingAppbarState extends State<FloatingAppbar> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
                     const Text(
                       "Search...",
                       textAlign: TextAlign.start,
                       style: TextStyle(
                           fontSize: 18, fontWeight: FontWeight.normal),
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ),

@@ -49,7 +49,7 @@ class _AccountsPageState extends State<AccountsPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Anilist',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
               BlocBuilder<AnilistAccountBloc, AnilistAccountState>(
@@ -81,7 +81,7 @@ class _AccountsPageState extends State<AccountsPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             data.anilistUserName,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
                         const Divider(),
@@ -151,7 +151,7 @@ class _AccountsPageState extends State<AccountsPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Kitsu',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
               BlocBuilder<KitsuAccountBloc, KitsuAccountState>(
@@ -193,7 +193,7 @@ class _AccountsPageState extends State<AccountsPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             data.kitsuUserName,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
                         const Divider(),

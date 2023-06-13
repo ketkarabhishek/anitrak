@@ -9,7 +9,7 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const pageDecoration = const PageDecoration(
+    const pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
       bodyTextStyle: TextStyle(fontSize: 19.0),
       bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
@@ -35,7 +35,7 @@ class IntroScreen extends StatelessWidget {
             ),
             title: 'Sync',
             body: 'Sync your library with your favourite tracking service.',
-            footer: Text(
+            footer: const Text(
               'Only supports Anilist for now. Kitsu and MyAnimeList support is planned to be added in the future.',
               textAlign: TextAlign.center,
             ),

@@ -54,25 +54,25 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
         sizeFactor: _hide,
         axisAlignment: -1.0,
         axis: Axis.vertical,
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          selectedItemColor: Theme.of(context).colorScheme.secondary,
-          unselectedItemColor: Colors.grey,
-          items: const [
-            BottomNavigationBarItem(
+        child: NavigationBar(
+          selectedIndex: _currentIndex,
+          // selectedItemColor: Theme.of(context).colorScheme.secondary,
+          // unselectedItemColor: Colors.grey,
+          destinations: const [
+            NavigationDestination(
               icon: Icon(Icons.dashboard_outlined),
               label: "Dashboard",
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: Icon(Icons.list_outlined),
               label: "Library",
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: Icon(Icons.more_horiz_outlined ),
               label: "More",
             ),
           ],
-          onTap: (int index) {
+          onDestinationSelected: (int index) {
             setState(() {
               _currentIndex = index;
             });

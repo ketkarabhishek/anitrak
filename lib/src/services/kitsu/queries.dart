@@ -81,7 +81,7 @@ fragment AnimeFragment on Anime{
   titles{
     romanized
   }
-  description
+  description(locales: "en")
   episodeCount
   episodeLength
   season

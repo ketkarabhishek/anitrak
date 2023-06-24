@@ -9,4 +9,5 @@ part of 'media_library_dao.dart';
 mixin _$MediaLibraryDaoMixin on DatabaseAccessor<MyDatabase> {
   $MediaEntriesTable get mediaEntries => attachedDatabase.mediaEntries;
   $MediaTable get media => attachedDatabase.media;
+  $MediaMappingsTable get mediaMappings => attachedDatabase.mediaMappings;
 }

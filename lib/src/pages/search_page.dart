@@ -14,6 +14,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _editingController = TextEditingController();
+  Widget customSearchBar = const Text("Search");
 
   @override
   Widget build(BuildContext context) {
@@ -25,31 +26,17 @@ class _SearchPageState extends State<SearchPage> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          bottom: const PreferredSize(
-              child: Divider(
-                height: 2.0,
-                color: Colors.grey,
-              ),
-              preferredSize: Size.fromHeight(2.0)),
-          title: Builder(builder: (context) {
-            return TextField(
-              controller: _editingController,
-              onChanged: (String text) {
-                BlocProvider.of<SearchBloc>(context)
-                    .add(MediaSearchEvent(search: text));
-              },
-              decoration: InputDecoration(
-                hintText: "Search...",
-                border: InputBorder.none,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    _editingController.clear();
-                  },
-                  icon: const Icon(Icons.close_sharp,),
-                ),
-              ),
-            );
-          }),
+          title: customSearchBar,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.filter_list),
+              onPressed: () {},
+            ),
+          ],
+          bottom: PreferredSize(
+            child: ListTile(title: _getCustomSearchBar()),
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+          ),
         ),
         body: BlocBuilder<SearchBloc, SearchState>(
           builder: (context, state) {
@@ -88,5 +75,35 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
     );
+  }
+
+  Widget _getCustomSearchBar() {
+    return Builder(builder: (context) {
+      return TextField(
+        controller: _editingController,
+        onChanged: (String text) {
+          BlocProvider.of<SearchBloc>(context)
+              .add(MediaSearchEvent(search: text));
+        },
+        decoration: InputDecoration(
+          hintText: "Search...",
+          border: InputBorder.none,
+          suffixIcon: IconButton(
+            onPressed: () {
+              _editingController.clear();
+            },
+            icon: const Icon(
+              Icons.close_sharp,
+            ),
+          ),
+          prefixIcon: IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.search,
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

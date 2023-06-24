@@ -1,7 +1,7 @@
 import 'package:anitrak/src/pages/search_page.dart';
 import 'package:flutter/material.dart';
 
-class SearchBar extends StatelessWidget implements PreferredSizeWidget {
+class SearchBar extends StatelessWidget {
   const SearchBar({Key? key}) : super(key: key);
 
   @override
@@ -15,30 +15,25 @@ class SearchBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         );
       },
-      child: Container(
-        color: Colors.transparent,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Center(
-            child: Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Row(
-                children: [
-                  Icon(Icons.search),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      "Search...",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 18),
+      child: const ListTile(
+        title: Center(
+          child: Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                Icon(Icons.search),
+                Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Search...',
                     ),
+                    // textAlign: TextAlign.start,
+                    // style: TextStyle(fontSize: 18),
                   ),
-                  Spacer(),
-                ],
-              ),
+                ),
+                Spacer(),
+              ],
             ),
           ),
         ),
@@ -46,6 +41,6 @@ class SearchBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  // @override
+  // Size get preferredSize => const Size.fromHeight(50);
 }

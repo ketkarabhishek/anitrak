@@ -6,7 +6,7 @@ part of 'database.dart';
 // MoorGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
+// ignore_for_file: type=lint
 class MediaCompanion extends UpdateCompanion<MediaModel> {
   final Value<String> id;
   final Value<String> title;
@@ -1161,11 +1161,175 @@ class $LibraryUpdatesTable extends LibraryUpdates
   }
 }
 
+class MediaMappingsCompanion extends UpdateCompanion<MediaMapping> {
+  final Value<String> id;
+  final Value<int> anilist;
+  final Value<int> kitsu;
+  final Value<int> mal;
+  const MediaMappingsCompanion({
+    this.id = const Value.absent(),
+    this.anilist = const Value.absent(),
+    this.kitsu = const Value.absent(),
+    this.mal = const Value.absent(),
+  });
+  MediaMappingsCompanion.insert({
+    required String id,
+    required int anilist,
+    required int kitsu,
+    required int mal,
+  })  : id = Value(id),
+        anilist = Value(anilist),
+        kitsu = Value(kitsu),
+        mal = Value(mal);
+  static Insertable<MediaMapping> custom({
+    Expression<String>? id,
+    Expression<int>? anilist,
+    Expression<int>? kitsu,
+    Expression<int>? mal,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (anilist != null) 'anilist': anilist,
+      if (kitsu != null) 'kitsu': kitsu,
+      if (mal != null) 'mal': mal,
+    });
+  }
+
+  MediaMappingsCompanion copyWith(
+      {Value<String>? id,
+      Value<int>? anilist,
+      Value<int>? kitsu,
+      Value<int>? mal}) {
+    return MediaMappingsCompanion(
+      id: id ?? this.id,
+      anilist: anilist ?? this.anilist,
+      kitsu: kitsu ?? this.kitsu,
+      mal: mal ?? this.mal,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (anilist.present) {
+      map['anilist'] = Variable<int>(anilist.value);
+    }
+    if (kitsu.present) {
+      map['kitsu'] = Variable<int>(kitsu.value);
+    }
+    if (mal.present) {
+      map['mal'] = Variable<int>(mal.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MediaMappingsCompanion(')
+          ..write('id: $id, ')
+          ..write('anilist: $anilist, ')
+          ..write('kitsu: $kitsu, ')
+          ..write('mal: $mal')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MediaMappingsTable extends MediaMappings
+    with TableInfo<$MediaMappingsTable, MediaMapping> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MediaMappingsTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _anilistMeta = const VerificationMeta('anilist');
+  @override
+  late final GeneratedColumn<int?> anilist = GeneratedColumn<int?>(
+      'anilist', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _kitsuMeta = const VerificationMeta('kitsu');
+  @override
+  late final GeneratedColumn<int?> kitsu = GeneratedColumn<int?>(
+      'kitsu', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _malMeta = const VerificationMeta('mal');
+  @override
+  late final GeneratedColumn<int?> mal = GeneratedColumn<int?>(
+      'mal', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, anilist, kitsu, mal];
+  @override
+  String get aliasedName => _alias ?? 'media_mappings';
+  @override
+  String get actualTableName => 'media_mappings';
+  @override
+  VerificationContext validateIntegrity(Insertable<MediaMapping> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('anilist')) {
+      context.handle(_anilistMeta,
+          anilist.isAcceptableOrUnknown(data['anilist']!, _anilistMeta));
+    } else if (isInserting) {
+      context.missing(_anilistMeta);
+    }
+    if (data.containsKey('kitsu')) {
+      context.handle(
+          _kitsuMeta, kitsu.isAcceptableOrUnknown(data['kitsu']!, _kitsuMeta));
+    } else if (isInserting) {
+      context.missing(_kitsuMeta);
+    }
+    if (data.containsKey('mal')) {
+      context.handle(
+          _malMeta, mal.isAcceptableOrUnknown(data['mal']!, _malMeta));
+    } else if (isInserting) {
+      context.missing(_malMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MediaMapping map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MediaMapping(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      anilist: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}anilist'])!,
+      kitsu: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}kitsu'])!,
+      mal: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}mal'])!,
+    );
+  }
+
+  @override
+  $MediaMappingsTable createAlias(String alias) {
+    return $MediaMappingsTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$MyDatabase extends GeneratedDatabase {
   _$MyDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $MediaTable media = $MediaTable(this);
   late final $MediaEntriesTable mediaEntries = $MediaEntriesTable(this);
   late final $LibraryUpdatesTable libraryUpdates = $LibraryUpdatesTable(this);
+  late final $MediaMappingsTable mediaMappings = $MediaMappingsTable(this);
   late final MediaLibraryDao mediaLibraryDao =
       MediaLibraryDao(this as MyDatabase);
   late final LibraryUpdateDao libraryUpdateDao =
@@ -1174,5 +1338,5 @@ abstract class _$MyDatabase extends GeneratedDatabase {
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [media, mediaEntries, libraryUpdates];
+      [media, mediaEntries, libraryUpdates, mediaMappings];
 }

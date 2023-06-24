@@ -4,9 +4,9 @@ import 'package:anitrak/src/pages/media_detail_page.dart';
 import 'package:anitrak/src/repositories/media_library_repo.dart';
 import 'package:anitrak/src/ui_widgets/donut_chart.dart';
 import 'package:anitrak/src/ui_widgets/recents_list_item.dart';
-import 'package:anitrak/src/ui_widgets/searchbar.dart' as search_bar;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -19,27 +19,37 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            pinned: true,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            centerTitle: true,
-            title: Text(
-              'Anitrak',
-              style: TextStyle(
-                  fontFamily: 'Naruto',
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 30),
-            ),
-            bottom: const search_bar.SearchBar(),
-          ),
-          SliverToBoxAdapter(
-            child: _getBody(),
-          ),
-        ],
+      appBar: AppBar(
+        title: Text(
+          'Anitrak',
+          style: TextStyle(
+              fontFamily: 'Naruto',
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 30),
+        ),
       ),
+      // body: CustomScrollView(
+      //   slivers: [
+      //     SliverAppBar(
+      //       floating: true,
+      //       pinned: true,
+      //       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //       centerTitle: true,
+      //       title: Text(
+      //         'Anitrak',
+      //         style: TextStyle(
+      //             fontFamily: 'Naruto',
+      //             color: Theme.of(context).colorScheme.primary,
+      //             fontSize: 30),
+      //       ),
+      //       bottom: const search_bar.SearchBar(),
+      //     ),
+      //     SliverToBoxAdapter(
+      //       child: _getBody(),
+      //     ),
+      //   ],
+      // ),
+      body: _getBody(),
     );
   }
 

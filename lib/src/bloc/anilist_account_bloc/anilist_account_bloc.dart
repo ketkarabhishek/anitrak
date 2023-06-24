@@ -111,90 +111,106 @@ class AnilistAccountBloc
     return true;
   }
 
-  Future<void> _syncAnilist() async {
-    _syncCreated();
-    _syncUpdated();
-    _syncDeleted();
-  }
+  // Future<void> _syncAnilist() async {
+  //   _syncCreated();
+  //   _syncUpdated();
+  //   _syncDeleted();
+  // }
 
-  void _syncCreated() async {
-    _mediaLibraryRepo
-        .getLibraryUpdates(type: LibraryUpdateType.create, anilist: false)
-        .listen(
-      (entries) async {
-        if (!(state as AnilistAccountConnected).anilistSync) return;
-        final libItems = await Future.wait(
-          entries.map((e) =>
-              _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),
-        );
-
-        await Future.wait(
-          libItems.map(
-            (e) => _mediaLibraryRepo.saveAnilistEntry(
-              e.mediaEntry,
-              mediaId: e.media.alMediaId,
-            ),
-          ),
-        );
-
-        await Future.wait(entries.map((e) {
-          final ue = e.copyWith(anilist: true);
-          return _mediaLibraryRepo.updateLibraryUpdate(ue);
-        }));
-      },
-    );
-  }
-
-  void _syncUpdated() async {
-    _mediaLibraryRepo
-        .getLibraryUpdates(type: LibraryUpdateType.update, anilist: false)
-        .listen(
-      (entries) async {
-        if (!(state as AnilistAccountConnected).anilistSync) return;
-        final libItems = await Future.wait(
-          entries.map((e) =>
-              _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),
-        );
-
-        await Future.wait(
-          libItems.map(
-            (e) => _mediaLibraryRepo.saveAnilistEntry(
-              e.mediaEntry,
-              mediaId: e.media.alMediaId,
-            ),
-          ),
-        );
-
-        await Future.wait(entries.map((e) {
-          final ue = e.copyWith(anilist: true);
-          return _mediaLibraryRepo.updateLibraryUpdate(ue);
-        }));
-      },
-    );
-  }
-
-  void _syncDeleted() async {
-    _mediaLibraryRepo
-        .getLibraryUpdates(type: LibraryUpdateType.delete, anilist: false)
-        .listen(
-      (entries) async {
+  void _syncAnilist() async {
+    _mediaLibraryRepo.getLibraryUpdates(anilist: false).listen(
+      (updates) async {
         if (!(state as AnilistAccountConnected).anilistSync) return;
         await Future.wait(
-          entries.map(
+          updates.map(
             (e) async {
-              final res = await _mediaLibraryRepo.deleteAnilistEntry(
-                  mediaId: e.alEntryId);
-              if (res) {
-                final ue = e.copyWith(anilist: true);
-                return _mediaLibraryRepo.updateLibraryUpdate(ue);
+              final entry = await _mediaLibraryRepo.getLibraryItem(
+                  mediaEntryId: e.mediaEntryId);
+              int anilistid = entry.media.alMediaId;
+              if (anilistid == 0) {
+                final mapping = await _mediaLibraryRepo.getMediaMapping(
+                    entry.media.kitsuMediaId, 'kitsu');
+                anilistid = mapping.anilist;
               }
-              return;
+              switch (e.updateType) {
+                case LibraryUpdateType.create:
+                  _mediaLibraryRepo.saveAnilistEntry(entry.mediaEntry,
+                      mediaId: anilistid);
+                  break;
+                case LibraryUpdateType.update:
+                  _mediaLibraryRepo.saveAnilistEntry(entry.mediaEntry,
+                      mediaId: anilistid);
+                  break;
+                case LibraryUpdateType.delete:
+                  if (e.alEntryId == 0) {
+                    break;
+                  }
+                  await _mediaLibraryRepo.deleteAnilistEntry(
+                      mediaId: e.alEntryId);
+                  break;
+              }
             },
           ),
         );
+
+        await Future.wait(updates.map((e) {
+          final ue = e.copyWith(anilist: true);
+          return _mediaLibraryRepo.updateLibraryUpdate(ue);
+        }));
       },
     );
   }
+
+  // void _syncUpdated() async {
+  //   _mediaLibraryRepo
+  //       .getLibraryUpdates(type: LibraryUpdateType.update, anilist: false)
+  //       .listen(
+  //     (entries) async {
+  //       if (!(state as AnilistAccountConnected).anilistSync) return;
+  //       final libItems = await Future.wait(
+  //         entries.map((e) =>
+  //             _mediaLibraryRepo.getLibraryItem(mediaEntryId: e.mediaEntryId)),
+  //       );
+
+  //       await Future.wait(
+  //         libItems.map(
+  //           (e) => _mediaLibraryRepo.saveAnilistEntry(
+  //             e.mediaEntry,
+  //             mediaId: e.media.alMediaId,
+  //           ),
+  //         ),
+  //       );
+
+  //       await Future.wait(entries.map((e) {
+  //         final ue = e.copyWith(anilist: true);
+  //         return _mediaLibraryRepo.updateLibraryUpdate(ue);
+  //       }));
+  //     },
+  //   );
+  // }
+
+  // void _syncDeleted() async {
+  //   _mediaLibraryRepo
+  //       .getLibraryUpdates(type: LibraryUpdateType.delete, anilist: false)
+  //       .listen(
+  //     (entries) async {
+  //       if (!(state as AnilistAccountConnected).anilistSync) return;
+  //       await Future.wait(
+  //         entries.map(
+  //           (e) async {
+  //             final res = await _mediaLibraryRepo.deleteAnilistEntry(
+  //                 mediaId: e.alEntryId);
+  //             if (res) {
+  //               final ue = e.copyWith(anilist: true);
+  //               return _mediaLibraryRepo.updateLibraryUpdate(ue);
+  //             }
+  //             return;
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<String> _fetchAndSaveAniistUserData() async {
     final res = await _accountsRepo.fetchAnilistUserData();

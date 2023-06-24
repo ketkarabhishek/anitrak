@@ -2,6 +2,7 @@ import 'package:anitrak/src/database/library_update_dao.dart';
 import 'package:anitrak/src/database/library_update_table.dart';
 import 'package:anitrak/src/database/media_entry_table.dart';
 import 'package:anitrak/src/database/media_library_dao.dart';
+import 'package:anitrak/src/database/media_mapping_table.dart';
 import 'package:anitrak/src/database/media_table.dart';
 import 'package:anitrak/src/models/library_update.dart';
 import 'package:anitrak/src/models/media_entry.dart';
@@ -11,6 +12,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:drift/drift.dart';
 import 'dart:io';
+
+import '../models/media_mapping.dart';
 
 part 'database.g.dart';
 
@@ -26,7 +29,7 @@ LazyDatabase _openConnection() {
   });
 }
 
-@DriftDatabase(tables: [MediaEntries, Media, LibraryUpdates], daos: [MediaLibraryDao, LibraryUpdateDao,])
+@DriftDatabase(tables: [MediaEntries, Media, LibraryUpdates, MediaMappings], daos: [MediaLibraryDao, LibraryUpdateDao,])
 class MyDatabase extends _$MyDatabase {
   MyDatabase() : super(_openConnection());
 

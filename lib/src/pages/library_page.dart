@@ -36,7 +36,7 @@ class _LibraryPageState extends State<LibraryPage> {
                     bottom: TabBar(
                       isScrollable: true,
                       // indicatorColor: Theme.of(context).colorScheme.secondary,
-                      tabs:  [
+                      tabs: [
                         Tab(child: Text('Watching')),
                         Tab(child: Text('Completed')),
                         Tab(child: Text('Planned')),
@@ -88,13 +88,15 @@ class _LibraryPageState extends State<LibraryPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.20,
-                      child: Image.asset('images/no_data.png',),
+                      child: Image.asset(
+                        'images/no_data.png',
+                      ),
                     ),
                   ),
-                   Text(
-                      'There\'s nothing here.',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                  Text(
+                    'There\'s nothing here.',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ],
               ),
             );

@@ -1,6 +1,7 @@
 import 'package:anitrak/src/pages/dashboard_page.dart';
 import 'package:anitrak/src/pages/library_page.dart';
 import 'package:anitrak/src/pages/more_page.dart';
+import 'package:anitrak/src/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -56,8 +57,6 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
         axis: Axis.vertical,
         child: NavigationBar(
           selectedIndex: _currentIndex,
-          // selectedItemColor: Theme.of(context).colorScheme.secondary,
-          // unselectedItemColor: Colors.grey,
           destinations: const [
             NavigationDestination(
               icon: Icon(Icons.dashboard_outlined),
@@ -68,7 +67,11 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
               label: "Library",
             ),
             NavigationDestination(
-              icon: Icon(Icons.more_horiz_outlined ),
+              icon: Icon(Icons.search_outlined),
+              label: "Search",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.more_horiz_outlined),
               label: "More",
             ),
           ],
@@ -94,6 +97,7 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
             children: const [
               DashboardPage(),
               LibraryPage(),
+              SearchPage(),
               MorePage(),
             ],
           ),

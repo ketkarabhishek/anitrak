@@ -40,12 +40,13 @@ class _MediaDetailPageState extends State<MediaDetailPage>
     return false;
   }
 
-   List<MediaEntryStatus> getStatusList(){
+  List<MediaEntryStatus> getStatusList() {
     switch (widget.media.mediaStatus) {
       case MediaStatus.tba:
         return [MediaEntryStatus.planned];
       case MediaStatus.current:
-        List<MediaEntryStatus> res = MediaEntryStatus.values.toList(growable: true);
+        List<MediaEntryStatus> res =
+            MediaEntryStatus.values.toList(growable: true);
         res.remove(MediaEntryStatus.completed);
         return res;
       case MediaStatus.finished:
@@ -161,8 +162,12 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                           return ElevatedButton.icon(
                               label: const Text('Add to Library'),
                               onPressed: () async {
-                                final status = await showDialog<MediaEntryStatus>(context: context, builder: (context) => _getAddDialog(context));
-                                if(status == null) return;
+                                final status =
+                                    await showDialog<MediaEntryStatus>(
+                                        context: context,
+                                        builder: (context) =>
+                                            _getAddDialog(context));
+                                if (status == null) return;
                                 final cubit =
                                     BlocProvider.of<MediaPageCubit>(context);
                                 final entry = MediaEntry.createNewEntry(
@@ -178,44 +183,37 @@ class _MediaDetailPageState extends State<MediaDetailPage>
 
                         final data = state as MediaPageWithEntry;
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Card(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    _infoCard(
-                                      title: 'Progress',
-                                      value:
-                                          data.mediaEntry.progress.toString(),
-                                    ),
-                                    _infoCard(
-                                      title: 'Rating',
-                                      value:
-                                          '${data.mediaEntry.score == 0 ? "-" : data.mediaEntry.score}/10',
-                                    ),
-                                    _infoCard(
-                                      title: 'Status',
-                                      value: data
-                                          .mediaEntry.entryStatus.displayTitle,
-                                    ),
-                                  ],
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ElevatedButton.icon(
-                                    style: OutlinedButton.styleFrom(
-                                        fixedSize: Size(
-                                          MediaQuery.of(context).size.width,
-                                          40,
-                                        ),
-                                        textStyle: const TextStyle(fontSize: 18)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _infoCard(
+                                        title: 'Progress',
+                                        value:
+                                            data.mediaEntry.progress.toString(),
+                                      ),
+                                      _infoCard(
+                                        title: 'Rating',
+                                        value:
+                                            '${data.mediaEntry.score == 0 ? "-" : data.mediaEntry.score}/10',
+                                      ),
+                                      _infoCard(
+                                        title: 'Status',
+                                        value: data.mediaEntry.entryStatus
+                                            .displayTitle,
+                                      ),
+                                    ],
+                                  ),
+                                  FilledButton.icon(
                                     label: const Text("Edit"),
                                     onPressed: () async {
-                                      final result =
-                                          await Navigator.push(
+                                      final result = await Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           fullscreenDialog: true,
@@ -227,19 +225,21 @@ class _MediaDetailPageState extends State<MediaDetailPage>
                                         ),
                                       );
                                       if (result == null) return;
-                                      if(result is MediaEntry){
+                                      if (result is MediaEntry) {
                                         BlocProvider.of<MediaPageCubit>(context)
-                                          .updateMediaEntry(result);
-                                          return;
+                                            .updateMediaEntry(result);
+                                        return;
                                       }
                                       BlocProvider.of<MediaPageCubit>(context)
-                                          .deleteMediaEntry(LibraryItem(media: widget.media, mediaEntry: widget.mediaEntry!));
+                                          .deleteMediaEntry(LibraryItem(
+                                              media: widget.media,
+                                              mediaEntry: widget.mediaEntry!));
                                       Navigator.pop(context);
                                     },
                                     icon: const Icon(Icons.edit_outlined),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -309,16 +309,20 @@ class _MediaDetailPageState extends State<MediaDetailPage>
     return SimpleDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       title: const Text('Select Status'),
-      children: getStatusList().map((e) => SimpleDialogOption(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              e.displayTitle,
-              style: const TextStyle(fontSize: 18),
+      children: getStatusList()
+          .map(
+            (e) => SimpleDialogOption(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  e.displayTitle,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+              onPressed: () => Navigator.pop(context, e),
             ),
-          ),
-          onPressed: () => Navigator.pop(context, e),
-        ),).toList(),
+          )
+          .toList(),
     );
   }
 }

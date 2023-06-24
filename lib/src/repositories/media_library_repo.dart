@@ -1,11 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:anitrak/src/database/library_update_dao.dart';
 import 'package:anitrak/src/database/media_library_dao.dart';
 import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/library_update.dart';
 import 'package:anitrak/src/models/media_entry.dart';
+import 'package:anitrak/src/models/media_mapping.dart';
 import 'package:anitrak/src/models/media_model.dart';
 import 'package:anitrak/src/services/anilist/anilist_client.dart';
+import 'package:anitrak/src/services/anime_offline_db.dart';
 import 'package:anitrak/src/services/kitsu/kitsu.dart';
+import 'package:flutter/foundation.dart';
 
 class MediaLibraryRepo {
   MediaLibraryRepo({
@@ -163,7 +169,8 @@ class MediaLibraryRepo {
 
   Future<void> createKitsuEntry(MediaEntry entry,
       {required int mediaId}) async {
-    final varMap = entry.toKitsuMap(mediaId: mediaId, updateType: LibraryUpdateType.create);
+    final varMap = entry.toKitsuMap(
+        mediaId: mediaId, updateType: LibraryUpdateType.create);
     final id = await kitsuClient.createLibraryEntry(varMap);
     if (entry.kitsuEntryId == 0) {
       final newEntry = entry.copyWith(alEntryId: id);
@@ -184,4 +191,30 @@ class MediaLibraryRepo {
     return res == mediaEntryId;
   }
 
+  // Anime Mapping
+  Future<void> insertAllMediaMappings(List<MediaMapping> mediaList) async {
+    await mediaLibraryDao.insertAllMediaMapping(mediaList);
+  }
+
+  Future<void> refreshMediaMappings() async {
+    final mappings = await AnimeOffileDB.downloadDbFile();
+    final list = await compute(parseMappings, mappings.toString());
+    await mediaLibraryDao.insertAllMediaMapping(list);
+  }
+
+  Future<MediaMapping> getMediaMapping(int id, String site) {
+    return mediaLibraryDao.getMapping(id: id, site: site);
+  }
+
+  Future<void> deleteAllMediaMapping() {
+    return mediaLibraryDao.deleteAllMappings();
+  }
+}
+
+List<MediaMapping> parseMappings(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed
+      .map<MediaMapping>((json) => MediaMapping.fromJson(json))
+      .toList();
 }

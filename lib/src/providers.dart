@@ -1,5 +1,6 @@
 import 'package:anitrak/src/bloc/anilist_account_bloc/anilist_account_bloc.dart';
 import 'package:anitrak/src/bloc/kitsu_account_bloc/kitsu_account_bloc.dart';
+import 'package:anitrak/src/cubits/mappings_cubit/mappings_cubit.dart';
 import 'package:anitrak/src/cubits/theme_cubit/theme_cubit.dart';
 import 'package:anitrak/src/database/database.dart';
 import 'package:anitrak/src/repositories/accounts_repo.dart';
@@ -29,7 +30,8 @@ class _ProvidersState extends State<Providers> {
   void initState() {
     final anilistClient = AnilistClient.create(repo: _preferencesRepo);
     final kitsuClient = Kitsu.create(repo: _preferencesRepo);
-    _accountsRepo = AccountsRepo(anilistClient: anilistClient, kitsuClient: kitsuClient);
+    _accountsRepo =
+        AccountsRepo(anilistClient: anilistClient, kitsuClient: kitsuClient);
     _mediaLibraryRepo = MediaLibraryRepo(
       mediaLibraryDao: _db.mediaLibraryDao,
       anilistClient: anilistClient,
@@ -66,6 +68,10 @@ class _ProvidersState extends State<Providers> {
           BlocProvider(
             lazy: false,
             create: (context) => ThemeCubit()..initializeTheme(),
+          ),
+          BlocProvider(
+            lazy: false,
+            create: (context) => MappingsCubit(_mediaLibraryRepo, _preferencesRepo)..initializeMappings(),
           ),
         ],
         child: MultiRepositoryProvider(

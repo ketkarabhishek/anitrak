@@ -26,7 +26,9 @@ class PreferencesRepo {
   final String _jsonExpiresInKey = "expires_in";
 
   // First time
-  final String _firstTime = "first_time";
+  static const _firstTime = "first_time";
+
+  static const String mappingRefreshDate = "mapping_date";
 
   final _storage = const FlutterSecureStorage();
 
@@ -38,6 +40,18 @@ class PreferencesRepo {
   void setFirstTime(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_firstTime, value);
+  }
+
+  // Mapping
+
+  Future<String?> get mappingDate async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(mappingRefreshDate);
+  }
+
+  void setMappingDate(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(mappingRefreshDate, value);
   }
 
   // Anilist=================
@@ -77,11 +91,9 @@ class PreferencesRepo {
 
   Future<void> saveAnilistToken(Map<String, dynamic> tokenMap) async {
     await _storage.write(
-        key: _anilistAccessTokenKey,
-        value: tokenMap[_jsonAccessTokenKey]);
+        key: _anilistAccessTokenKey, value: tokenMap[_jsonAccessTokenKey]);
     await _storage.write(
-        key: _anilistRefreshTokenKey,
-        value: tokenMap[_jsonRefreshTokenKey]);
+        key: _anilistRefreshTokenKey, value: tokenMap[_jsonRefreshTokenKey]);
     final expiresIn = DateTime.now()
         .add(Duration(seconds: tokenMap[_jsonExpiresInKey]))
         .subtract(const Duration(days: 7))
@@ -145,8 +157,7 @@ class PreferencesRepo {
     await _storage.write(
         key: _kitsuAccessTokenKey, value: tokenMap[_jsonAccessTokenKey]);
     await _storage.write(
-        key: _kitsuRefreshTokenKey,
-        value: tokenMap[_jsonRefreshTokenKey]);
+        key: _kitsuRefreshTokenKey, value: tokenMap[_jsonRefreshTokenKey]);
     final expiresIn = DateTime.now()
         .add(Duration(seconds: tokenMap[_jsonExpiresInKey]))
         .subtract(const Duration(days: 7))

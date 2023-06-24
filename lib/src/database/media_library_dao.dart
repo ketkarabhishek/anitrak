@@ -1,14 +1,16 @@
 import 'package:anitrak/src/database/database.dart';
 import 'package:anitrak/src/database/media_entry_table.dart';
+import 'package:anitrak/src/database/media_mapping_table.dart';
 import 'package:anitrak/src/database/media_table.dart';
 import 'package:anitrak/src/models/library_item.dart';
 import 'package:anitrak/src/models/media_entry.dart';
+import 'package:anitrak/src/models/media_mapping.dart';
 import 'package:anitrak/src/models/media_model.dart';
 import 'package:drift/drift.dart';
 
 part 'media_library_dao.g.dart';
 
-@DriftAccessor(tables: [MediaEntries, Media])
+@DriftAccessor(tables: [MediaEntries, Media, MediaMappings])
 class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     with _$MediaLibraryDaoMixin {
   MediaLibraryDao(MyDatabase db) : super(db);
@@ -122,9 +124,8 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
     await delete(media).go();
   }
 
-   Future<void> deleteMedia({required String mediaId}) async {
-    final query = delete(media)
-      ..where((tbl) => tbl.id.equals(mediaId));
+  Future<void> deleteMedia({required String mediaId}) async {
+    final query = delete(media)..where((tbl) => tbl.id.equals(mediaId));
     await query.go();
   }
 
@@ -190,5 +191,39 @@ class MediaLibraryDao extends DatabaseAccessor<MyDatabase>
       mediaEntry: row.readTable(mediaEntries),
       media: row.readTable(media),
     );
+  }
+
+  // Media Mappings
+  Future<void> insertAllMediaMapping(List<MediaMapping> entries) async {
+    await batch((batch) {
+      // functions in a batch don't have to be awaited - just
+      // await the whole batch afterwards.
+      batch.insertAll(mediaMappings, entries);
+    });
+  }
+
+  Future<MediaMapping> getMapping({
+    required int id,
+    required String site,
+  }) async {
+    final query = select(mediaMappings);
+
+    switch (site) {
+      case "kitsu":
+        query.where((tbl) => tbl.kitsu.equals(id));
+        break;
+      case "anilist":
+        query.where((tbl) => tbl.anilist.equals(id));
+        break;
+      case "mal":
+        query.where((tbl) => tbl.mal.equals(id));
+        break;
+    }
+
+    return query.getSingle();
+  }
+
+  Future<void> deleteAllMappings() async {
+    await delete(mediaMappings).go();
   }
 }
